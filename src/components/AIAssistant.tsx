@@ -31,7 +31,6 @@ const TIMELINES = [
 
 type Step = 'GREETING' | 'ASK_EMAIL' | 'ASK_PHONE' | 'ASK_SERVICE' | 'ASK_BUDGET' | 'ASK_TIMELINE' | 'COMPLETE';
 
-
 type Message = {
   id: number;
   text: string;
@@ -117,8 +116,6 @@ export default function AIAssistant({ isOpen, onToggle, isVisible }: AIAssistant
     };
     setMessages(prev => [...prev, userMsg]);
     setInputValue('');
-
-    // Logic based on current step
     processFlow(text);
   };
 
@@ -129,7 +126,6 @@ export default function AIAssistant({ isOpen, onToggle, isVisible }: AIAssistant
         setStep('ASK_EMAIL');
         addBotMessage(`Thank you, ${input} 😊\n\nTo provide you with a free consultation, please share your Business Email Address.`);
         break;
-
       case 'ASK_EMAIL':
         if (validateEmail(input)) {
           setLeadData(prev => ({ ...prev, email: input }));
@@ -139,7 +135,6 @@ export default function AIAssistant({ isOpen, onToggle, isVisible }: AIAssistant
           addBotMessage("I'm sorry, that doesn't look like a valid email address. Could you please try again?\n\nExample: ✔ example@company.com");
         }
         break;
-
       case 'ASK_PHONE':
         if (validatePhone(input)) {
           setLeadData(prev => ({ ...prev, phone: input }));
@@ -149,9 +144,6 @@ export default function AIAssistant({ isOpen, onToggle, isVisible }: AIAssistant
           addBotMessage("I'm sorry, that doesn't look like a valid phone number. Could you please try again?\n\nExample format: ✔ +91-**********");
         }
         break;
-
-
-
       case 'ASK_SERVICE':
         setLeadData(prev => ({ ...prev, service: input }));
         if (input === "Other Business Requirements") {
@@ -162,13 +154,11 @@ export default function AIAssistant({ isOpen, onToggle, isVisible }: AIAssistant
             addBotMessage("Excellent choice 🚀\n\nTo help us recommend the most suitable solution, please select your estimated project budget range:", BUDGETS);
         }
         break;
-
       case 'ASK_BUDGET':
         setLeadData(prev => ({ ...prev, budget: input }));
         setStep('ASK_TIMELINE');
         addBotMessage("Great 👍\n\nWhat is your expected project timeline?", TIMELINES);
         break;
-
       case 'ASK_TIMELINE':
         setLeadData(prev => ({ ...prev, timeline: input }));
         setStep('COMPLETE');
@@ -190,8 +180,7 @@ export default function AIAssistant({ isOpen, onToggle, isVisible }: AIAssistant
           "Service": data.service,
           "Budget": data.budget,
           "Project Timeline": data.timeline,
-          "Company Banner": "https://www.klanvision.com/logo.png", // Included for branding
-          _subject: `🚀 New Advanced AI Lead - ${data.name}`,
+          _subject: `🚀 New AI Lead - ${data.name}`,
           _template: 'table',
           _captcha: 'false'
         })
@@ -201,14 +190,8 @@ export default function AIAssistant({ isOpen, onToggle, isVisible }: AIAssistant
     }
   };
 
-
-  const handleOptionClick = (option: string) => {
-    handleSend(option);
-  };
-
   return (
     <>
-      {/* Floating Toggle Button */}
       <AnimatePresence>
         {isVisible && (
           <div className="ai-assistant-toggle">
@@ -216,7 +199,7 @@ export default function AIAssistant({ isOpen, onToggle, isVisible }: AIAssistant
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0, opacity: 0 }}
-              whileHover={{ scale: 1.15, rotate: 5 }}
+              whileHover={{ scale: 1.1, rotate: 5 }}
               whileTap={{ scale: 0.9 }}
               onClick={onToggle}
               style={{
@@ -231,182 +214,311 @@ export default function AIAssistant({ isOpen, onToggle, isVisible }: AIAssistant
               {!isOpen && (
                 <div style={{ position: 'absolute', top: 2, right: 2, width: 14, height: 14, background: '#EF4444', borderRadius: '50%', border: '2px solid var(--bg-main)' }} />
               )}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'linear' }}
-                style={{ position: 'absolute', inset: -6, borderRadius: '50%', border: '2px dashed rgba(124, 58, 237, 0.6)' }}
-              />
             </motion.button>
           </div>
         )}
       </AnimatePresence>
 
-      {/* Chat Window Popup */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="ai-chat-popup"
-            style={{
-              position: 'fixed',
-              bottom: '100px',
-              right: '24px',
-              width: '400px',
-              maxWidth: 'calc(100vw - 48px)',
-              height: '600px',
-              maxHeight: 'calc(100vh - 140px)',
-              display: 'flex', flexDirection: 'column',
-              fontFamily: "'Inter', sans-serif",
-              background: 'var(--bg-surface)',
-              borderRadius: '24px',
-              border: '1px solid var(--border-main)',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.2)',
-              zIndex: 10001,
-              overflow: 'hidden'
-            }}
-          >
-            {/* Header */}
-            <div style={{ padding: '16px 24px', background: 'linear-gradient(135deg, #4F46E5, #7C3AED)', color: 'white', display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Bot size={24} />
-              </div>
-              <div>
-                <div style={{ fontWeight: 800, fontSize: 16 }}>Klanvision AI Assistant</div>
-                <div style={{ fontSize: 11, opacity: 0.8, display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <div style={{ width: 6, height: 6, background: '#10B981', borderRadius: '50%' }} /> Active Support
-                </div>
-              </div>
-              <button onClick={onToggle} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'white', cursor: 'pointer', opacity: 0.7 }}><X size={20} /></button>
-            </div>
-
-            {/* Messages Area */}
-            <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 12, background: 'var(--bg-surface-soft)' }}>
-              {messages.map((msg) => (
-                <div key={msg.id} style={{ display: 'flex', flexDirection: 'column', alignItems: msg.sender === 'user' ? 'flex-end' : 'flex-start', gap: 6 }}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    style={{
-                      maxWidth: '85%',
-                      padding: '10px 16px',
-                      borderRadius: msg.sender === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-                      background: msg.sender === 'user' ? '#4F46E5' : 'var(--bg-surface)',
-                      color: msg.sender === 'user' ? 'white' : 'var(--text-main)',
-                      fontSize: '13.5px',
-                      lineHeight: 1.5,
-                      boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
-                      border: msg.sender === 'user' ? 'none' : '1px solid var(--border-main)',
-                      whiteSpace: 'pre-wrap'
-                    }}
-                  >
-                    {msg.text}
-                  </motion.div>
-                  
-                  {/* Quick Reply Options */}
-                  {msg.options && step !== 'COMPLETE' && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
-                      {msg.options.map((opt) => (
-                        <motion.button
-                          key={opt}
-                          whileHover={{ scale: 1.05, background: '#4F46E5', color: 'white' }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleOptionClick(opt)}
-                          style={{
-                            padding: '6px 14px',
-                            borderRadius: '50px',
-                            border: '1px solid #4F46E5',
-                            background: 'transparent',
-                            color: '#4F46E5',
-                            fontSize: '11px',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease'
-                          }}
-                        >
-                          {opt}
-                        </motion.button>
-                      ))}
+          <>
+            {/* Backdrop for mobile */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={onToggle}
+              className="chat-backdrop"
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="ai-chat-popup"
+            >
+              {/* Header */}
+              <div className="chat-header" style={{ background: 'linear-gradient(135deg, #4F46E5, #7C3AED)' }}>
+                <div className="header-info">
+                  <div className="bot-icon"><Bot size={22} /></div>
+                  <div>
+                    <div className="header-title">Klanvision AI</div>
+                    <div className="header-status">
+                      <span className="status-dot" /> Online Support
                     </div>
-                  )}
+                  </div>
                 </div>
-              ))}
-              
-              {isTyping && (
-                <div style={{ alignSelf: 'flex-start', display: 'flex', gap: 4, padding: '10px 14px', background: 'var(--bg-surface)', borderRadius: 15, border: '1px solid var(--border-main)' }}>
-                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0 }} style={{ width: 5, height: 5, background: 'var(--text-muted)', borderRadius: '50%' }} />
-                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} style={{ width: 5, height: 5, background: 'var(--text-muted)', borderRadius: '50%' }} />
-                    <motion.div animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} style={{ width: 5, height: 5, background: 'var(--text-muted)', borderRadius: '50%' }} />
+                <button onClick={onToggle} className="close-btn"><X size={20} /></button>
+              </div>
+
+              {/* Messages Area */}
+              <div ref={scrollRef} className="messages-area">
+                {messages.map((msg) => (
+                  <div key={msg.id} className={`message-wrapper ${msg.sender}`}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`message-bubble ${msg.sender}`}
+                    >
+                      {msg.text}
+                    </motion.div>
+                    
+                    {msg.options && step !== 'COMPLETE' && (
+                      <div className="options-container">
+                        {msg.options.map((opt) => (
+                          <motion.button
+                            key={opt}
+                            whileHover={{ scale: 1.02, background: '#4F46E5', color: 'white' }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => handleSend(opt)}
+                            className="option-btn"
+                          >
+                            {opt}
+                          </motion.button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+                
+                {isTyping && (
+                  <div className="typing-indicator">
+                    <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0 }} />
+                    <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} />
+                    <motion.span animate={{ opacity: [0.3, 1, 0.3] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} />
+                  </div>
+                )}
+              </div>
+
+              {/* Input Area */}
+              {step !== 'COMPLETE' && (
+                <div className="input-area">
+                  <div className="input-container">
+                    <input
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                      placeholder="Type your message..."
+                    />
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => handleSend()}
+                      className="send-btn"
+                      style={{ background: '#4F46E5' }}
+                    >
+                      <Send size={18} />
+                    </motion.button>
+                  </div>
                 </div>
               )}
-            </div>
-
-            {/* Input Area */}
-            {step !== 'COMPLETE' && (
-              <div style={{ padding: '16px', borderTop: '1px solid var(--border-main)', background: 'var(--bg-surface)' }}>
-                <div style={{ display: 'flex', gap: 10 }}>
-                  <input
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                    placeholder="Type your message..."
-                    style={{ 
-                      flex: 1, 
-                      padding: '10px 16px', 
-                      borderRadius: 50, 
-                      border: '1.5px solid var(--border-main)', 
-                      outline: 'none', 
-                      fontSize: '13px', 
-                      background: 'var(--bg-surface-soft)', 
-                      color: 'var(--text-main)' 
-                    }}
-                  />
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => handleSend()}
-                    style={{ 
-                      width: 40, height: 40, borderRadius: '50%', 
-                      background: '#4F46E5', color: 'white', 
-                      border: 'none', cursor: 'pointer', 
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                      boxShadow: '0 5px 15px rgba(79, 70, 229, 0.2)' 
-                    }}
-                  >
-                    <Send size={18} />
-                  </motion.button>
-                </div>
-              </div>
-            )}
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 
       <style>{`
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--border-main); border-radius: 10px; }
         .ai-assistant-toggle {
           position: fixed;
           bottom: 24px;
           right: 24px;
           z-index: 10000;
         }
-        @media (max-width: 480px) {
+        .chat-backdrop {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.4);
+          backdrop-filter: blur(4px);
+          z-index: 10000;
+          display: none;
+        }
+        .ai-chat-popup {
+          position: fixed;
+          bottom: 100px;
+          right: 24px;
+          width: 400px;
+          height: 600px;
+          max-height: calc(100vh - 140px);
+          background: var(--bg-surface);
+          border-radius: 24px;
+          border: 1px solid var(--border-main);
+          boxShadow: 0 20px 50px rgba(0,0,0,0.3);
+          z-index: 10001;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          font-family: 'Inter', sans-serif;
+        }
+        .chat-header {
+          padding: 16px 20px;
+          color: white;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .header-info {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .bot-icon {
+          width: 38px;
+          height: 38px;
+          background: rgba(255,255,255,0.2);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .header-title {
+          font-weight: 800;
+          font-size: 15px;
+        }
+        .header-status {
+          font-size: 10px;
+          opacity: 0.8;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+        .status-dot {
+          width: 6px;
+          height: 6px;
+          background: #10B981;
+          border-radius: 50%;
+        }
+        .close-btn {
+          background: none;
+          border: none;
+          color: white;
+          cursor: pointer;
+          opacity: 0.7;
+          padding: 4px;
+        }
+        .messages-area {
+          flex: 1;
+          overflow-y: auto;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          background: var(--bg-surface-soft);
+        }
+        .message-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+        .message-wrapper.user { align-items: flex-end; }
+        .message-wrapper.bot { align-items: flex-start; }
+        .message-bubble {
+          max-width: 85%;
+          padding: 12px 16px;
+          font-size: 14px;
+          line-height: 1.5;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+          white-space: pre-wrap;
+        }
+        .message-bubble.user {
+          background: #4F46E5;
+          color: white;
+          border-radius: 18px 18px 4px 18px;
+        }
+        .message-bubble.bot {
+          background: var(--bg-surface);
+          color: var(--text-main);
+          border: 1px solid var(--border-main);
+          border-radius: 18px 18px 18px 4px;
+        }
+        .options-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 4px;
+        }
+        .option-btn {
+          padding: 8px 16px;
+          border-radius: 50px;
+          border: 1.5px solid #4F46E5;
+          background: transparent;
+          color: #4F46E5;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: 0.2s;
+        }
+        .typing-indicator {
+          display: flex;
+          gap: 4px;
+          padding: 12px 16px;
+          background: var(--bg-surface);
+          border-radius: 15px;
+          border: 1px solid var(--border-main);
+          width: fit-content;
+        }
+        .typing-indicator span {
+          width: 5px;
+          height: 5px;
+          background: var(--text-muted);
+          border-radius: 50%;
+        }
+        .input-area {
+          padding: 16px 20px;
+          background: var(--bg-surface);
+          border-top: 1px solid var(--border-main);
+        }
+        .input-container {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+        }
+        .input-container input {
+          flex: 1;
+          padding: 10px 16px;
+          border-radius: 50px;
+          border: 1.5px solid var(--border-main);
+          outline: none;
+          font-size: 14px;
+          background: var(--bg-surface-soft);
+          color: var(--text-main);
+        }
+        .send-btn {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: none;
+          color: white;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        @media (max-width: 768px) {
           .ai-chat-popup {
-            bottom: 0 !important;
-            right: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: 100vw !important;
-            max-height: 100vh !important;
+            width: 360px;
+            right: 20px;
+            bottom: 90px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .chat-backdrop { display: block; }
+          .ai-chat-popup {
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100dvh !important;
+            max-height: 100dvh !important;
             border-radius: 0 !important;
+            border: none !important;
           }
           .ai-assistant-toggle {
-            bottom: 20px !important;
-            right: 20px !important;
+            bottom: 16px;
+            right: 16px;
           }
+          .message-bubble { font-size: 13px; }
         }
       `}</style>
     </>
