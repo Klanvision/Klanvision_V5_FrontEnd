@@ -1,0 +1,6 @@
+/* DotField.css — container styles for the DotField canvas component */
+.dot-field-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}

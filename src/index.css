@@ -1,0 +1,1115 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-blue: #4F46E5;
+  --primary-purple: #7C3AED;
+  --accent: #FF6B35;
+<<<<<<< HEAD
+  --bg-light: #F5F6FA;
+  --text-dark: #1F2937;
+  --text-light: #6B7280;
+}
+
+=======
+  
+  /* Light Mode (Default) */
+  --bg-main: #F5F6FA;
+  --bg-surface: #FFFFFF;
+  --bg-surface-soft: #F9FAFB;
+  --text-main: #1F2937;
+  --text-muted: #6B7280;
+  --border-main: #E5E7EB;
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+  --hero-bg: linear-gradient(135deg, #EEF2FF 0%, #F3E8FF 50%, #FFF7ED 100%);
+  --glass-bg: rgba(255, 255, 255, 0.75);
+
+  /* Compatibility with App.css */
+  --accent-bg: rgba(255, 107, 53, 0.1);
+  --accent-border: rgba(255, 107, 53, 0.2);
+  --border: var(--border-main);
+  --text-h: var(--text-main);
+  --social-bg: var(--bg-surface-soft);
+  --shadow: var(--card-shadow);
+}
+
+/* Dark Mode (Attractive & Professional) */
+[data-theme='dark'] {
+  --bg-main: #020617;
+  --bg-surface: #0F172A;
+  --bg-surface-soft: #1E293B;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border-main: #1E293B;
+  --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  --hero-bg: linear-gradient(135deg, #020617 0%, #0F172A 50%, #1E1B4B 100%);
+  --glass-bg: rgba(15, 23, 42, 0.85);
+
+  /* Compatibility with App.css */
+  --accent-bg: rgba(255, 107, 53, 0.2);
+  --accent-border: rgba(255, 107, 53, 0.4);
+}
+
+
+
+>>>>>>> 681f246 (Launch version-v5)
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', 'Roboto', sans-serif;
+<<<<<<< HEAD
+  background-color: #F5F6FA;
+  color: #1F2937;
+=======
+  background-color: var(--bg-main);
+  color: var(--text-main);
+>>>>>>> 681f246 (Launch version-v5)
+  overflow-x: hidden;
+  width: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+<<<<<<< HEAD
+}
+
+=======
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+>>>>>>> 681f246 (Launch version-v5)
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2.25rem, 5vw + 1rem, 4.5rem);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: clamp(1.75rem, 4vw + 0.5rem, 3.5rem);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: clamp(1.25rem, 2vw + 0.25rem, 1.75rem);
+}
+
+p {
+  font-family: 'Roboto', 'Poppins', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  font-size: clamp(0.875rem, 0.5vw + 0.75rem, 1.0625rem);
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F6FA;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  border-radius: 3px;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.gradient-text {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-orange-400;
+}
+
+.accent-bar {
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #FF6B35, #7C3AED);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+  display: block;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #FF6B35, #7C3AED);
+  color: white;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.35);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #4F46E5;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 50px;
+  border: 2px solid #4F46E5;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.btn-outline:hover {
+  background: #4F46E5;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(79, 70, 229, 0.18);
+}
+
+.section-bg-white {
+  background: #ffffff;
+}
+
+.section-bg-light {
+  background: #F5F6FA;
+}
+
+.accent-bar {
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #FF6B35, #7C3AED);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+  display: block;
+}
+
+.dotted-pattern {
+  background-image: radial-gradient(circle, rgba(79, 70, 229, 0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.glass {
+<<<<<<< HEAD
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+=======
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-main);
+}
+
+
+>>>>>>> 681f246 (Launch version-v5)
+/* ===== ANIMATIONS ===== */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+.float-anim {
+  animation: float 3.5s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+@keyframes spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.spin-reverse {
+  animation: spin-reverse 15s linear infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes shimmer-rtl {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ===== NAV LINK UNDERLINE ===== */
+.nav-link {
+  position: relative;
+  color: #1F2937;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding-bottom: 4px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #4F46E5, #7C3AED);
+  border-radius: 1px;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #4F46E5;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* ===== HERO GRADIENT BACKGROUND ===== */
+.hero-bg {
+  background: linear-gradient(135deg, #EEF2FF 0%, #F3E8FF 50%, #FFF7ED 100%);
+  top: 40px;
+}
+
+/* ===== HERO SECTION TYPOGRAPHY =====
+   Poppins  → h1, badge, buttons, feature list, stat numbers, float-card titles
+   Roboto   → description paragraph, stat labels, float-card sub-text, scroll label
+   sans-serif → browser fallback for both
+================================================================= */
+
+/* Hero h1 – Poppins 700 */
+.hero-bg h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+/* Description paragraph – Roboto 400 */
+.hero-bg .hero-description {
+  font-family: 'Roboto', 'Poppins', sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+  font-size: clamp(0.9rem, 0.5vw + 0.8rem, 1.0625rem);
+  color: #6B7280;
+}
+
+/* Feature list items – Poppins 500 */
+.hero-bg .hero-features li {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: clamp(0.875rem, 0.4vw + 0.8rem, 1rem);
+  color: #1F2937;
+}
+
+/* CTA buttons – already set globally; reinforce here */
+.hero-bg .btn-primary,
+.hero-bg .btn-outline {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Stat numbers – Poppins 900 (gradient text) */
+.hero-bg .hero-stat-number {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.25rem, 2vw + 0.5rem, 1.75rem);
+}
+
+/* Stat labels – Roboto 500 */
+.hero-bg .hero-stat-label {
+  font-family: 'Roboto', 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 2px;
+}
+
+/* Floating card title – Poppins 700 */
+.hero-bg .hero-float-card .float-card-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Floating card sub-text – Roboto 400 */
+.hero-bg .hero-float-card .float-card-sub {
+  font-family: 'Roboto', 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 2px;
+}
+
+/* Scroll indicator label – Roboto 500 */
+.hero-bg .scroll-label {
+  font-family: 'Roboto', 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: #9CA3AF;
+}
+
+/* Gradient text on "Scroll down" label */
+.scroll-label-gradient {
+  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600 !important;
+}
+
+/* Mouse shape with gradient border */
+.scroll-mouse {
+  width: 22px;
+  height: 36px;
+  border-radius: 11px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(180deg, #6366f1, #a855f7, #ec4899, #f97316) border-box;
+  border: 2px solid transparent;
+}
+
+/* Gradient dot inside the mouse shape */
+.scroll-dot {
+  width: 4px;
+  height: 8px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #6366f1, #ec4899, #f97316);
+}
+
+/* ===== SERVICE CARD ICON ===== */
+.icon-wrap {
+  width: 56px;
+  height: 30px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .icon-wrap {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* ===== INPUT FIELDS ===== */
+.form-input {
+  width: 100%;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 13px 16px 13px 44px;
+  font-size: 14px;
+  background: #F5F6FA;
+  transition: all 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  color: #1F2937;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: #4F46E5;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.form-input::placeholder {
+  color: #9CA3AF;
+}
+
+textarea.form-input {
+  padding-top: 13px;
+  resize: none;
+  height: 140px;
+}
+
+/* ===== BADGE ===== */
+.badge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 26px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  height: 60px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #FFFFFF;
+  border-radius: 50px;
+  background: transparent;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+}
+
+.badge::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 600px;
+  background: conic-gradient(from 0deg,
+      #6366f1, #a855f7, #ec4899, #f97316,
+      #ec4899, #a855f7, #6366f1);
+  transform-origin: center;
+  animation: rotate-border 3s linear infinite;
+  transform: translate(-50%, -50%);
+  z-index: -2;
+}
+
+.badge::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899, #f97316);
+  border-radius: 50px;
+  z-index: -1;
+}
+
+@keyframes rotate-border {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* ===== FOOTER ===== */
+.footer-link {
+  color: #9CA3AF;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.2s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-link:hover {
+  color: #FF6B35;
+}
+
+/* ===== STAT CARD ===== */
+.stat-card {
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.07), rgba(124, 58, 237, 0.07));
+  border: 1px solid rgba(79, 70, 229, 0.15);
+  border-radius: 16px;
+  padding: 16px 20px;
+  text-align: center;
+}
+
+/* ===== PORTFOLIO CARD ===== */
+.portfolio-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.portfolio-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.18);
+}
+
+.portfolio-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(79, 70, 229, 0.9), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: flex-end;
+  padding: 24px;
+}
+
+.portfolio-card:hover .portfolio-overlay {
+  opacity: 1;
+}
+
+/* ===== BLOG CARD ===== */
+.blog-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 50px;
+  text-transform: uppercase;
+}
+
+/* ===== TESTIMONIAL ===== */
+.testimonial-card {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+  position: relative;
+}
+
+.testimonial-card::before {
+  content: '"';
+  position: absolute;
+  top: 16px;
+  left: 24px;
+  font-size: 80px;
+  line-height: 1;
+  font-family: serif;
+  color: rgba(79, 70, 229, 0.1);
+  font-weight: 900;
+}
+
+<<<<<<< HEAD
+=======
+/* ===== FLOATING BUTTONS ===== */
+.whatsapp-float {
+  position: fixed;
+  bottom: 125px;
+  right: 30px;
+  z-index: 2000;
+  transition: all 0.3s ease;
+}
+
+.ai-assistant-toggle {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9000;
+  transition: all 0.3s ease;
+}
+
+.ai-chat-window {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  z-index: 9001;
+  width: 380px;
+  max-width: calc(100vw - 60px);
+  height: 520px;
+  max-height: calc(100vh - 150px);
+  background: white;
+  border-radius: 28px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid #F3F4F6;
+}
+
+@media (max-width: 768px) {
+  .whatsapp-float {
+    bottom: 100px;
+    right: 20px;
+    transform: scale(0.85);
+  }
+  .ai-assistant-toggle {
+    bottom: 20px;
+    right: 20px;
+    transform: scale(0.85);
+  }
+  .ai-chat-window {
+    bottom: 85px;
+    right: 20px;
+    width: 340px;
+    height: 480px;
+  }
+}
+
+@media (max-width: 480px) {
+  .whatsapp-float {
+    bottom: 90px;
+    right: 15px;
+    transform: scale(0.75);
+  }
+  .ai-assistant-toggle {
+    bottom: 15px;
+    right: 15px;
+    transform: scale(0.75);
+  }
+  .ai-chat-window {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    max-width: 100%;
+    border-radius: 0;
+  }
+}
+
+>>>>>>> 681f246 (Launch version-v5)
+/* ================================================================
+   RESPONSIVE DESIGN SYSTEM
+   Breakpoints:
+     xs  : 320px  – very small phones
+     sm  : 480px  – phones (landscape)
+     md  : 640px  – large phones / small tablets
+     lg  : 768px  – tablets (portrait)
+     xl  : 1024px – tablets (landscape) / small laptops
+     2xl : 1280px – laptops
+     3xl : 1536px – large monitors
+================================================================ */
+
+/* ── Large Monitors (1536px+) ──────────────────────────────── */
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1400px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+/* ── Laptops / Desktops (1280px) ───────────────────────────── */
+@media (max-width: 1280px) {
+  .container {
+    max-width: 1100px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  /* Hero: shift to 55/45 split so text has more breathing room */
+  .hero-grid {
+    grid-template-columns: 55fr 45fr !important;
+    gap: 40px !important;
+  }
+
+  /* Shrink hero image on small laptops */
+  .hero-image-wrap {
+    width: 260px !important;
+    height: 260px !important;
+  }
+
+  /* Shrink decorative rings proportionally */
+  .hero-rings {
+    width: 300px !important;
+    height: 300px !important;
+  }
+}
+
+/* ── Small Laptops / Landscape Tablets (1024px) ────────────── */
+@media (max-width: 1024px) {
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* Hero */
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+    text-align: center !important;
+  }
+
+  .hero-grid>div {
+    align-items: center !important;
+  }
+
+  .hero-grid>div:last-child {
+    margin-top: 0 !important;
+  }
+
+  .hero-features {
+    margin: 0 auto;
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .hero-ctas {
+    justify-content: center !important;
+  }
+
+  .hero-stats {
+    justify-content: center !important;
+  }
+
+  /* Footer */
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 32px !important;
+  }
+
+  /* Nav */
+  .desktop-nav {
+    display: none !important;
+  }
+
+  #hamburger-btn {
+    display: flex !important;
+  }
+
+  /* Cards */
+  .card {
+    padding: 24px !important;
+  }
+
+  /* Sections */
+  section {
+    padding: 64px 0 !important;
+  }
+}
+
+/* ── Tablets Portrait (768px) ──────────────────────────────── */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  section {
+    padding: 56px 0 !important;
+  }
+
+  /* Hero image sizing */
+  .hero-image-wrap {
+    width: 220px !important;
+    height: 220px !important;
+  }
+
+  /* Hero rings */
+  .hero-rings {
+    display: none !important;
+  }
+
+  /* Grids → 2 columns */
+  .grid-4-col {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .grid-3-col {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Footer */
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 28px !important;
+  }
+
+  /* Buttons */
+  .btn-primary,
+  .btn-outline {
+    padding: 11px 24px !important;
+    font-size: 14px !important;
+  }
+
+  /* Stat cards */
+  .stat-card {
+    padding: 14px 12px !important;
+  }
+
+  /* Testimonial card */
+  .testimonial-card {
+    padding: 24px !important;
+  }
+
+  /* Contact grid */
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Scroll indicator always visible */
+  .scroll-indicator {
+    display: flex !important;
+  }
+
+  /* About grid */
+  .about-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Large Phones / Small Tablets (640px) ──────────────────── */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  section {
+    padding: 48px 0 !important;
+  }
+
+  /* Grids → single column */
+  .grid-4-col {
+    grid-template-columns: 1fr !important;
+  }
+
+  .grid-3-col {
+    grid-template-columns: 1fr !important;
+  }
+
+  .grid-2-col {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Footer collapse */
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  /* Hero heading size floor */
+  h1 {
+    font-size: clamp(1.6rem, 6vw, 2.4rem) !important;
+  }
+
+  h2 {
+    font-size: clamp(1.4rem, 5vw, 2rem) !important;
+  }
+
+  /* Hero floating cards – hide on very small screens */
+  .hero-float-card {
+    display: none !important;
+  }
+
+  /* Badge responsive */
+  .badge {
+    font-size: 12px !important;
+    padding: 8px 18px !important;
+    height: auto !important;
+  }
+
+  /* Hero image */
+  .hero-image-wrap {
+<<<<<<< HEAD
+    width: 180px !important;
+    height: 180px !important;
+=======
+    width: 160px !important;
+    height: 160px !important;
+>>>>>>> 681f246 (Launch version-v5)
+  }
+
+  /* Stats row wrap */
+  .hero-stats {
+    flex-wrap: wrap !important;
+    gap: 16px !important;
+    justify-content: center !important;
+  }
+
+  /* CTA stack on small screens */
+  .hero-ctas {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  .hero-ctas button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+/* ── Phones Landscape / Medium Phones (480px) ──────────────── */
+@media (max-width: 480px) {
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  section {
+    padding: 40px 0 !important;
+  }
+
+  p {
+    line-height: 1.55;
+  }
+
+  /* Card padding */
+  .card {
+    border-radius: 14px !important;
+  }
+
+  /* Testimonial */
+  .testimonial-card {
+    padding: 18px !important;
+  }
+
+  .testimonial-card::before {
+    font-size: 52px !important;
+  }
+
+  /* Blog tag */
+  .blog-tag {
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+  }
+
+  /* Form */
+  .form-input {
+    font-size: 13px !important;
+    padding: 11px 14px 11px 40px !important;
+  }
+
+  /* Footer bottom bar */
+  .footer-bottom {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 8px !important;
+  }
+}
+
+/* ── Very Small Phones (≤360px) ────────────────────────────── */
+@media (max-width: 360px) {
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  h1 {
+    font-size: 1.4rem !important;
+  }
+
+  h2 {
+    font-size: 1.2rem !important;
+  }
+
+  h3 {
+    font-size: 1rem !important;
+  }
+
+  .btn-primary,
+  .btn-outline {
+    padding: 10px 18px !important;
+    font-size: 13px !important;
+  }
+
+  .badge {
+    font-size: 11px !important;
+    letter-spacing: 0.5px !important;
+  }
+<<<<<<< HEAD
+=======
+
+  /* Prevent text overflow on small headings */
+  h1 {
+    font-size: 1.3rem !important;
+  }
+  h2 {
+    font-size: 1.15rem !important;
+  }
+}
+
+/* Fix for horizontal scroll issues */
+.overflow-x-hidden-global {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  position: relative !important;
+>>>>>>> 681f246 (Launch version-v5)
+}
