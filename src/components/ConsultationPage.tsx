@@ -1,8 +1,16 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronLeft, BarChart, Settings, Rocket, ShieldCheck, Target, Zap, ArrowRight, CheckCircle2, TrendingUp, PieChart, Activity, Plane } from 'lucide-react';
 import { useRef } from 'react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function ConsultationPage() {
+  useSEO({
+    title: 'IT Consultation & Strategy | Expert Technology Advisory – Klanvision',
+    description: 'Klanvision\'s IT consultation services align your technology with business goals. Infrastructure audits, digital transformation advisory, ROI optimization and strategic roadmaps.',
+    keywords: 'IT consultation, technology advisory, digital transformation, IT strategy, infrastructure audit, Klanvision',
+    canonical: 'https://www.klanvision.com/it-consultation',
+  });
+
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,

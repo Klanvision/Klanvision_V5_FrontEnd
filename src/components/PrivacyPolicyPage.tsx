@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion';
 import { ChevronLeft, Lock, Eye, Share2, ShieldAlert, FileText, Database } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function PrivacyPolicyPage() {
+  useSEO({
+    title: 'Privacy Policy | How Klanvision Protects Your Data',
+    description: "Klanvision's Privacy Policy explains how we collect, use, protect and share your personal data. We are committed to GDPR compliance and data security.",
+    keywords: 'privacy policy, data protection, GDPR, Klanvision data security',
+    canonical: 'https://www.klanvision.com/privacy-policy',
+  });
   return (
     <div style={{ background: '#F9FAFB', minHeight: '100vh', paddingBottom: 80 }}>
       {/* Hero Section */}

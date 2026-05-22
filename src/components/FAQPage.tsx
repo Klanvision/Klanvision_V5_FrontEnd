@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Plus, Minus, ChevronLeft } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
 
 // ── 3D Animated FAQ Icons ─────────────────────────────────────
 const SvgFAQIcon3D = ({ index, active }: { index: number; active: boolean }) => {
@@ -94,6 +95,12 @@ const faqs = [
 ];
 
 export default function FAQPage() {
+  useSEO({
+    title: 'Frequently Asked Questions | Klanvision Support',
+    description: 'Find answers to common questions about Klanvision services, project timelines, pricing, NDAs, SLAs, tech stack, cloud migration and post-delivery support.',
+    keywords: 'FAQ, Klanvision support, IT services questions, pricing, project timeline, NDA, SLA',
+    canonical: 'https://www.klanvision.com/faq',
+  });
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (

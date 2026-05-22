@@ -1,8 +1,16 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronLeft, ShieldAlert, Lock, FileCheck, Zap, ArrowRight, CheckCircle2, Fingerprint, Activity, Shield, Terminal, Search } from 'lucide-react';
 import { useRef } from 'react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function CybersecurityPage() {
+  useSEO({
+    title: 'Cybersecurity Solutions | Zero-Trust Protection – Klanvision',
+    description: 'Klanvision delivers enterprise-grade cybersecurity: penetration testing, zero-trust architecture, 24/7 SOC monitoring, compliance (ISO 27001, SOC2, GDPR) and threat intelligence.',
+    keywords: 'cybersecurity, zero trust, penetration testing, SOC monitoring, ISO 27001, GDPR compliance, Klanvision',
+    canonical: 'https://www.klanvision.com/cybersecurity',
+  });
+
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,

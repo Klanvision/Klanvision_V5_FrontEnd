@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion';
 import { ChevronLeft, Gavel, Scale, FileCheck, AlertCircle, CreditCard, Clock } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function TermsPage() {
+  useSEO({
+    title: 'Terms & Conditions | Klanvision Legal Agreement',
+    description: 'Read Klanvision\'s Terms and Conditions covering service delivery, client responsibilities, prohibited use, project timelines, ownership rights and payment terms.',
+    keywords: 'terms and conditions, legal, Klanvision agreement, service terms, payment terms',
+    canonical: 'https://www.klanvision.com/terms',
+  });
   const terms = [
     {
       icon: FileCheck,

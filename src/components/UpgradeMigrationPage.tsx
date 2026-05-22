@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion';
 import { ChevronLeft, RefreshCw, Zap, Search, ArrowRight, CheckCircle2, Cpu, Gauge } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function UpgradeMigrationPage() {
+  useSEO({
+    title: 'Website Upgrade & Migration | Zero-Downtime Modernization – Klanvision',
+    description: 'Klanvision modernizes legacy systems and executes zero-downtime migrations with SEO-safe 301 redirects, data integrity checks, and blue-green deployments.',
+    keywords: 'website upgrade, system migration, legacy modernization, zero downtime migration, SEO migration, Klanvision',
+    canonical: 'https://www.klanvision.com/upgrade-migration',
+  });
   const upgradeFeatures = [
     {
       title: "Legacy Modernization",

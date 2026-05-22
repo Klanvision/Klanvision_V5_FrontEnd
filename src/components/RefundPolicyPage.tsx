@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion';
 import { ChevronLeft, ShieldCheck, XCircle, RefreshCcw, Info } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function RefundPolicyPage() {
+  useSEO({
+    title: 'Cancellation & Refund Policy | Klanvision',
+    description: 'Read Klanvision\'s Cancellation and Refund Policy. Understand our terms for project cancellation, refund eligibility, billing timelines, and approved refund processing.',
+    keywords: 'refund policy, cancellation policy, Klanvision refund, billing terms',
+    canonical: 'https://www.klanvision.com/refund-policy',
+  });
   return (
     <div style={{ background: '#F9FAFB', minHeight: '100vh', paddingBottom: 80 }}>
       {/* Hero Section */}

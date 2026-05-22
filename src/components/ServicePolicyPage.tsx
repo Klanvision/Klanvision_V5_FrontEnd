@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion';
 import { ChevronLeft, Smartphone, Cloud, Settings, Shield, Globe, Cpu, Headphones, CheckCircle2 } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function ServicePolicyPage() {
+  useSEO({
+    title: 'Service Policy | Klanvision Service Delivery Standards',
+    description: "Klanvision's Service Policy outlines our service delivery approach, quality standards, SLA commitments, 5-phase methodology and professional governance framework.",
+    keywords: 'service policy, SLA, service delivery, Klanvision standards, IT services terms',
+    canonical: 'https://www.klanvision.com/service-policy',
+  });
   const offerings = [
     { icon: Globe, label: 'Web Development', desc: 'Crafting responsive, high-performance websites.' },
     { icon: Smartphone, label: 'Mobile App Development', desc: 'Building intuitive iOS and Android applications.' },
