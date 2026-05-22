@@ -1,8 +1,15 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronLeft, Smartphone, Layout, Cpu, Globe, ArrowRight, CheckCircle2, Apple, Play, Code2, Rocket, Activity } from 'lucide-react';
 import { useRef } from 'react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function MobileAppPage() {
+  useSEO({
+    title: 'Mobile App Development | iOS & Android Apps – Klanvision',
+    description: 'Klanvision develops native and cross-platform mobile apps for iOS and Android using Swift, Kotlin, and React Native. From UI/UX to App Store deployment and ASO.',
+    keywords: 'mobile app development, iOS app, Android app, React Native, Flutter, cross-platform, Klanvision',
+    canonical: 'https://www.klanvision.com/mobile-app',
+  });
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,

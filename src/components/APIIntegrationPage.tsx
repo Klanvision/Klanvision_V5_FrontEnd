@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion';
 import { ChevronLeft, Share2, Zap, Shield, Repeat, ArrowRight, CheckCircle2, Code2, Link, Database, Cpu } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function APIIntegrationPage() {
+  useSEO({
+    title: 'API Integration Services | Connect Your Systems – Klanvision',
+    description: 'Klanvision provides seamless API integration: custom REST & GraphQL APIs, third-party platform connections (Stripe, Salesforce, Shopify), real-time data sync, and OAuth2 security.',
+    keywords: 'API integration, REST API, GraphQL, Salesforce integration, Stripe API, webhook, Klanvision',
+    canonical: 'https://www.klanvision.com/api-integration',
+  });
   const integrationFeatures = [
     {
       title: "Custom API Development",

@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion';
 import { ChevronLeft, Shield, Cpu, Activity, Clock, Server, Zap, ArrowRight, CheckCircle2, HardDrive, Network } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function ManagedServicesPage() {
+  useSEO({
+    title: 'Managed IT Services | 24/7 IT Operations – Klanvision',
+    description: 'Klanvision provides 24/7 Managed IT Services including proactive monitoring, infrastructure maintenance, performance optimization and 99.9% uptime SLA for enterprises.',
+    keywords: 'managed IT services, IT operations, 24/7 monitoring, infrastructure management, Klanvision',
+    canonical: 'https://www.klanvision.com/managed-services',
+  });
   const managedFeatures = [
     {
       title: "24/7 Proactive Monitoring",

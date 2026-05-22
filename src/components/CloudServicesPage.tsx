@@ -1,8 +1,15 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronLeft, Cloud, Server, Shield, Zap, ArrowRight, CheckCircle2, Cpu, Database, Globe, Rocket, Terminal, Layers, Gauge } from 'lucide-react';
 import { useRef } from 'react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function CloudServicesPage() {
+  useSEO({
+    title: 'Cloud Services | AWS Infrastructure & Migration – Klanvision',
+    description: 'Klanvision delivers agile cloud solutions on AWS including EC2, Lambda, S3, cloud migration, cost optimization, and 99.99% uptime SLA for growing enterprises.',
+    keywords: 'cloud services, AWS, cloud migration, serverless, EC2, infrastructure management, Klanvision',
+    canonical: 'https://www.klanvision.com/cloud-services',
+  });
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,

@@ -1,8 +1,15 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronLeft, Code2, Layout, Database, Zap, ArrowRight, CheckCircle2, Cpu, Smartphone, Monitor, Gauge, Rocket } from 'lucide-react';
 import { useRef } from 'react';
+import { useSEO } from '../hooks/useSEO';
 
 export default function WebDevelopmentPage() {
+  useSEO({
+    title: 'Web Development Services | Scalable & Modern Web Apps – Klanvision',
+    description: 'Klanvision builds high-performance, scalable web applications using React, Next.js & Node.js. Enterprise architecture, UX/UI design, SEO-ready and Lighthouse 100 performance.',
+    keywords: 'web development, React, Next.js, enterprise web app, scalable websites, UX design, Klanvision',
+    canonical: 'https://www.klanvision.com/web-development',
+  });
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,

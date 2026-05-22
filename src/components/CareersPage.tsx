@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { MapPin, Clock, ChevronLeft, ArrowRight, Code2, Database, ShieldCheck, Smartphone, Monitor, Server } from 'lucide-react';
+import { useSEO } from '../hooks/useSEO';
 
 const jobListings = [
   {
@@ -60,6 +61,12 @@ const jobListings = [
 ];
 
 export default function CareersPage() {
+  useSEO({
+    title: 'Careers at Klanvision | Join Our Global Tech Team',
+    description: 'Explore career opportunities at Klanvision. We are hiring Frontend Developers, Backend Developers, Full Stack, Mobile App, Data Engineers and DevSecOps engineers.',
+    keywords: 'careers, jobs, Klanvision hiring, developer jobs, tech careers, remote jobs',
+    canonical: 'https://www.klanvision.com/careers',
+  });
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   return (
