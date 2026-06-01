@@ -474,17 +474,21 @@ export default function AdminPanel() {
           setIsAuthenticated(true);
           setCurrentUser(user);
           setLoginError('');
-          addActivity(user.name || user.email, 'System Login', 'security', 'success', `Successful login from ${user.email}`);
-          
           localStorage.setItem('klanvision_admin_session', JSON.stringify({ user, loginTime: Date.now() }));
+          // Give local storage a tiny moment to save before triggering a network request that reads it
+          setTimeout(() => {
+            addActivity(user.name || user.email, 'System Login', 'security', 'success', `Successful login from ${user.email}`);
+          }, 50);
         }
       } else {
         setLoginError('This account is not authorized to access the Panel.');
-        addActivity(user.name, 'Blocked Login', 'security', 'warning', `Unauthorized access attempt from ${user.email}`);
+        // Unauthenticated - backend will reject this, so we don't try from frontend
+        // addActivity(user.name, 'Blocked Login', 'security', 'warning', `Unauthorized access attempt from ${user.email}`);
       }
     } catch (err) {
       setLoginError('Invalid security credentials provided.');
-      addActivity('System', 'Failed Login', 'security', 'warning', `Invalid attempt for ${loginForm.email}`);
+      // Unauthenticated - backend will reject this
+      // addActivity('System', 'Failed Login', 'security', 'warning', `Invalid attempt for ${loginForm.email}`);
     }
   };
 
@@ -492,9 +496,12 @@ export default function AdminPanel() {
     if (currentUser) {
       addActivity(currentUser.name, 'System Logout', 'security', 'info', `${currentUser.name} signed out of the admin panel.`);
     }
-    localStorage.removeItem('klanvision_admin_session');
-    setIsAuthenticated(false);
-    setCurrentUser(null);
+    // Delay removing session to allow the activity fetch to read the token
+    setTimeout(() => {
+      localStorage.removeItem('klanvision_admin_session');
+      setIsAuthenticated(false);
+      setCurrentUser(null);
+    }, 100);
   };
 
   const handleResetRequest = (e) => {
@@ -509,8 +516,8 @@ export default function AdminPanel() {
       setResetSuccess(`Secure reset link has been dispatched to ${resetEmail}. Please check your inbox.`);
       setLoginError('');
 
-      // Log the security event
-      addActivity(user.name, 'Password Reset Requested', 'security', 'warning', `Reset link generated and sent to ${user.email}`);
+      // Unauthenticated - backend will reject this
+      // addActivity(user.name, 'Password Reset Requested', 'security', 'warning', `Reset link generated and sent to ${user.email}`);
 
       // Auto-return to login after 4 seconds
       setTimeout(() => {
