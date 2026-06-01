@@ -244,7 +244,7 @@ export default function AdminPanel() {
       try {
         const session = JSON.parse(sessionStr);
         const twentyFourHours = 24 * 60 * 60 * 1000;
-        if (session && session.user && session.loginTime && (Date.now() - session.loginTime < twentyFourHours)) {
+        if (session && session.user && session.user.token && session.loginTime && (Date.now() - session.loginTime < twentyFourHours)) {
           setIsAuthenticated(true);
           setCurrentUser(session.user);
         } else {
@@ -343,11 +343,6 @@ export default function AdminPanel() {
   }, []);
 
   // --- Database Fetching Effect ---
-  useEffect(() => {
-    api.getUsers()
-      .then(data => { if (data) setUsers(data); })
-      .catch(err => console.error("Database error fetching users on mount:", err));
-  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -460,13 +455,7 @@ export default function AdminPanel() {
         localStorage.removeItem('klanvision_remembered');
       }
 
-      // Fetch latest users so we have up-to-date states
-      const allUsers = await api.getUsers();
-      if (allUsers && allUsers.length > 0) {
-        setUsers(allUsers);
-      }
-
-      const user = (allUsers || users).find(u => u.email === result.email);
+      const user = result;
       if (!user) {
         setLoginError('User data could not be loaded.');
         return;
@@ -485,11 +474,8 @@ export default function AdminPanel() {
           setIsAuthenticated(true);
           setCurrentUser(user);
           setLoginError('');
-          addActivity(user.name, 'System Login', 'security', 'success', `Successful login from ${user.email}`);
+          addActivity(user.name || user.email, 'System Login', 'security', 'success', `Successful login from ${user.email}`);
           
-          if (result.token) {
-            user.token = result.token;
-          }
           localStorage.setItem('klanvision_admin_session', JSON.stringify({ user, loginTime: Date.now() }));
         }
       } else {
