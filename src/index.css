@@ -14,7 +14,7 @@
   --primary-blue: #4F46E5;
   --primary-purple: #7C3AED;
   --accent: #FF6B35;
-  
+
   /* Light Mode (Default) */
   --bg-main: #F5F6FA;
   --bg-surface: #FFFFFF;
@@ -480,20 +480,20 @@ p {
 /* ===== INPUT FIELDS ===== */
 .form-input {
   width: 100%;
-  border: 1.5px solid #E5E7EB;
+  border: 1.5px solid var(--border-main);
   border-radius: 12px;
   padding: 13px 16px 13px 44px;
   font-size: 14px;
-  background: #F5F6FA;
+  background: var(--bg-surface-soft);
   transition: all 0.2s ease;
   font-family: 'Poppins', sans-serif;
-  color: #1F2937;
+  color: var(--text-main);
   outline: none;
 }
 
 .form-input:focus {
   border-color: #4F46E5;
-  background: white;
+  background: var(--bg-surface);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
@@ -689,11 +689,13 @@ textarea.form-input {
     right: 20px;
     transform: scale(0.85);
   }
+
   .ai-assistant-toggle {
     bottom: 20px;
     right: 20px;
     transform: scale(0.85);
   }
+
   .ai-chat-window {
     bottom: 85px;
     right: 20px;
@@ -708,11 +710,13 @@ textarea.form-input {
     right: 15px;
     transform: scale(0.75);
   }
+
   .ai-assistant-toggle {
     bottom: 15px;
     right: 15px;
     transform: scale(0.75);
   }
+
   .ai-chat-window {
     bottom: 0;
     right: 0;
@@ -1064,6 +1068,7 @@ textarea.form-input {
   h1 {
     font-size: 1.3rem !important;
   }
+
   h2 {
     font-size: 1.15rem !important;
   }

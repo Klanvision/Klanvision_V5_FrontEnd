@@ -145,3 +145,188 @@
   }
 }
 
+/* 2FA Setup & Verification Views */
+.shield-icon-container {
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin: 0 auto 24px;
+  box-shadow: 0 8px 30px rgba(6, 182, 212, 0.4), 0 0 20px rgba(16, 185, 129, 0.2);
+  position: relative;
+}
+.shield-icon-container::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #10b981, #06b6d4);
+  opacity: 0.3;
+  filter: blur(8px);
+  z-index: -1;
+}
+
+.qr-code-card {
+  padding: 12px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 160px;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Brackets inside QR scanner card */
+.qr-scanner-bracket {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: #818cf8;
+  border-style: solid;
+  pointer-events: none;
+}
+.bracket-tl {
+  top: 8px;
+  left: 8px;
+  border-width: 3px 0 0 3px;
+  border-top-left-radius: 6px;
+}
+.bracket-tr {
+  top: 8px;
+  right: 8px;
+  border-width: 3px 3px 0 0;
+  border-top-right-radius: 6px;
+}
+.bracket-bl {
+  bottom: 8px;
+  left: 8px;
+  border-width: 0 0 3px 3px;
+  border-bottom-left-radius: 6px;
+}
+.bracket-br {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 3px 3px 0;
+  border-bottom-right-radius: 6px;
+}
+
+/* Scanning line laser animation */
+.qr-scanner-line {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #06b6d4, #10b981, #06b6d4, transparent);
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.8);
+  animation: scan 3s linear infinite;
+  pointer-events: none;
+}
+@keyframes scan {
+  0% { top: 12px; }
+  50% { top: calc(100% - 14px); }
+  100% { top: 12px; }
+}
+
+.manual-key-box {
+  padding: 12px 24px;
+  background: #0a0e1a;
+  border-radius: 9999px;
+  border: 1px solid rgba(129, 140, 248, 0.15);
+  margin-top: 8px;
+  font-family: 'Courier New', Courier, monospace;
+  color: #a5b4fc;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 3px;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(0, 0, 0, 0.6);
+  text-transform: uppercase;
+}
+
+.otp-inputs-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.otp-input-field {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: #0a0e1a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: white;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.3);
+}
+.otp-input-field:focus {
+  border-color: #6366f1;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), 0 0 15px rgba(99, 102, 241, 0.4);
+  background: #0e1426;
+  transform: scale(1.05);
+}
+.otp-input-field.filled {
+  border-color: #818cf8;
+  background: #0e1426;
+}
+
+.complete-setup-btn {
+  background: linear-gradient(90deg, #f97316, #a855f7);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 16px 40px;
+  font-size: 15px;
+  font-weight: 800;
+  width: 100%;
+  max-width: 280px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 24px rgba(249, 115, 22, 0.25);
+}
+.complete-setup-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(168, 85, 247, 0.4), 0 4px 12px rgba(249, 115, 22, 0.2);
+}
+.complete-setup-btn:active {
+  transform: translateY(0);
+}
+
+.complete-setup-btn.verification-btn {
+  background: linear-gradient(90deg, #6366f1, #a855f7);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
+}
+.complete-setup-btn.verification-btn:hover {
+  box-shadow: 0 12px 30px rgba(168, 85, 247, 0.4), 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.cancel-logout-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.cancel-logout-btn:hover {
+  color: white;
+}
