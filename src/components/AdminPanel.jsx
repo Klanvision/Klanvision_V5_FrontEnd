@@ -72,13 +72,10 @@ const normalizePermission = (p) => {
 const hasTabPermission = (user, tabId) => {
   if (!user) return false;
   const role = (user.role || '').toUpperCase();
-  if (role === 'SUPER_ADMIN' || role === 'SUPER ADMIN' || role === 'ADMIN' || role === 'ADMINISTRATOR') {
+  if (role === 'SUPER_ADMIN' || role === 'SUPER ADMIN' || role === 'ADMIN' || role === 'ADMINISTRATOR' || role === 'SUPERADMIN') {
     return true;
   }
-  const perms = (user.permissions || []).map(normalizePermission);
-  if (perms.includes('ALL_ACCESS') || perms.includes('SUPER_ADMIN')) {
-    return true;
-  }
+  
   const permMap = {
     dashboard:  null,             // always visible
     users:      'Users',
@@ -88,9 +85,32 @@ const hasTabPermission = (user, tabId) => {
     activity:   'Activity Log',
   };
   const required = permMap[tabId];
-  if (required === undefined) return false; // unknown tab
   if (required === null) return true;       // no permission required
-  return perms.includes(required);
+  if (required === undefined) return false; // unknown tab
+  
+  const perms = (user.permissions || []).map(normalizePermission);
+  if (perms.includes('ALL_ACCESS') || perms.includes('SUPER_ADMIN')) {
+    return true;
+  }
+  
+  // Explicitly granted tab access
+  if (perms.includes(required)) {
+    return true;
+  }
+  
+  // Base role read access
+  if (role === 'VIEWER') {
+    // Viewers get access to see all standard panels by default
+    return true;
+  }
+  if (role === 'DEVELOPER') {
+    if (tabId === 'projects' || tabId === 'settings' || tabId === 'activity') return true;
+  }
+  if (role === 'EDITOR') {
+    if (tabId === 'blogs') return true;
+  }
+  
+  return false;
 };
 
 const hasWritePermission = (user, tabId) => {
@@ -98,21 +118,39 @@ const hasWritePermission = (user, tabId) => {
   const role = (user.role || '').toUpperCase();
   
   // Super Admin and Admin have full write access everywhere
-  if (role === 'SUPER_ADMIN' || role === 'SUPER ADMIN' || role === 'ADMIN' || role === 'ADMINISTRATOR') {
+  if (role === 'SUPER_ADMIN' || role === 'SUPER ADMIN' || role === 'ADMIN' || role === 'ADMINISTRATOR' || role === 'SUPERADMIN') {
     return true;
   }
   
-  // Viewer has no write access (read-only)
+  // Viewer has no write access (read-only) regardless of explicit permissions
   if (role === 'VIEWER') {
     return false;
   }
   
-  // Developer can write to projects and settings
+  const perms = (user.permissions || []).map(normalizePermission);
+  if (perms.includes('ALL_ACCESS') || perms.includes('SUPER_ADMIN')) {
+    return true;
+  }
+  
+  const permMap = {
+    users:      'Users',
+    projects:   'Projects',
+    blogs:      'Blogs',
+    settings:   'Settings',
+    activity:   'Activity Log',
+  };
+  const required = permMap[tabId];
+  
+  // If explicitly granted permission by Superadmin, allow write (what ever superadmin provided)
+  if (required && perms.includes(required)) {
+    return true;
+  }
+  
+  // Base role write access
   if (role === 'DEVELOPER') {
     return tabId === 'projects' || tabId === 'settings';
   }
   
-  // Editor can write to blogs
   if (role === 'EDITOR') {
     return tabId === 'blogs';
   }
@@ -448,6 +486,10 @@ export default function AdminPanel() {
           setCurrentUser(user);
           setLoginError('');
           addActivity(user.name, 'System Login', 'security', 'success', `Successful login from ${user.email}`);
+          
+          if (result.token) {
+            user.token = result.token;
+          }
           localStorage.setItem('klanvision_admin_session', JSON.stringify({ user, loginTime: Date.now() }));
         }
       } else {
@@ -684,7 +726,7 @@ export default function AdminPanel() {
       if (verifyingUser) {
         try {
           // Verify code with backend
-          await api.verify2FA(verifyingUser.email, code);
+          const authenticatedUser = await api.verify2FA(verifyingUser.email, code);
 
           // Set user 2FA configuration to true in backend database
           await api.updateUser(verifyingUser.id, {
@@ -696,12 +738,13 @@ export default function AdminPanel() {
           setUsers(prev => prev.map(u => u.id === verifyingUser.id ? { ...u, is2FAConfigured: true, failed2FAAttempts: 0 } : u));
           setIsSettingUp2FA(false);
           setIsAuthenticated(true);
-          setCurrentUser({ ...verifyingUser, is2FAConfigured: true });
+          const finalUser = { ...verifyingUser, is2FAConfigured: true, token: authenticatedUser.token };
+          setCurrentUser(finalUser);
           setVerifyingUser(null);
           setAuthCode(['', '', '', '', '', '']);
           setLoginError('');
           addActivity(verifyingUser.name, '2FA Configured', 'security', 'success', `Initial 2FA setup completed for ${verifyingUser.email}. Now verifying.`);
-          localStorage.setItem('klanvision_admin_session', JSON.stringify({ user: { ...verifyingUser, is2FAConfigured: true }, loginTime: Date.now() }));
+          localStorage.setItem('klanvision_admin_session', JSON.stringify({ user: finalUser, loginTime: Date.now() }));
         } catch (err) {
           setLoginError('Verification failed. Use the code shown in your app.');
         }

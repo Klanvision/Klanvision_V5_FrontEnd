@@ -12,67 +12,89 @@ const handleResponse = async (response) => {
     return response.text();
 };
 
+const fetchWithAuth = (url, options = {}) => {
+    let token = null;
+    try {
+        const sessionStr = localStorage.getItem('klanvision_admin_session');
+        if (sessionStr) {
+            const session = JSON.parse(sessionStr);
+            if (session.user && session.user.token) {
+                token = session.user.token;
+            }
+        }
+    } catch (e) {
+        // ignore
+    }
+    
+    const headers = { ...options.headers };
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    return fetch(url, { ...options, headers }).then(handleResponse);
+};
+
 export const api = {
     // Projects
-    getProjects: () => fetch(`${API_BASE_URL}/projects`).then(handleResponse),
-    createProject: (data) => fetch(`${API_BASE_URL}/projects`, {
+    getProjects: () => fetchWithAuth(`${API_BASE_URL}/projects`),
+    createProject: (data) => fetchWithAuth(`${API_BASE_URL}/projects`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }).then(handleResponse),
-    updateProject: (id, data) => fetch(`${API_BASE_URL}/projects/${id}`, {
+    }),
+    updateProject: (id, data) => fetchWithAuth(`${API_BASE_URL}/projects/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }).then(handleResponse),
-    deleteProject: (id) => fetch(`${API_BASE_URL}/projects/${id}`, { method: 'DELETE' }).then(handleResponse),
+    }),
+    deleteProject: (id) => fetchWithAuth(`${API_BASE_URL}/projects/${id}`, { method: 'DELETE' }),
 
     // Blogs
-    getBlogs: () => fetch(`${API_BASE_URL}/blogs`).then(handleResponse),
-    createBlog: (data) => fetch(`${API_BASE_URL}/blogs`, {
+    getBlogs: () => fetchWithAuth(`${API_BASE_URL}/blogs`),
+    createBlog: (data) => fetchWithAuth(`${API_BASE_URL}/blogs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }).then(handleResponse),
-    updateBlog: (id, data) => fetch(`${API_BASE_URL}/blogs/${id}`, {
+    }),
+    updateBlog: (id, data) => fetchWithAuth(`${API_BASE_URL}/blogs/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }).then(handleResponse),
-    deleteBlog: (id) => fetch(`${API_BASE_URL}/blogs/${id}`, { method: 'DELETE' }).then(handleResponse),
+    }),
+    deleteBlog: (id) => fetchWithAuth(`${API_BASE_URL}/blogs/${id}`, { method: 'DELETE' }),
 
     // SEO
-    getSEO: () => fetch(`${API_BASE_URL}/seo`).then(handleResponse),
-    updateSEO: (data) => fetch(`${API_BASE_URL}/seo`, {
+    getSEO: () => fetchWithAuth(`${API_BASE_URL}/seo`),
+    updateSEO: (data) => fetchWithAuth(`${API_BASE_URL}/seo`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }).then(handleResponse),
+    }),
 
     // Activities
-    getActivities: () => fetch(`${API_BASE_URL}/activities?limit=200`).then(handleResponse),
-    getActivitiesAfter: (afterId) => fetch(`${API_BASE_URL}/activities?afterId=${afterId}&limit=50`).then(handleResponse),
-    addActivity: (data) => fetch(`${API_BASE_URL}/activities`, {
+    getActivities: () => fetchWithAuth(`${API_BASE_URL}/activities?limit=200`),
+    getActivitiesAfter: (afterId) => fetchWithAuth(`${API_BASE_URL}/activities?afterId=${afterId}&limit=50`),
+    addActivity: (data) => fetchWithAuth(`${API_BASE_URL}/activities`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }).then(handleResponse),
+    }),
 
     // Admin Users
-    getUsers: () => fetch(`${API_BASE_URL}/admin/users`).then(handleResponse),
-    createUser: (data) => fetch(`${API_BASE_URL}/admin/users`, {
+    getUsers: () => fetchWithAuth(`${API_BASE_URL}/admin/users`),
+    createUser: (data) => fetchWithAuth(`${API_BASE_URL}/admin/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }).then(handleResponse),
-    updateUser: (id, data) => fetch(`${API_BASE_URL}/admin/users/${id}`, {
+    }),
+    updateUser: (id, data) => fetchWithAuth(`${API_BASE_URL}/admin/users/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }).then(handleResponse),
-    deleteUser: (id) => fetch(`${API_BASE_URL}/admin/users/${id}`, { method: 'DELETE' }).then(handleResponse),
+    }),
+    deleteUser: (id) => fetchWithAuth(`${API_BASE_URL}/admin/users/${id}`, { method: 'DELETE' }),
 
-    // Auth
+    // Auth (Login and 2FA don't need token)
     login: (credentials) => fetch(`${API_BASE_URL}/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -84,25 +106,25 @@ export const api = {
     generate2FA: (email) => fetch(`${API_BASE_URL}/admin/generate-2fa?usernameOrEmail=${encodeURIComponent(email)}`).then(handleResponse),
 
     // Applications
-    getApplications: () => fetch(`${API_BASE_URL}/applications`).then(handleResponse),
-    deleteApplication: (id) => fetch(`${API_BASE_URL}/applications/${id}`, { method: 'DELETE' }).then(handleResponse),
+    getApplications: () => fetchWithAuth(`${API_BASE_URL}/applications`),
+    deleteApplication: (id) => fetchWithAuth(`${API_BASE_URL}/applications/${id}`, { method: 'DELETE' }),
     downloadResume: (id) => `${API_BASE_URL}/applications/resume/${id}`,
 
     // Jobs
-    getJobs: () => fetch(`${API_BASE_URL}/jobs`).then(handleResponse),
-    getActiveJobs: () => fetch(`${API_BASE_URL}/jobs`).then(handleResponse),
-    createJob: (data) => fetch(`${API_BASE_URL}/jobs`, {
+    getJobs: () => fetchWithAuth(`${API_BASE_URL}/jobs`),
+    getActiveJobs: () => fetch(`${API_BASE_URL}/jobs/active`).then(handleResponse), // Active jobs might be public, but using standard fetch for now
+    createJob: (data) => fetchWithAuth(`${API_BASE_URL}/jobs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }).then(handleResponse),
-    updateJob: (id, data) => fetch(`${API_BASE_URL}/jobs/${id}`, {
+    }),
+    updateJob: (id, data) => fetchWithAuth(`${API_BASE_URL}/jobs/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }).then(handleResponse),
-    deleteJob: (id) => fetch(`${API_BASE_URL}/jobs/${id}`, { method: 'DELETE' }).then(handleResponse),
+    }),
+    deleteJob: (id) => fetchWithAuth(`${API_BASE_URL}/jobs/${id}`, { method: 'DELETE' }),
 
     // Health Check
-    checkHealth: () => fetch(`${API_BASE_URL}/projects`).then(r => r.ok),
+    checkHealth: () => fetch(`${API_BASE_URL}/health`).then(r => r.ok),
 };
