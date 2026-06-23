@@ -29,11 +29,23 @@ import ActivityView from './ActivityView';
 import ExamsView from './ExamsView';
 import InternshipModule from './InternshipModule';
 
+const navItems = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, gradient: 'linear-gradient(135deg, #6366F1, #818CF8)' },
+  { id: 'users', label: 'Users', icon: Users, gradient: 'linear-gradient(135deg, #EC4899, #F472B6)' },
+  { id: 'projects', label: 'Projects', icon: LayoutPanelLeft, gradient: 'linear-gradient(135deg, #7C3AED, #A78BFA)', sub: ['All Projects', 'Delivered Projects', 'Future Projects'] },
+  { id: 'exams', label: 'Examination', icon: GraduationCap, gradient: 'linear-gradient(135deg, #8B5CF6, #A78BFA)' },
+  { id: 'internship', label: 'Internships', icon: ShieldCheck, gradient: 'linear-gradient(135deg, #10B981, #34D399)' },
+  { id: 'blogs', label: 'Blogs', icon: FileText, gradient: 'linear-gradient(135deg, #F59E0B, #FBBF24)' },
+  { id: 'settings', label: 'Settings', icon: Settings, gradient: 'linear-gradient(135deg, #64748B, #94A3B8)' },
+  { id: 'activity', label: 'Activity Log', icon: Activity, gradient: 'linear-gradient(135deg, #3B82F6, #60A5FA)' },
+];
+
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => typeof window !== 'undefined' ? window.innerWidth > 1024 : true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [editingBlog, setEditingBlog] = useState(null);
   const [isResetMode, setIsResetMode] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [resetEmail, setResetEmail] = useState('');
@@ -130,6 +142,15 @@ export default function AdminPanel() {
   const [editingProject, setEditingProject] = useState(null);
   const [showCelebration, setShowCelebration] = useState(false);
   const [notification, setNotification] = useState(null);
+
+  useEffect(() => {
+    if (currentUser) {
+      const firstPermitted = navItems.find(item => hasTabPermission(currentUser, item.id));
+      if (firstPermitted && !hasTabPermission(currentUser, activeTab)) {
+        setActiveTab(firstPermitted.id);
+      }
+    }
+  }, [currentUser]);
 
   const triggerToast = (msg, user = 'System') => {
     setNotification({ show: true, msg, user });
@@ -248,16 +269,7 @@ export default function AdminPanel() {
       });
   }, []);
 
-  const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, gradient: 'linear-gradient(135deg, #6366F1, #818CF8)' },
-    { id: 'users', label: 'Users', icon: Users, gradient: 'linear-gradient(135deg, #EC4899, #F472B6)' },
-    { id: 'projects', label: 'Projects', icon: LayoutPanelLeft, gradient: 'linear-gradient(135deg, #7C3AED, #A78BFA)', sub: ['All Projects', 'Delivered Projects', 'Future Projects'] },
-    { id: 'exams', label: 'Examination', icon: GraduationCap, gradient: 'linear-gradient(135deg, #8B5CF6, #A78BFA)' },
-    { id: 'internship', label: 'Internships', icon: ShieldCheck, gradient: 'linear-gradient(135deg, #10B981, #34D399)' },
-    { id: 'blogs', label: 'Blogs', icon: FileText, gradient: 'linear-gradient(135deg, #F59E0B, #FBBF24)' },
-    { id: 'settings', label: 'Settings', icon: Settings, gradient: 'linear-gradient(135deg, #64748B, #94A3B8)' },
-    { id: 'activity', label: 'Activity Log', icon: Activity, gradient: 'linear-gradient(135deg, #3B82F6, #60A5FA)' },
-  ];
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -511,13 +523,6 @@ export default function AdminPanel() {
         try {
           // Verify code with backend
           const authenticatedUser = await api.verify2FA(verifyingUser.email, code);
-
-          // Set user 2FA configuration to true in backend database
-          await api.updateUser(verifyingUser.id, {
-            ...verifyingUser,
-            is2FAConfigured: true,
-            secret2FA: setup2FASecret || verifyingUser.secret2FA
-          });
 
           setUsers(prev => prev.map(u => u.id === verifyingUser.id ? { ...u, is2FAConfigured: true, failed2FAAttempts: 0 } : u));
           setIsSettingUp2FA(false);
