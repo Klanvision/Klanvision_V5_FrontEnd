@@ -21,7 +21,8 @@ export function UserForm({ initialData, onSave, triggerToast }) {
     'Users',
     'Blogs',
     'Settings',
-    'Activity Log'
+    'Activity Log',
+    'Exams'
   ];
 
   const togglePermission = (perm) => {

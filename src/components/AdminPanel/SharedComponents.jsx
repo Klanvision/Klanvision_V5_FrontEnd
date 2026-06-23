@@ -67,16 +67,16 @@ export const hasTabPermission = (user, tabId) => {
   }
   
   const permMap = {
-    dashboard:  null,             // always visible
+    dashboard:  'Dashboard',
     users:      'Users',
     projects:   'Projects',
-    exams:      null,             // always visible
+    internship: 'Projects',
+    exams:      'Exams',
     blogs:      'Blogs',
     settings:   'Settings',
     activity:   'Activity Log',
   };
   const required = permMap[tabId];
-  if (required === null) return true;       // no permission required
   if (required === undefined) return false; // unknown tab
   
   const perms = (user.permissions || []).map(normalizePermission);
@@ -87,18 +87,6 @@ export const hasTabPermission = (user, tabId) => {
   // Explicitly granted tab access
   if (perms.includes(required)) {
     return true;
-  }
-  
-  // Base role read access
-  if (role === 'VIEWER') {
-    // Viewers get access to see all standard panels by default
-    return true;
-  }
-  if (role === 'DEVELOPER') {
-    if (tabId === 'projects' || tabId === 'settings' || tabId === 'activity') return true;
-  }
-  if (role === 'EDITOR') {
-    if (tabId === 'blogs') return true;
   }
   
   return false;
