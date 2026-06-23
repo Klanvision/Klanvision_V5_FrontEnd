@@ -273,7 +273,9 @@ function Loader() {
 // Controls app-level state: shows Loader for 2.4s,
 // then fades in the full site content.
 function App() {
-  const [loading, setLoading] = useState(true);
+  // Only show loader on the home page, not when navigating via navbar
+  const isHomePage = window.location.pathname === '/' || window.location.pathname === '/home';
+  const [loading, setLoading] = useState(isHomePage);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('klanvision_theme') || 'light';
   });
@@ -289,8 +291,9 @@ function App() {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
-  // Hide loader after 2400ms on initial mount
+  // Hide loader after 2400ms – only runs when on the home page
   useEffect(() => {
+    if (!isHomePage) return;
     const t = setTimeout(() => setLoading(false), 2400);
     return () => clearTimeout(t);   // cleanup on unmount
   }, []);
