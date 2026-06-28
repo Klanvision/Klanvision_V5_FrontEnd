@@ -984,6 +984,20 @@ export default function VerificationPortal({ certificateNumber }) {
       await new Promise(resolve => setTimeout(resolve, 5000));
       if (res.verified) {
         setData(res.certificate);
+        
+        // Safely determine and set the active tab for the images based on the fetched data
+        if (res.certificate.is_custom && res.certificate.files) {
+          const files = res.certificate.files;
+          if (files.professional) setActiveImageTab('professional');
+          else if (files.participation) setActiveImageTab('participation');
+          else if (files.business) setActiveImageTab('business');
+          else if (files.apricate) setActiveImageTab('apricate');
+          else if (files.photo) setActiveImageTab('photo');
+          else setActiveImageTab('participation');
+        } else {
+          setActiveImageTab('participation');
+        }
+
         speakText("Congratulations. Your certificate has been successfully verified and authenticated. Thank you for using the Klanvision Certificate Verification Portal.");
       } else {
         setError('Certificate invalid or not found');
@@ -1585,10 +1599,7 @@ export default function VerificationPortal({ certificateNumber }) {
                             ];
                           }
 
-                          // Default to first tab if current active tab isn't valid for this cert
-                          if (!tabs.find(t => t.id === activeImageTab) && tabs.length > 0) {
-                            setTimeout(() => setActiveImageTab(tabs[0].id), 0);
-                          }
+                          // Safe tab rendering without state side-effects during render
 
                           return tabs.map(tab => (
                             <button
