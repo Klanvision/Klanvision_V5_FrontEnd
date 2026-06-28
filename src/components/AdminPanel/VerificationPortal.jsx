@@ -786,10 +786,12 @@ export default function VerificationPortal({ certificateNumber }) {
 
     // Attempt autoplay on mount
     const tryAutoplay = () => {
+      if (window.hasPlayedWelcomeThisLoad) return; // Strictly one time per page load
       if (hasAutoplayedRef.current) return;
       if (!window.speechSynthesis.speaking) {
         toggleAudio();
         hasAutoplayedRef.current = true;
+        window.hasPlayedWelcomeThisLoad = true;
       }
     };
 
@@ -897,27 +899,24 @@ export default function VerificationPortal({ certificateNumber }) {
 
     let voices = window.speechSynthesis.getVoices();
     
-    // Explicitly filter out known male voices to prevent the system from picking "Microsoft David" or "Mark"
-    let nonMaleVoices = voices.filter(v => 
-      !v.name.toLowerCase().includes('david') && 
-      !v.name.toLowerCase().includes('mark') && 
-      !v.name.toLowerCase().includes('male') &&
-      !v.name.toLowerCase().includes('george') &&
-      !v.name.toLowerCase().includes('arthur')
-    );
+    // STRICT RULE: ONLY female voices. No generic fallbacks.
+    let femaleVoice = voices.find(v => v.name.includes('Zira')) ||
+                      voices.find(v => v.name.includes('Google US English')) ||
+                      voices.find(v => v.name.includes('Jenny') || v.name.includes('Aria')) ||
+                      voices.find(v => v.name.includes('Samantha') || v.name.includes('Tessa') || v.name.includes('Karen')) ||
+                      voices.find(v => v.name.toLowerCase().includes('female')) ||
+                      voices.find(v => v.name.toLowerCase().match(/catherine|susan|linda|hazel|victoria|kyoko|amelia|elsa/));
 
-    // Prioritize high-quality female voices, then fallback to any English voice that isn't male
-    let femaleVoice = nonMaleVoices.find(v => v.name.includes('Zira')) ||
-                      nonMaleVoices.find(v => v.name.includes('Google US English')) ||
-                      nonMaleVoices.find(v => v.name.includes('Jenny') || v.name.includes('Aria')) ||
-                      nonMaleVoices.find(v => v.name.includes('Samantha') || v.name.includes('Tessa') || v.name.includes('Karen')) ||
-                      nonMaleVoices.find(v => v.name.includes('Female')) ||
-                      nonMaleVoices.find(v => v.lang.startsWith('en'));
+    if (femaleVoice) {
+      utterance.voice = femaleVoice;
+    } else {
+      // STRICT RULE: If absolutely no female voice is installed, do not speak. Never use a male voice.
+      window.speechSynthesis.cancel();
+      return; 
+    }
 
-    if (femaleVoice) utterance.voice = femaleVoice;
-
-    // Extremely slow speed for maximum clarity
-    utterance.rate = 0.55;
+    // Normal Chrome speed for consistency across all browsers
+    utterance.rate = 1.0;
     utterance.pitch = 1.05;
 
     utterance.onstart = () => {
@@ -1941,6 +1940,14 @@ export default function VerificationPortal({ certificateNumber }) {
         input:focus        { outline: none; }
         * { box-sizing: border-box; }
         body { margin: 0; }
+        img {
+          pointer-events: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          -webkit-user-drag: none;
+        }
       `}</style>
     </div>
   );
