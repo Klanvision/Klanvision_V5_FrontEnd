@@ -1527,7 +1527,7 @@ export default function VerificationPortal({ certificateNumber }) {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24 }}>
-                      <div style={{ width: '100%', maxWidth: activeImageTab === 'photo' ? '280px' : '420px', height: activeImageTab === 'photo' ? '300px' : '295px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s ease-in-out' }}>
+                      <div style={{ width: '100%', maxWidth: (activeImageTab === 'photo' && mockData.status === 'Completed') ? '280px' : '420px', height: (activeImageTab === 'photo' && mockData.status === 'Completed') ? '300px' : '350px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s ease-in-out' }}>
                         <motion.div
                           layout
                           transition={{ duration: 0.3 }}
@@ -1536,15 +1536,36 @@ export default function VerificationPortal({ certificateNumber }) {
                             boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
                             border: '1px solid rgba(201,168,76,0.3)',
                             width: '100%',
-                            maxWidth: activeImageTab === 'photo' ? '220px' : '100%',
+                            maxWidth: (activeImageTab === 'photo' && mockData.status === 'Completed') ? '220px' : '100%',
                             height: '100%',
-                            minHeight: activeImageTab === 'photo' ? '300px' : '295px',
+                            minHeight: (activeImageTab === 'photo' && mockData.status === 'Completed') ? '300px' : '350px',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                             background: 'rgba(0,0,0,0.4)'
                           }}
                         >
                           <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {(() => {
+                              if (mockData.status !== 'Completed') {
+                                return (
+                                  <motion.img
+                                    key="pending-verification"
+                                    initial={false}
+                                    animate={{ opacity: 1, scale: 1, zIndex: 10 }}
+                                    transition={{ duration: 0.3 }}
+                                    src="/images/Pending_Verification.png"
+                                    alt="Pending Verification"
+                                    style={{
+                                      position: 'absolute',
+                                      width: '100%',
+                                      height: '100%',
+                                      objectFit: 'contain',
+                                      pointerEvents: 'none',
+                                      padding: '10px'
+                                    }}
+                                  />
+                                );
+                              }
+
                               const availableTabs = mockData.is_custom
                                 ? Object.keys(mockData.files || {}).filter(k => mockData.files[k])
                                 : ['participation', 'professional', 'photo'];
@@ -1582,72 +1603,73 @@ export default function VerificationPortal({ certificateNumber }) {
                         </motion.div>
                       </div>
 
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, background: 'rgba(0,0,0,0.4)', padding: '6px 8px', borderRadius: 30, border: '1px solid rgba(201,168,76,0.3)', justifyContent: 'center' }}>
-                        {(() => {
-                          let tabs = [];
-                          if (mockData.is_custom) {
-                            if (mockData.files?.professional) tabs.push({ id: 'professional', label: 'Professional' });
-                            if (mockData.files?.participation) tabs.push({ id: 'participation', label: 'Participate' });
-                            if (mockData.files?.business) tabs.push({ id: 'business', label: 'Certificate' });
-                            if (mockData.files?.apricate) tabs.push({ id: 'apricate', label: 'Appreciate' });
-                            if (mockData.files?.photo) tabs.push({ id: 'photo', label: 'Candidate photo' });
-                          } else {
-                            tabs = [
-                              { id: 'participation', label: 'Participate' },
-                              { id: 'professional', label: 'Professional' },
-                              { id: 'photo', label: 'Candidate photo' }
-                            ];
-                          }
+                      {mockData.status === 'Completed' && (
+                        <>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, background: 'rgba(0,0,0,0.4)', padding: '6px 8px', borderRadius: 30, border: '1px solid rgba(201,168,76,0.3)', justifyContent: 'center' }}>
+                            {(() => {
+                              let tabs = [];
+                              if (mockData.is_custom) {
+                                if (mockData.files?.professional) tabs.push({ id: 'professional', label: 'Professional' });
+                                if (mockData.files?.participation) tabs.push({ id: 'participation', label: 'Participate' });
+                                if (mockData.files?.business) tabs.push({ id: 'business', label: 'Certificate' });
+                                if (mockData.files?.apricate) tabs.push({ id: 'apricate', label: 'Appreciate' });
+                                if (mockData.files?.photo) tabs.push({ id: 'photo', label: 'Candidate photo' });
+                              } else {
+                                tabs = [
+                                  { id: 'participation', label: 'Participate' },
+                                  { id: 'professional', label: 'Professional' },
+                                  { id: 'photo', label: 'Candidate photo' }
+                                ];
+                              }
 
-                          // Safe tab rendering without state side-effects during render
+                              return tabs.map(tab => (
+                                <button
+                                  key={tab.id}
+                                  onClick={() => setActiveImageTab(tab.id)}
+                                  style={{
+                                    padding: '8px 16px',
+                                    borderRadius: 24,
+                                    border: 'none',
+                                    background: activeImageTab === tab.id ? 'linear-gradient(135deg, #C9A84C, #F5E070)' : 'transparent',
+                                    color: activeImageTab === tab.id ? '#000' : '#C9A84C',
+                                    fontWeight: 700,
+                                    fontSize: 12,
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    boxShadow: activeImageTab === tab.id ? '0 4px 10px rgba(201,168,76,0.4)' : 'none'
+                                  }}
+                                >
+                                  {tab.label}
+                                </button>
+                              ));
+                            })()}
+                          </div>
+                          <div style={{ visibility: activeImageTab === 'photo' ? 'hidden' : 'visible' }}>
+                            <motion.a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                const url = mockData.is_custom ? `${API_BASE_URL}/certifications/${mockData.id}/document/${activeImageTab}?download=true` : (activeImageTab === 'participation' ? '/images/Participate.png' : '/images/Professional.png');
 
-                          return tabs.map(tab => (
-                            <button
-                              key={tab.id}
-                              onClick={() => setActiveImageTab(tab.id)}
-                              style={{
-                                padding: '8px 16px',
-                                borderRadius: 24,
-                                border: 'none',
-                                background: activeImageTab === tab.id ? 'linear-gradient(135deg, #C9A84C, #F5E070)' : 'transparent',
-                                color: activeImageTab === tab.id ? '#000' : '#C9A84C',
-                                fontWeight: 700,
-                                fontSize: 12,
-                                cursor: 'pointer',
-                                transition: 'all 0.2s',
-                                boxShadow: activeImageTab === tab.id ? '0 4px 10px rgba(201,168,76,0.4)' : 'none'
+                                if (mockData.is_custom) {
+                                  const iframe = document.createElement('iframe');
+                                  iframe.style.display = 'none';
+                                  iframe.src = url;
+                                  document.body.appendChild(iframe);
+                                  setTimeout(() => iframe.remove(), 5000);
+                                } else {
+                                  const a = document.createElement('a');
+                                  a.href = url;
+                                  a.download = `${activeImageTab}_certificate.png`;
+                                  document.body.appendChild(a);
+                                  a.click();
+                                  a.remove();
+                                }
                               }}
-                            >
-                              {tab.label}
-                            </button>
-                          ));
-                        })()}
-                      </div>
-                      <div style={{ visibility: activeImageTab === 'photo' ? 'hidden' : 'visible' }}>
-                        <motion.a
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            const url = mockData.is_custom ? `${API_BASE_URL}/certifications/${mockData.id}/document/${activeImageTab}?download=true` : (activeImageTab === 'participation' ? '/images/Participate.png' : '/images/Professional.png');
+                              whileHover={{ scale: 1.05, background: 'rgba(201,168,76,0.15)', borderColor: '#C9A84C' }}
+                              whileTap={{ scale: 0.95 }}
+                              style={{
 
-                            if (mockData.is_custom) {
-                              const iframe = document.createElement('iframe');
-                              iframe.style.display = 'none';
-                              iframe.src = url;
-                              document.body.appendChild(iframe);
-                              setTimeout(() => iframe.remove(), 5000);
-                            } else {
-                              const a = document.createElement('a');
-                              a.href = url;
-                              a.download = `${activeImageTab}_certificate.png`;
-                              document.body.appendChild(a);
-                              a.click();
-                              a.remove();
-                            }
-                          }}
-                          whileHover={{ scale: 1.05, background: 'rgba(201,168,76,0.15)', borderColor: '#C9A84C' }}
-                          whileTap={{ scale: 0.95 }}
-                          style={{
                             display: 'inline-flex', alignItems: 'center', gap: 10,
                             padding: '12px 28px',
                             borderRadius: '30px',
@@ -1667,6 +1689,8 @@ export default function VerificationPortal({ certificateNumber }) {
                           Download Certificate
                         </motion.a>
                       </div>
+                      </>
+                      )}
                     </div>
                   </div>
                 </motion.div>
