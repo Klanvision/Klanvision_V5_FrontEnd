@@ -1115,6 +1115,7 @@ export default function VerificationPortal({ certificateNumber }) {
           {/* Premium Company Logo */}
           <div
             onClick={() => window.location.href = '/'}
+            className="verify-header-logo"
             style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginLeft: '-120px', marginTop: '-10px' }}
           >
             <img
@@ -1125,7 +1126,7 @@ export default function VerificationPortal({ certificateNumber }) {
           </div>
 
           {/* Security Badge Image */}
-          <div style={{ display: 'flex', alignItems: 'center', marginRight: '-120px' }}>
+          <div className="verify-header-lock" style={{ display: 'flex', alignItems: 'center', marginRight: '-120px' }}>
             <img
               src="/images/Lock.png"
               alt="Secure Verification"
@@ -1135,7 +1136,7 @@ export default function VerificationPortal({ certificateNumber }) {
         </motion.div>
 
         {/* ── MAIN TITLE ── */}
-        <div style={{ textAlign: 'center', padding: '0 24px', maxWidth: 1100, margin: '-170px auto 0', position: 'relative', zIndex: 1 }}>
+        <div className="verify-title-area" style={{ textAlign: 'center', padding: '0 24px', maxWidth: 1100, margin: '-170px auto 0', position: 'relative', zIndex: 1 }}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1195,6 +1196,7 @@ export default function VerificationPortal({ certificateNumber }) {
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.56, duration: 0.65 }}
+          className="verify-search-panel"
           style={{ padding: '0px 24px 56px', maxWidth: 1200, margin: '-200px auto 0', position: 'relative', zIndex: 10 }}
         >
           {/* Animated Flowing Border Wrapper */}
@@ -1218,7 +1220,7 @@ export default function VerificationPortal({ certificateNumber }) {
             />
 
             {/* Inner Content Box */}
-            <div style={{
+            <div className="verify-search-inner" style={{
               position: 'relative',
               zIndex: 1,
               background: 'linear-gradient(145deg, #2a2a2a 0%, #0a0a0a 45%, #000000 100%)',
@@ -1239,7 +1241,7 @@ export default function VerificationPortal({ certificateNumber }) {
                 }}
               />
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16, maxWidth: 800, margin: '0 auto' }}>
+              <div className="verify-search-row" style={{ display: 'flex', alignItems: 'center', gap: 16, maxWidth: 800, margin: '0 auto' }}>
                 {/* Input */}
                 <div style={{
                   flex: 1, display: 'flex', alignItems: 'center',
@@ -1341,8 +1343,8 @@ export default function VerificationPortal({ certificateNumber }) {
                       pointerEvents: 'none', zIndex: 0
                     }}
                   />
-                  <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: 120, width: '100%' }}>
-                    <div style={{ position: 'relative', width: 140, height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 10, marginLeft: 110 }}>
+                  <div className="verify-valid-banner" style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: 120, width: '100%' }}>
+                    <div className="verify-shield-container">
                       {/* Slow, elegant attractive circles */}
                       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 0, width: 0, height: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         {[200, 240, 280, 320].map((size, index) => (
@@ -1403,11 +1405,7 @@ export default function VerificationPortal({ certificateNumber }) {
                       </motion.p>
 
                       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
-                        style={{
-                          display: 'flex', alignItems: 'center', gap: 24, width: '100%',
-                          padding: '20px 24px', borderRadius: 16,
-                          background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)'
-                        }}
+                        className="verify-meta-strip"
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: 16, flex: 1 }}>
                           <div style={{ position: 'relative', width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1499,17 +1497,9 @@ export default function VerificationPortal({ certificateNumber }) {
                     </div>
                   </div>
 
-                  <div style={{
-                    display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 40,
-                    padding: '40px', background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.7), rgba(2, 6, 23, 0.9))',
-                    border: '1px solid rgba(201,168,76,0.25)', borderRadius: 24,
-                    boxShadow: '0 25px 50px -12px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.05)',
-                    backdropFilter: 'blur(20px)'
-                  }} className="cert-details-grid">
+                  <div className="cert-details-grid">
                     <div style={{ display: 'flex', gap: 36, alignItems: 'center' }}>
-                      <div style={{
-                        display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16, flex: 1
-                      }}>
+                      <div className="cert-info-grid">
                         <DetailRow icon={Hash} label="Certificate Number" value={mockData.certificate_number || mockData.certificateNumber} color="#48CAE4" />
                         <DetailRow icon={User} label="Candidate Name" value={mockData.name} color="#FF6B6B" />
                         <DetailRow icon={BookOpen} label="Certificate Name" value={mockData.role || mockData.domain} color="#6BCB77" />
@@ -1884,7 +1874,7 @@ export default function VerificationPortal({ certificateNumber }) {
           viewport={{ once: true }}
           style={{ maxWidth: 1200, margin: '16px auto 64px', padding: '0 24px' }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="trust-badges-container">
             <TrustBadge imgSrc="/images/Authenticate.png" imgAnim="authenticate" glowColor="34,197,94" title="100% AUTHENTIC" desc="All certificates are verified against our secure, encrypted database." delay={0} link="/verify-authentic" />
             <TrustBadge imgSrc="/images/Protection.png" imgAnim="protection" glowColor="0,229,255" title="DATA PROTECTION" desc="Your data is safe with us. We never share your information." delay={0.1} link="/verify-protection" />
             <TrustBadge imgSrc="/images/database.png" imgAnim="database" glowColor="245,158,11" title="TRUSTED DATABASE" desc="Real-time verification from an authorized and secure source." delay={0.2} link="/verify-database" />
@@ -1914,7 +1904,7 @@ export default function VerificationPortal({ certificateNumber }) {
           {/* Attractive Top Glow Line */}
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, transparent, #F0D060, transparent)', zIndex: 2, boxShadow: '0 0 25px rgba(240,208,96,0.9)' }} />
 
-          <div style={{ position: 'relative', zIndex: 1, maxWidth: 1350, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.5fr auto 1fr auto 1fr auto 1fr', gap: 50, paddingBottom: 60, borderBottom: '1px solid rgba(255,255,255,0.05)' }} className="verify-footer-grid">
+          <div className="verify-footer-grid">
 
             {/* Left */}
             <div>

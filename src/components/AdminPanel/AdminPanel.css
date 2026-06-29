@@ -445,3 +445,294 @@
     margin-bottom: 20px !important;
   }
 }
+
+/* ── VERIFICATION PORTAL RESPONSIVENESS ── */
+
+/* Base classes replacing inline styles for responsive control */
+.cert-details-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 40px;
+  padding: 40px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.7), rgba(2, 6, 23, 0.9));
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.05);
+  backdrop-filter: blur(20px);
+}
+
+.cert-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  flex: 1;
+}
+
+.verify-footer-grid {
+  position: relative;
+  z-index: 1;
+  max-width: 1350px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.5fr auto 1fr auto 1fr auto 1fr;
+  gap: 50px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ── Valid Certificate Banner ── */
+.verify-valid-banner {
+  display: flex;
+  align-items: center;
+  gap: 120px;
+  width: 100%;
+}
+
+.verify-shield-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 10px;
+  margin-left: 110px;
+}
+
+/* ── Trust Badges ── */
+.trust-badges-container {
+  display: flex;
+  gap: 24px;
+  padding: 56px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ── Verified On/By/Status strip ── */
+.verify-meta-strip {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  padding: 20px 24px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
+  flex-wrap: wrap;
+}
+
+/* ── RESPONSIVE BREAKPOINTS ── */
+
+/* Large Laptop / Desktop 1440px */
+@media (max-width: 1440px) {
+  .cert-details-grid {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 30px;
+    padding: 30px;
+  }
+  .verify-footer-grid {
+    gap: 30px;
+    max-width: 1200px;
+    padding: 0 24px 60px;
+  }
+  .verify-shield-container {
+    margin-left: 40px;
+  }
+  .verify-valid-banner {
+    gap: 60px;
+  }
+}
+
+/* Standard Laptop / Small Desktop 1366px — The problem viewport */
+@media (max-width: 1400px) {
+  .verify-shield-container {
+    margin-left: 20px;
+    width: 100px;
+    height: 100px;
+  }
+  .verify-valid-banner {
+    gap: 40px;
+  }
+  /* Shrink logo images in header */
+  .verify-header-logo img {
+    height: 90px !important;
+  }
+  .verify-header-lock img {
+    height: 130px !important;
+  }
+  /* Reduce negative margin overlap of the hero title */
+  .verify-title-area {
+    margin-top: -120px !important;
+  }
+  .verify-search-panel {
+    margin-top: -140px !important;
+    padding-bottom: 32px !important;
+  }
+}
+
+/* Tablet Landscape / Small Laptop 1024px */
+@media (max-width: 1024px) {
+  .cert-details-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+  .cert-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .verify-footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    padding: 0 24px 40px;
+  }
+  .footer-divider {
+    display: none !important;
+  }
+  .verify-valid-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .verify-shield-container {
+    margin-left: 0;
+    align-self: center;
+  }
+  .verify-meta-strip {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  /* Header nav tighten */
+  .verify-header-logo img {
+    height: 70px !important;
+    margin-left: 0 !important;
+  }
+  .verify-header-lock img {
+    height: 100px !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* Tablet Portrait 768px */
+@media (max-width: 768px) {
+  /* Header */
+  .verify-header-logo img {
+    height: 55px !important;
+    margin-left: 0 !important;
+  }
+  .verify-header-lock {
+    display: none !important;
+  }
+  /* Hero title image */
+  .verify-title-area {
+    margin-top: -40px !important;
+    padding: 0 16px !important;
+  }
+  .verify-title-area img {
+    max-width: 100% !important;
+  }
+  /* Search panel */
+  .verify-search-panel {
+    margin-top: -60px !important;
+    padding: 0 16px 32px !important;
+  }
+  .verify-search-inner {
+    padding: 20px 20px !important;
+  }
+  .verify-search-row {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  .verify-search-row button {
+    width: 100% !important;
+    justify-content: center;
+  }
+  /* Results section */
+  .verify-valid-banner {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .verify-shield-container {
+    margin-left: 0;
+    width: 80px;
+    height: 80px;
+    align-self: center;
+  }
+  /* cert details */
+  .cert-details-grid {
+    padding: 16px;
+    gap: 16px;
+  }
+  .cert-info-grid {
+    grid-template-columns: 1fr;
+  }
+  /* Footer */
+  .verify-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    text-align: center;
+  }
+  .verify-footer-grid > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center !important;
+  }
+  .verify-footer-grid img {
+    margin: 0 auto;
+  }
+  /* Trust badges */
+  .trust-badges-container {
+    flex-direction: column;
+    padding: 32px 16px;
+    gap: 16px;
+  }
+  .trust-badges-container > * {
+    flex: 1 1 100% !important;
+  }
+  /* AI voice button */
+  .verify-voice-btn {
+    width: 44px !important;
+    height: 44px !important;
+    top: 8px !important;
+    right: 8px !important;
+  }
+}
+
+/* Mobile 480px */
+@media (max-width: 480px) {
+  .cert-details-grid {
+    border-radius: 16px;
+    padding: 14px;
+  }
+  .cert-info-grid {
+    gap: 10px;
+  }
+  /* Image preview container */
+  .premium-border-glow {
+    max-width: 100% !important;
+  }
+  /* Valid cert strip icons */
+  .verify-meta-strip {
+    padding: 14px;
+    gap: 12px;
+  }
+  /* Title text */
+  h1, h2, h3 {
+    word-break: break-word;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .verify-header-logo img {
+    height: 50px !important;
+  }
+  .verify-header-lock {
+    display: none !important;
+  }
+}
