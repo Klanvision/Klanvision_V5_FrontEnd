@@ -442,6 +442,15 @@ export default function CertificationModule() {
     photoFile: null
   });
 
+  // Tracks which files already exist on a cert (for edit mode)
+  const [existingFiles, setExistingFiles] = useState({
+    participation: false,
+    professional: false,
+    business: false,
+    apricate: false,
+    photo: false
+  });
+
   const participationRef = useRef(null);
   const professionalRef = useRef(null);
   const businessRef = useRef(null);
@@ -979,9 +988,10 @@ export default function CertificationModule() {
             setSelectedCertId(null);
             setFormData({
               certificateNumber: '', candidateName: '', certificateName: '', issueDate: '',
-              technicalLead: '', internshipManager: '', issuedBy: '', location: '', certificateType: ['Business Certificate']
+              technicalLead: '', internshipManager: '', issuedBy: '', location: '', certificateType: []
             });
             setFiles({ participationFile: null, professionalFile: null, businessFile: null, apricateFile: null, photoFile: null });
+            setExistingFiles({ participation: false, professional: false, business: false, apricate: false, photo: false });
             setIsModalOpen(true);
           }}
           style={{ 
@@ -1263,6 +1273,14 @@ export default function CertificationModule() {
                               certificateType: parsedTypesEdit.length > 0 ? parsedTypesEdit : ['Business Certificate']
                             });
                             setFiles({ participationFile: null, professionalFile: null, businessFile: null, apricateFile: null, photoFile: null });
+                            // Populate existing file status so edit modal shows "Already Attached"
+                            setExistingFiles({
+                              participation: !!(cert.participationFileName || cert.participation_file_name),
+                              professional: !!(cert.professionalFileName || cert.professional_file_name),
+                              business: !!(cert.businessFileName || cert.business_file_name),
+                              apricate: !!(cert.apricateFileName || cert.apricate_file_name),
+                              photo: !!(cert.photoFileName || cert.photo_file_name),
+                            });
                             setIsModalOpen(true);
                           }}
                         >
@@ -1530,34 +1548,79 @@ export default function CertificationModule() {
               exit={{ opacity: 0, scale: 0.9, y: 30 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               style={{ 
-                background: '#050A15', 
-                border: '1px solid rgba(255,255,255,0.08)', 
-                borderRadius: 22, 
-                width: modalMode === 'view' ? 520 : 780, 
-                maxWidth: '95%', 
-                maxHeight: '90vh',
+                background: 'linear-gradient(145deg, #060D1F 0%, #0A1628 40%, #06101E 100%)',
+                border: '1px solid rgba(99,102,241,0.25)', 
+                borderRadius: 24, 
+                width: modalMode === 'view' ? 520 : 820, 
+                maxWidth: '96%', 
+                maxHeight: '92vh',
                 overflowY: 'auto',
-                padding: modalMode === 'view' ? 24 : 32, 
+                padding: modalMode === 'view' ? 28 : 36, 
                 position: 'relative',
-                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1)'
+                boxShadow: '0 40px 80px -20px rgba(0,0,0,0.8), 0 0 0 1px rgba(99,102,241,0.1), inset 0 1px 0 rgba(255,255,255,0.06)',
+                scrollbarWidth: 'thin',
+                scrollbarColor: 'rgba(99,102,241,0.3) transparent'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: 20, marginBottom: 10 }}>
-                <h3 style={{ fontSize: 18, fontWeight: 700, margin: 0, color: 'white', display: 'flex', alignItems: 'center', gap: 12 }}>
-                  {modalMode === 'add' ? <><Award size={24} color="#6366F1" /> Add New Certification</> :
-                   modalMode === 'edit' ? <><Edit size={24} color="#10B981" /> Edit Certification</> :
-                   <><Eye size={24} color="#3B82F6" /> View Certification</>}
-                </h3>
-                <motion.div whileHover={{ rotate: 90, scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                  <X size={24} color="#94A3B8" style={{ cursor: 'pointer' }} onClick={() => setIsModalOpen(false)} />
-                </motion.div>
+              {/* Animated Background Orbs */}
+              <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: 24, pointerEvents: 'none', zIndex: 0 }}>
+                <motion.div
+                  animate={{ x: [0, 30, 0], y: [0, -20, 0], opacity: [0.15, 0.25, 0.15] }}
+                  transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+                  style={{ position: 'absolute', top: -60, left: -60, width: 250, height: 250, borderRadius: '50%', background: 'radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%)' }}
+                />
+                <motion.div
+                  animate={{ x: [0, -20, 0], y: [0, 30, 0], opacity: [0.1, 0.2, 0.1] }}
+                  transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+                  style={{ position: 'absolute', bottom: -40, right: -40, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(16,185,129,0.35) 0%, transparent 70%)' }}
+                />
+                <motion.div
+                  animate={{ opacity: [0.05, 0.12, 0.05] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+                  style={{ position: 'absolute', top: '40%', right: '20%', width: 150, height: 150, borderRadius: '50%', background: 'radial-gradient(circle, rgba(245,158,11,0.3) 0%, transparent 70%)' }}
+                />
+                <motion.div
+                  animate={{ left: ['-100%', '200%'] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', repeatDelay: 5 }}
+                  style={{ position: 'absolute', top: 0, height: 1, width: '60%', background: 'linear-gradient(90deg, transparent, rgba(99,102,241,0.8), rgba(16,185,129,0.6), transparent)', pointerEvents: 'none' }}
+                />
               </div>
 
-              
+              {/* Content above z-index */}
+              <div style={{ position: 'relative', zIndex: 1 }}>
+
+              {/* Header */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                  <div style={{ 
+                    padding: '10px 12px', borderRadius: 14,
+                    background: modalMode === 'add' ? 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))' : modalMode === 'edit' ? 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(5,150,105,0.2))' : 'linear-gradient(135deg, rgba(59,130,246,0.2), rgba(37,99,235,0.2))',
+                    border: `1px solid ${modalMode === 'add' ? 'rgba(99,102,241,0.3)' : modalMode === 'edit' ? 'rgba(16,185,129,0.3)' : 'rgba(59,130,246,0.3)'}`,
+                    boxShadow: `0 8px 20px ${modalMode === 'add' ? 'rgba(99,102,241,0.2)' : modalMode === 'edit' ? 'rgba(16,185,129,0.2)' : 'rgba(59,130,246,0.2)'}`
+                  }}>
+                    {modalMode === 'add' ? <Award size={22} color="#818CF8" /> : modalMode === 'edit' ? <Edit size={22} color="#34D399" /> : <Eye size={22} color="#60A5FA" />}
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: 19, fontWeight: 800, margin: 0, color: 'white', letterSpacing: '-0.3px' }}>
+                      {modalMode === 'add' ? 'Add New Certification' : modalMode === 'edit' ? 'Edit Certification' : 'View Certification'}
+                    </h3>
+                    <p style={{ fontSize: 12, color: '#64748B', margin: '2px 0 0 0' }}>
+                      {modalMode === 'add' ? 'Fill in all required fields to create a new certification record' : modalMode === 'edit' ? 'Update the certification details and files below' : 'Read-only view of the certification record'}
+                    </p>
+                  </div>
+                </div>
+                <motion.button whileHover={{ rotate: 90, scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => setIsModalOpen(false)} style={{ background: 'rgba(30,41,59,0.6)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: 8, cursor: 'pointer', color: '#94A3B8', display: 'flex' }}>
+                  <X size={18} />
+                </motion.button>
+              </div>
+
+              {/* Thin gold divider */}
+              <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent)', marginBottom: 24 }} />
+
               {modalMode === 'view' ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <div style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1))', padding: '16px 20px', borderRadius: 16, border: '1px solid rgba(59, 130, 246, 0.2)', display: 'flex', alignItems: 'center', gap: 16 }}>
-                    <div style={{ background: 'linear-gradient(135deg, #3B82F6, #2563EB)', padding: 12, borderRadius: 12, color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 25px -5px rgba(59, 130, 246, 0.5)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <div style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.08), rgba(37,99,235,0.08))', padding: '18px 22px', borderRadius: 18, border: '1px solid rgba(59,130,246,0.2)', display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <div style={{ background: 'linear-gradient(135deg, #3B82F6, #2563EB)', padding: 14, borderRadius: 14, color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 25px -5px rgba(59,130,246,0.5)' }}>
                       <Award size={28} strokeWidth={2.5} />
                     </div>
                     <div>
@@ -1565,7 +1628,6 @@ export default function CertificationModule() {
                       <div style={{ color: 'white', fontSize: 20, fontWeight: 800, letterSpacing: '-0.5px' }}>{formData.certificateName}</div>
                     </div>
                   </div>
-
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                     {[
                       { label: 'Candidate Name', value: formData.candidateName, icon: <User size={12} /> },
@@ -1575,263 +1637,32 @@ export default function CertificationModule() {
                       { label: 'Technical Lead', value: formData.technicalLead, icon: <ShieldCheck size={12} /> },
                       { label: 'Project Manager', value: formData.internshipManager, icon: <CheckCircle size={12} /> }
                     ].map((item, idx) => (
-                      <div key={idx} style={{ background: 'rgba(30, 41, 59, 0.4)', padding: '12px 16px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                        <div style={{ color: '#94A3B8', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>
-                          {item.icon} {item.label}
-                        </div>
+                      <div key={idx} style={{ background: 'rgba(30,41,59,0.4)', padding: '12px 16px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        <div style={{ color: '#94A3B8', fontSize: 10, fontWeight: 700, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 6 }}>{item.icon} {item.label}</div>
                         <div style={{ color: 'white', fontSize: 13, fontWeight: 600 }}>{item.value || 'N/A'}</div>
                       </div>
                     ))}
                   </div>
-
-                  <div style={{ borderTop: '1px dashed rgba(255,255,255,0.1)', margin: '2px 0' }} />
-                  
+                  <div style={{ borderTop: '1px dashed rgba(255,255,255,0.08)', margin: '4px 0' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     <div style={{ color: '#CBD5E1', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 }}>Certificate Types</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                       {(Array.isArray(formData.certificateType) ? formData.certificateType : [formData.certificateType]).filter(Boolean).map(type => (
-                        <div key={type} style={{ background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.15))', color: '#34D399', padding: '6px 12px', borderRadius: 20, fontSize: 11, fontWeight: 700, border: '1px solid rgba(16, 185, 129, 0.3)', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.1)' }}>
-                          {type}
-                        </div>
+                        <div key={type} style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(5,150,105,0.15))', color: '#34D399', padding: '6px 14px', borderRadius: 20, fontSize: 11, fontWeight: 700, border: '1px solid rgba(16,185,129,0.3)' }}>{type}</div>
                       ))}
                     </div>
                   </div>
                 </div>
               ) : (
-                <>
-                  <h4 style={{ color: '#8B5CF6', fontSize: 12, fontWeight: 700, marginBottom: 10, letterSpacing: 1, textTransform: 'uppercase' }}>Certificate Details</h4>
-              
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 10 }}>
-                <div>
-                  <label style={{ display: 'block', color: '#CBD5E1', fontSize: 11, marginBottom: 4, fontWeight: 600 }}>Certificate Number <span style={{ color: '#EF4444' }}>*</span></label>
-                  <input disabled={modalMode === 'view'} type="text" name="certificateNumber" value={formData.certificateNumber} onChange={handleInputChange} placeholder="Enter certificate number" style={{ width: '100%', background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '7px 10px', color: modalMode === 'view' ? '#94A3B8' : 'white', fontSize: 12, outline: 'none', transition: 'all 0.2s', opacity: modalMode === 'view' ? 0.8 : 1 }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: '#CBD5E1', fontSize: 11, marginBottom: 4, fontWeight: 600 }}>Candidate Name <span style={{ color: '#EF4444' }}>*</span></label>
-                  <input disabled={modalMode === 'view'} type="text" name="candidateName" value={formData.candidateName} onChange={handleInputChange} placeholder="Enter candidate name" style={{ width: '100%', background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '7px 10px', color: modalMode === 'view' ? '#94A3B8' : 'white', fontSize: 12, outline: 'none', transition: 'all 0.2s', opacity: modalMode === 'view' ? 0.8 : 1 }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: '#CBD5E1', fontSize: 11, marginBottom: 4, fontWeight: 600 }}>Certificate Name <span style={{ color: '#EF4444' }}>*</span></label>
-                  <input disabled={modalMode === 'view'} type="text" name="certificateName" value={formData.certificateName} onChange={handleInputChange} placeholder="Enter certificate name" style={{ width: '100%', background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '7px 10px', color: modalMode === 'view' ? '#94A3B8' : 'white', fontSize: 12, outline: 'none', transition: 'all 0.2s', opacity: modalMode === 'view' ? 0.8 : 1 }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: '#CBD5E1', fontSize: 11, marginBottom: 4, fontWeight: 600 }}>Issue Date <span style={{ color: '#EF4444' }}>*</span></label>
-                  <div style={{ position: 'relative' }}>
-                    <input disabled={modalMode === 'view'} type="date" name="issueDate" value={formData.issueDate} onChange={handleInputChange} placeholder="Select issue date" style={{ width: '100%', background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '7px 10px', color: modalMode === 'view' ? '#94A3B8' : 'white', fontSize: 12, outline: 'none', transition: 'all 0.2s', opacity: modalMode === 'view' ? 0.8 : 1 }} />
-                  </div>
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: '#CBD5E1', fontSize: 11, marginBottom: 4, fontWeight: 600 }}>Technical Lead <span style={{ color: '#EF4444' }}>*</span></label>
-                  <input disabled={modalMode === 'view'} type="text" name="technicalLead" value={formData.technicalLead} onChange={handleInputChange} placeholder="Enter technical lead name" style={{ width: '100%', background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '7px 10px', color: modalMode === 'view' ? '#94A3B8' : 'white', fontSize: 12, outline: 'none', transition: 'all 0.2s', opacity: modalMode === 'view' ? 0.8 : 1 }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: '#CBD5E1', fontSize: 11, marginBottom: 4, fontWeight: 600 }}>Project Manager <span style={{ color: '#EF4444' }}>*</span></label>
-                  <input disabled={modalMode === 'view'} type="text" name="internshipManager" value={formData.internshipManager} onChange={handleInputChange} placeholder="Enter project manager name" style={{ width: '100%', background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '7px 10px', color: modalMode === 'view' ? '#94A3B8' : 'white', fontSize: 12, outline: 'none', transition: 'all 0.2s', opacity: modalMode === 'view' ? 0.8 : 1 }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: '#CBD5E1', fontSize: 11, marginBottom: 4, fontWeight: 600 }}>Issued By <span style={{ color: '#EF4444' }}>*</span></label>
-                  <input disabled={modalMode === 'view'} type="text" name="issuedBy" value={formData.issuedBy} onChange={handleInputChange} placeholder="Enter issuer name" style={{ width: '100%', background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '7px 10px', color: modalMode === 'view' ? '#94A3B8' : 'white', fontSize: 12, outline: 'none', transition: 'all 0.2s', opacity: modalMode === 'view' ? 0.8 : 1 }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: '#CBD5E1', fontSize: 11, marginBottom: 4, fontWeight: 600 }}>Location <span style={{ color: '#EF4444' }}>*</span></label>
-                  <input disabled={modalMode === 'view'} type="text" name="location" value={formData.location} onChange={handleInputChange} placeholder="Enter location" style={{ width: '100%', background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '7px 10px', color: modalMode === 'view' ? '#94A3B8' : 'white', fontSize: 12, outline: 'none', transition: 'all 0.2s', opacity: modalMode === 'view' ? 0.8 : 1 }} />
-                </div>
-              </div>
-
-            <div style={{ borderTop: '1px dashed rgba(255,255,255,0.1)', margin: '6px 0' }} />
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div style={{ flex: 1 }}>
-                <div style={{ marginBottom: 20 }}>
-                  <label style={{ display: 'block', color: '#CBD5E1', fontSize: 11, marginBottom: 6 }}>Certificate Type <span style={{ color: '#EF4444' }}>*</span></label>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row', gap: 8 }}>
-                    {['Participation Certificate', 'Professional Certificate', 'Apricate Certificate', 'Business Certificate'].map(type => (
-                      <label key={type} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', fontSize: 13, color: 'white' }}>
-                        <input 
-                          disabled={modalMode === 'view'}
-                          type="checkbox"
-                          checked={Array.isArray(formData.certificateType) ? formData.certificateType.includes(type) : formData.certificateType === type}
-                          onChange={() => handleCertTypeToggle(type)}
-                          style={{ width: 14, height: 14, accentColor: '#10B981', cursor: modalMode === 'view' ? 'default' : 'pointer' }}
-                        />
-                        {type}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', color: '#CBD5E1', fontSize: 12, marginBottom: 8 }}>Candidate Photo <span style={{ color: '#EF4444' }}>*</span></label>
-                  <div onClick={() => photoRef.current.click()} style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 6, padding: 8, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', transition: 'background 0.2s' }}>
-                    <input type="file" style={{ display: 'none' }} ref={photoRef} onChange={(e) => handleFileChange(e, 'photoFile')} />
-                    <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#EF4444', padding: 8, borderRadius: 6 }}>
-                      <User size={16} />
-                    </div>
-                    <div style={{ overflow: 'hidden', flex: 1 }}>
-                      <div style={{ fontSize: 12, color: 'white', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>Candidate Photo</div>
-                      <div style={{ fontSize: 11, color: files.photoFile ? '#10B981' : '#94A3B8', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                        {files.photoFile ? (files.photoFile.name || 'Existing File') : 'Upload file'}
-                      </div>
-                    </div>
-    {files.photoFile && (
-      <div 
-        onClick={(e) => { e.stopPropagation(); setFiles(prev => ({...prev, photoFile: null})); }}
-        style={{ padding: 6, background: 'rgba(239, 68, 68, 0.1)', borderRadius: 6, color: '#EF4444', marginLeft: 'auto', cursor: 'pointer' }}
-      >
-        <X size={14} />
-      </div>
-    )}
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ flex: 2 }}>
-                <h4 style={{ color: '#6366F1', fontSize: 12, fontWeight: 700, margin: '0 0 8px 0' }}>Upload Certificate Documents</h4>
-                
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                  {formData.certificateType.includes('Participation Certificate') && (
-                    <div onClick={() => participationRef.current.click()} style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 6, padding: 8, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', transition: 'background 0.2s' }}>
-                      <input type="file" style={{ display: 'none' }} ref={participationRef} onChange={(e) => handleFileChange(e, 'participationFile')} />
-                      <div style={{ background: 'rgba(99, 102, 241, 0.1)', color: '#6366F1', padding: 8, borderRadius: 6 }}>
-                        <User size={16} />
-                      </div>
-                      <div style={{ overflow: 'hidden', flex: 1 }}>
-                        <div style={{ fontSize: 12, color: 'white', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>Participation Certificate</div>
-                        <div style={{ fontSize: 11, color: files.participationFile ? '#10B981' : '#94A3B8', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                          {files.participationFile ? (files.participationFile.name || 'Existing File') : 'Upload file'}
-                        </div>
-                      </div>
-    {files.participationFile && (
-      <div 
-        onClick={(e) => { e.stopPropagation(); setFiles(prev => ({...prev, participationFile: null})); }}
-        style={{ padding: 6, background: 'rgba(239, 68, 68, 0.1)', borderRadius: 6, color: '#EF4444', marginLeft: 'auto', cursor: 'pointer' }}
-      >
-        <X size={14} />
-      </div>
-    )}
-                    </div>
-                  )}
-                  
-                  {formData.certificateType.includes('Professional Certificate') && (
-                    <div onClick={() => professionalRef.current.click()} style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 6, padding: 8, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', transition: 'background 0.2s' }}>
-                      <input type="file" style={{ display: 'none' }} ref={professionalRef} onChange={(e) => handleFileChange(e, 'professionalFile')} />
-                      <div style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#F59E0B', padding: 8, borderRadius: 6 }}>
-                        <ShieldCheck size={16} />
-                      </div>
-                      <div style={{ overflow: 'hidden', flex: 1 }}>
-                        <div style={{ fontSize: 12, color: 'white', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>Professional Certificate</div>
-                        <div style={{ fontSize: 11, color: files.professionalFile ? '#10B981' : '#94A3B8', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                          {files.professionalFile ? (files.professionalFile.name || 'Existing File') : 'Upload file'}
-                        </div>
-                      </div>
-    {files.professionalFile && (
-      <div 
-        onClick={(e) => { e.stopPropagation(); setFiles(prev => ({...prev, professionalFile: null})); }}
-        style={{ padding: 6, background: 'rgba(239, 68, 68, 0.1)', borderRadius: 6, color: '#EF4444', marginLeft: 'auto', cursor: 'pointer' }}
-      >
-        <X size={14} />
-      </div>
-    )}
-                    </div>
-                  )}
-                  
-                  {formData.certificateType.includes('Apricate Certificate') && (
-                    <div onClick={() => apricateRef.current.click()} style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 6, padding: 8, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', transition: 'background 0.2s' }}>
-                      <input type="file" style={{ display: 'none' }} ref={apricateRef} onChange={(e) => handleFileChange(e, 'apricateFile')} />
-                      <div style={{ background: 'rgba(245, 158, 11, 0.1)', color: '#F59E0B', padding: 8, borderRadius: 6 }}>
-                        <Calendar size={16} />
-                      </div>
-                      <div style={{ overflow: 'hidden', flex: 1 }}>
-                        <div style={{ fontSize: 12, color: 'white', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>Apricate Certificate</div>
-                        <div style={{ fontSize: 11, color: files.apricateFile ? '#10B981' : '#94A3B8', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                          {files.apricateFile ? (files.apricateFile.name || 'Existing File') : 'Upload file'}
-                        </div>
-                      </div>
-    {files.apricateFile && (
-      <div 
-        onClick={(e) => { e.stopPropagation(); setFiles(prev => ({...prev, apricateFile: null})); }}
-        style={{ padding: 6, background: 'rgba(239, 68, 68, 0.1)', borderRadius: 6, color: '#EF4444', marginLeft: 'auto', cursor: 'pointer' }}
-      >
-        <X size={14} />
-      </div>
-    )}
-                    </div>
-                  )}
-
-                  {formData.certificateType.includes('Business Certificate') && (
-                    <div onClick={() => businessRef.current.click()} style={{ background: '#1E293B', border: '1px solid #334155', borderRadius: 6, padding: 8, display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', transition: 'background 0.2s' }}>
-                      <input type="file" style={{ display: 'none' }} ref={businessRef} onChange={(e) => handleFileChange(e, 'businessFile')} />
-                      <div style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10B981', padding: 8, borderRadius: 6 }}>
-                        <Calendar size={16} />
-                      </div>
-                      <div style={{ overflow: 'hidden', flex: 1 }}>
-                        <div style={{ fontSize: 12, color: 'white', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>Business Certificate</div>
-                        <div style={{ fontSize: 11, color: files.businessFile ? '#10B981' : '#94A3B8', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                          {files.businessFile ? (files.businessFile.name || 'Existing File') : 'Upload file'}
-                        </div>
-                      </div>
-    {files.businessFile && (
-      <div 
-        onClick={(e) => { e.stopPropagation(); setFiles(prev => ({...prev, businessFile: null})); }}
-        style={{ padding: 6, background: 'rgba(239, 68, 68, 0.1)', borderRadius: 6, color: '#EF4444', marginLeft: 'auto', cursor: 'pointer' }}
-      >
-        <X size={14} />
-      </div>
-    )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            
-                </>
+                <></>
               )}
-<div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 14 }}>
-              <motion.button 
-                whileHover={{ scale: 1.03, backgroundColor: 'rgba(51, 65, 85, 0.6)' }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => setIsModalOpen(false)} 
-                style={{ background: 'rgba(30, 41, 59, 0.4)', border: '1px solid #334155', color: '#E2E8F0', padding: '8px 20px', borderRadius: 10, fontWeight: 600, cursor: 'pointer', transition: 'border-color 0.2s', letterSpacing: '0.5px' }}
-              >
-                {modalMode === 'view' ? 'Close' : 'Cancel'}
-              </motion.button>
-              
-              {modalMode !== 'view' && (
-                <motion.button 
-                  whileHover={!isSubmitting ? { scale: 1.03, boxShadow: '0 12px 28px -6px rgba(16, 185, 129, 0.55), inset 0 1px 2px rgba(255,255,255,0.2)' } : {}}
-                  whileTap={!isSubmitting ? { scale: 0.96 } : {}}
-                  disabled={isSubmitting} 
-                  onClick={handleSubmit} 
-                  style={{ 
-                    background: isSubmitting ? 'linear-gradient(135deg, #475569, #334155)' : 'linear-gradient(135deg, #34D399, #059669)', 
-                    color: 'white', border: '1px solid rgba(255,255,255,0.1)', padding: '8px 24px', borderRadius: 10, fontWeight: 700, 
-                    display: 'flex', alignItems: 'center', gap: 10, cursor: isSubmitting ? 'wait' : 'pointer', 
-                    boxShadow: '0 6px 16px rgba(5, 150, 105, 0.3), inset 0 1px 2px rgba(255,255,255,0.15)',
-                    transition: 'background 0.3s', letterSpacing: '0.5px', position: 'relative', overflow: 'hidden'
-                  }}
-                >
-                  <motion.div 
-                    animate={{ left: ['-100%', '200%'] }} 
-                    transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', repeatDelay: 3 }} 
-                    style={{ position: 'absolute', top: 0, bottom: 0, width: '40%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)', transform: 'skewX(-20deg)', pointerEvents: 'none' }} 
-                  />
-                  
-                  {isSubmitting ? (
-                    <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} style={{ display: 'flex' }}>
-                      <RefreshCw size={18} strokeWidth={2.5} />
-                    </motion.div>
-                  ) : (
-                    <CheckCircle size={18} strokeWidth={2.5} /> 
-                  )}
-                  {isSubmitting ? 'Saving...' : (modalMode === 'edit' ? 'Update Certification' : 'Save Certification')}
-                </motion.button>
-              )}
-            </div>
-          </motion.div>
+
+              </div>{/* end content z-index wrapper */}
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
           <AnimatePresence>
             {showCalendarMenu && (
               <motion.div
