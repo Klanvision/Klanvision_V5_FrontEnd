@@ -1106,6 +1106,7 @@ export default function VerificationPortal({ certificateNumber }) {
           initial={{ opacity: 0, y: -18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65 }}
+          className="verify-header-motion"
           style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             padding: '30px 52px 0',
@@ -1325,7 +1326,7 @@ export default function VerificationPortal({ certificateNumber }) {
                 transition={{ duration: 0.65 }}
                 style={{ maxWidth: 1200, margin: '0 auto 52px', padding: '0 24px' }}
               >
-                <div style={{
+                <div className="verify-result-card" style={{
                   position: 'relative', overflow: 'hidden',
                   background: 'linear-gradient(135deg, rgba(2, 26, 17, 0.8), rgba(1, 15, 11, 0.9))',
                   border: '1px solid rgba(74, 222, 128, 0.3)',
@@ -1381,7 +1382,7 @@ export default function VerificationPortal({ certificateNumber }) {
                       {/* Shield Image */}
                       <img src="/images/shield.png" alt="Valid Shield" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 0 25px rgba(74,222,128,0.5))', transform: 'scale(3.5)', zIndex: 1, position: 'relative' }} />
                     </div>
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                    <div className="verify-valid-text" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
                         style={{
                           display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 16,
@@ -1394,9 +1395,9 @@ export default function VerificationPortal({ certificateNumber }) {
                         <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', letterSpacing: '1px' }}>VERIFICATION RESULT</span>
                       </motion.div>
 
-                      <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
-                        <span style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 600, color: '#4ade80', marginRight: 12, fontFamily: "Georgia, 'Times New Roman', serif" }}>VALID</span>
-                        <span style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 600, color: 'white', fontFamily: "Georgia, 'Times New Roman', serif" }}>CERTIFICATE</span>
+                      <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="verify-valid-heading-row">
+                        <span className="verify-valid-heading" style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 600, color: '#4ade80', marginRight: 12, fontFamily: "Georgia, 'Times New Roman', serif" }}>VALID</span>
+                        <span className="verify-valid-heading" style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 600, color: 'white', fontFamily: "Georgia, 'Times New Roman', serif" }}>CERTIFICATE</span>
                       </motion.div>
 
                       <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}
@@ -1479,7 +1480,7 @@ export default function VerificationPortal({ certificateNumber }) {
                       <div style={{ width: 3, height: 3, borderRadius: '50%', background: '#FFDF00', boxShadow: '0 0 8px 2px rgba(255, 223, 0, 0.8)' }} />
                     </div>
 
-                    <h3 style={{
+                    <h3 className="verify-section-heading" style={{
                       margin: 0,
                       fontSize: 26,
                       fontWeight: 500,
@@ -1625,7 +1626,7 @@ export default function VerificationPortal({ certificateNumber }) {
 
                       {(mockData?.status?.toLowerCase() === 'completed' || mockData?.status?.toLowerCase() === 'verified') && (
                         <>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, background: 'rgba(0,0,0,0.4)', padding: '6px 8px', borderRadius: 30, border: '1px solid rgba(201,168,76,0.3)', justifyContent: 'center' }}>
+                          <div className="verify-tabs-row" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, background: 'rgba(0,0,0,0.4)', padding: '6px 8px', borderRadius: 30, border: '1px solid rgba(201,168,76,0.3)', justifyContent: 'center' }}>
                             {(() => {
                               let tabs = [];
                               if (mockData.is_custom) {
