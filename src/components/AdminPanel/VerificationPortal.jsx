@@ -767,6 +767,24 @@ export default function VerificationPortal({ certificateNumber }) {
   const [activeImageTab, setActiveImageTab] = useState('participation');
   const inputRef = useRef(null);
   const resultRef = useRef(null);
+  const portalRef = useRef(null);
+
+  // ── Viewport Zoom Scaling (Mobile = exact desktop look, scaled down) ──
+  useEffect(() => {
+    const DESIGN_WIDTH = 1280;
+    const applyZoom = () => {
+      if (!portalRef.current) return;
+      const vw = window.innerWidth;
+      if (vw < DESIGN_WIDTH) {
+        portalRef.current.style.zoom = (vw / DESIGN_WIDTH).toFixed(4);
+      } else {
+        portalRef.current.style.zoom = '';
+      }
+    };
+    applyZoom();
+    window.addEventListener('resize', applyZoom);
+    return () => window.removeEventListener('resize', applyZoom);
+  }, []);
 
   // Web Speech API Voice Assistant
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -1028,11 +1046,12 @@ export default function VerificationPortal({ certificateNumber }) {
   const { dateStr: verifiedDateStr, timeStr: verifiedTimeStr } = mockData ? formatVerificationDate(mockData.last_verified_at) : { dateStr: '', timeStr: '' };
 
   return (
-    <div style={{
+    <div ref={portalRef} style={{
       minHeight: '100vh',
       fontFamily: "'Outfit', 'Inter', sans-serif",
       color: 'white', position: 'relative', overflowX: 'hidden',
       background: '#000612',
+      transformOrigin: 'top left',
     }}>
 
       {/* Animated canvas background (fixed, full page) */}
