@@ -1558,8 +1558,8 @@ export default function VerificationPortal({ certificateNumber }) {
                       `}</style>
                       <div className="premium-border-glow" style={{
                         width: '100%',
-                        maxWidth: (activeImageTab === 'photo' && mockData?.status?.toLowerCase() === 'completed') ? '220px' : '480px',
-                        height: (activeImageTab === 'photo' && mockData?.status?.toLowerCase() === 'completed') ? '270px' : '330px'
+                        maxWidth: (activeImageTab === 'photo' && (mockData?.status?.toLowerCase() === 'completed' || mockData?.status?.toLowerCase() === 'verified')) ? '220px' : '480px',
+                        height: (activeImageTab === 'photo' && (mockData?.status?.toLowerCase() === 'completed' || mockData?.status?.toLowerCase() === 'verified')) ? '270px' : '330px'
                       }}>
                         <motion.div
                           layout
@@ -1574,7 +1574,7 @@ export default function VerificationPortal({ certificateNumber }) {
                         >
                           <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {(() => {
-                              if (mockData?.status?.toLowerCase() !== 'completed') {
+                              if (mockData?.status?.toLowerCase() !== 'completed' && mockData?.status?.toLowerCase() !== 'verified') {
                                 return (
                                   <motion.img
                                     key="pending-verification"
@@ -1598,8 +1598,9 @@ export default function VerificationPortal({ certificateNumber }) {
                               const availableTabs = mockData.is_custom
                                 ? Object.keys(mockData.files || {}).filter(k => mockData.files[k])
                                 : ['participation', 'professional', 'photo'];
+                              const finalTabs = availableTabs.length ? availableTabs : ['participation', 'professional', 'photo'];
 
-                              return availableTabs.map(tabId => {
+                              return finalTabs.map(tabId => {
                                 const isActive = activeImageTab === tabId;
                                 return (
                                   <motion.img
@@ -1632,7 +1633,7 @@ export default function VerificationPortal({ certificateNumber }) {
                         </motion.div>
                       </div>
 
-                      {mockData?.status?.toLowerCase() === 'completed' && (
+                      {(mockData?.status?.toLowerCase() === 'completed' || mockData?.status?.toLowerCase() === 'verified') && (
                         <>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, background: 'rgba(0,0,0,0.4)', padding: '6px 8px', borderRadius: 30, border: '1px solid rgba(201,168,76,0.3)', justifyContent: 'center' }}>
                             {(() => {
