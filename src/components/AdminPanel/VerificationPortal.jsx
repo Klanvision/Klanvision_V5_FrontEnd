@@ -1535,8 +1535,8 @@ export default function VerificationPortal({ certificateNumber }) {
                           100% { background-position: 0% 50%; }
                         }
                         @keyframes borderPulse {
-                          0%, 100% { box-shadow: 0 0 18px 4px rgba(201,168,76,0.5), 0 0 40px 10px rgba(139,92,246,0.2); }
-                          50%      { box-shadow: 0 0 28px 8px rgba(245,158,11,0.7), 0 0 60px 18px rgba(236,72,153,0.3); }
+                          0%, 100% { box-shadow: 0 0 8px 2px rgba(201,168,76,0.3), 0 0 18px 4px rgba(139,92,246,0.12); }
+                          50%      { box-shadow: 0 0 14px 4px rgba(245,158,11,0.4), 0 0 28px 8px rgba(236,72,153,0.15); }
                         }
                         .premium-border-glow {
                           position: relative;
