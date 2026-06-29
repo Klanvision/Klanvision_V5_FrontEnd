@@ -567,6 +567,13 @@ export default function AdminPanel() {
           }));
 
           setUsers(prev => prev.map(u => u.id === verifyingUser.id ? { ...u, failed2FAAttempts: newFailCount, isAuthorized: newFailCount >= limit ? false : u.isAuthorized } : u));
+          
+          // Clear input fields for the next attempt
+          setAuthCode(['', '', '', '', '', '']);
+          // Focus the first input box for convenient re-entry
+          setTimeout(() => {
+            document.getElementById('code-0')?.focus();
+          }, 50);
 
           if (newFailCount >= limit) {
             setLoginError('Account BLOCKED due to security violations.');
