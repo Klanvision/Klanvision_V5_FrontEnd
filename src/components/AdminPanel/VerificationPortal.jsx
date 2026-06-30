@@ -2019,7 +2019,7 @@ export default function VerificationPortal({ certificateNumber }) {
           min-height: 100px;
         }
         @media (max-width: 900px) {
-          .cert-details-grid   { grid-template-columns: 1fr !important; }
+          .cert-details-grid   { grid-template-columns: 1fr 1fr !important; }
           .verify-footer-grid  { 
             display: grid !important;
             grid-template-columns: repeat(4, 1fr) !important;
@@ -2029,9 +2029,28 @@ export default function VerificationPortal({ certificateNumber }) {
           }
           .verify-footer-grid > div { min-width: 0 !important; }
           .footer-divider { display: none !important; }
+          
+          /* First Column: Logo + Text Left Align */
+          .verify-footer-grid > div:nth-child(1) { text-align: left !important; }
           .footer-logo-container {
-            flex-direction: column !important;
-            text-align: center !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            text-align: left !important;
+          }
+
+          /* Third Column: Center Need Help */
+          .verify-footer-grid > div:nth-child(5) {
+            display: flex;
+            flex-direction: column;
+            align-items: center !important;
+          }
+          .verify-footer-grid > div:nth-child(5) > div {
+            align-items: center !important;
+          }
+
+          /* Fourth Column: Center Follow Us Icons */
+          .verify-footer-grid > div:nth-child(7) > div:last-child {
+            justify-content: center !important;
           }
         }
         input::placeholder { color: rgba(255,255,255,0.22); letter-spacing: 1px; }
