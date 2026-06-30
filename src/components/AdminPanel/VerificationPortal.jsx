@@ -1910,9 +1910,9 @@ export default function VerificationPortal({ certificateNumber }) {
           <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
             <Particles
               particleColors={["#ffffff", "#F0D060"]}
-              particleCount={250}
+              particleCount={300}
               particleSpread={10}
-              speed={0.08}
+              speed={0.09}
               particleBaseSize={80}
               moveParticlesOnHover
               alphaParticles={false}
@@ -1927,8 +1927,8 @@ export default function VerificationPortal({ certificateNumber }) {
           <div className="verify-footer-grid">
 
             {/* Left */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+            <div style={{ flex: '1.5', minWidth: 300 }}>
+              <div className="footer-logo-container" style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
                 <img src="/images/footer_logo.png" alt="Footer Logo" style={{ height: 90, maxWidth: 300, objectFit: 'contain' }} />
                 <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, maxWidth: 260 }}>
                   Certify Verification ensures the authenticity and integrity of every certificate.<br />Verify with confidence.
@@ -1940,7 +1940,7 @@ export default function VerificationPortal({ certificateNumber }) {
             <div style={{ width: 1, background: 'rgba(255,255,255,0.1)' }} className="footer-divider" />
 
             {/* Quick Links */}
-            <div>
+            <div style={{ flex: '1', minWidth: 150 }}>
               <h4 style={{ color: 'white', fontSize: 15, fontWeight: 600, marginBottom: 20, marginTop: 0 }}>Quick Links</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[
@@ -1962,7 +1962,7 @@ export default function VerificationPortal({ certificateNumber }) {
             <div style={{ width: 1, background: 'rgba(255,255,255,0.1)' }} className="footer-divider" />
 
             {/* Middle (Need Help) */}
-            <div>
+            <div style={{ flex: '1', minWidth: 200 }}>
               <h4 style={{ color: 'white', fontSize: 15, fontWeight: 600, marginBottom: 20, marginTop: 0 }}>Need Help?</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'rgba(255,255,255,0.7)', fontSize: 13 }}>
@@ -1978,7 +1978,7 @@ export default function VerificationPortal({ certificateNumber }) {
             <div style={{ width: 1, background: 'rgba(255,255,255,0.1)' }} className="footer-divider" />
 
             {/* Right (Follow Us) */}
-            <div>
+            <div style={{ flex: '1', minWidth: 150 }}>
               <h4 style={{ color: 'white', fontSize: 15, fontWeight: 600, marginBottom: 20, marginTop: 0 }}>Follow Us</h4>
               <div style={{ display: 'flex', gap: 12 }}>
                 {[
@@ -2006,10 +2006,31 @@ export default function VerificationPortal({ certificateNumber }) {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
         .cert-details-grid  { grid-template-columns: 1fr 1fr !important; }
-        .verify-footer-grid { grid-template-columns: 1.2fr 1fr 1fr; }
-        @media (max-width: 720px) {
+        .verify-footer-grid { 
+          display: flex;
+          justify-content: space-between;
+          gap: 30px;
+          flex-wrap: wrap;
+        }
+        .footer-divider {
+          width: 1px;
+          background: rgba(255,255,255,0.15);
+          align-self: stretch;
+          min-height: 100px;
+        }
+        @media (max-width: 900px) {
           .cert-details-grid   { grid-template-columns: 1fr !important; }
-          .verify-footer-grid  { grid-template-columns: 1fr !important; }
+          .verify-footer-grid  { 
+            flex-direction: column; 
+            align-items: center; 
+            text-align: center;
+            gap: 40px;
+          }
+          .footer-divider { display: none !important; }
+          .footer-logo-container {
+            flex-direction: column !important;
+            text-align: center !important;
+          }
         }
         input::placeholder { color: rgba(255,255,255,0.22); letter-spacing: 1px; }
         input:focus        { outline: none; }

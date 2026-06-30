@@ -204,8 +204,8 @@ const Particles = ({
 
       if (!disableRotation) {
         particles.rotation.x = Math.sin(elapsed * 0.0002) * 0.1;
-        particles.rotation.y = Math.cos(elapsed * 0.0005) * 0.15;
-        particles.rotation.z += 0.01 * speed;
+        particles.rotation.y -= 0.05 * speed;
+        particles.rotation.z = 0;
       }
 
       renderer.render({ scene: particles, camera });
