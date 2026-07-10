@@ -701,8 +701,27 @@ export default function Engine({ testId: propTestId }) {
         });
         if (cancelled) return;
         if (qError) throw qError;
-        if (!qData || qData.length === 0) throw new Error("No questions found");
-        const finalQuestions = testData.shuffle ? [...qData].sort(() => Math.random() - 0.5) : qData;
+        // Group questions by section to ensure 1-to-1 matching with Sidebar section groups
+        const sectionsMap = {};
+        qData.forEach(q => {
+          const sId = q.section_id || "default";
+          const sName = q.section_name || "General Section";
+          if (!sectionsMap[sId]) {
+            sectionsMap[sId] = { id: sId, name: sName, questions: [] };
+          }
+          sectionsMap[sId].questions.push(q);
+        });
+
+        // Convert back to flat list, sorting/shuffling questions within sections
+        const finalQuestions = [];
+        Object.values(sectionsMap).forEach(sec => {
+          let secQuestions = sec.questions;
+          if (testData.shuffle) {
+            secQuestions = [...secQuestions].sort(() => Math.random() - 0.5);
+          }
+          finalQuestions.push(...secQuestions);
+        });
+
         setQuestions(finalQuestions);
 
         const initialVisited = {};

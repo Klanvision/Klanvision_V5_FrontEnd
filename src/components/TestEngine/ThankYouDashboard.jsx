@@ -184,8 +184,8 @@ export function ThankYouDashboard({ attemptId, answeredCount, totalQuestions, te
           "#F472B6", // pink
         ];
         
-        const numParticles = isLarge ? 130 : (Math.floor(Math.random() * 20) + 55);
-        const speedScale = isLarge ? 1.35 : 1.0;
+        const numParticles = isLarge ? 160 : (Math.floor(Math.random() * 20) + 55);
+        const speedScale = isLarge ? 2.3 : 1.0;
         for (let i = 0; i < numParticles; i++) {
           const color = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
           this.particles.push(new FireworkParticle(this.x, this.y, color, speedScale));
@@ -205,11 +205,13 @@ export function ThankYouDashboard({ attemptId, answeredCount, totalQuestions, te
 
     let fireworks = [];
 
-    // Trackers for three sequential large shots at top middle (exact middle of top icons)
+    // Trackers for three sequential large shots distributed across the top of the page (above header text)
     let firstShotSpawned = false;
     let secondShotSpawned = false;
     let thirdShotSpawned = false;
     let activeSequentialFirework = null;
+    let sequentialDelayCounter = 0;
+    const DELAY_BETWEEN_SHOTS = 40; // ~0.65s delay between shots
 
     // Helper to get coordinates flanking the central dashboard box or header
     // 70% Top side, 30% Beside the "EXAM SUBMITTED SUCCESSFULLY!" header
@@ -241,9 +243,9 @@ export function ThankYouDashboard({ attemptId, answeredCount, totalQuestions, te
       ctx.fillStyle = "rgba(2,5,18,1)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // --- SEQUENTIAL THREE LARGE SHOTS (Top Middle) ---
-      if (!firstShotSpawned && t >= 15) {
-        const fw = new Firework(canvas.width * 0.5, canvas.height * 0.12, true);
+      // --- SEQUENTIAL THREE LARGE SHOTS (Top of page, above EXAM SUBMITTED SUCCESSFULLY!) ---
+      if (!firstShotSpawned && t >= 20) {
+        const fw = new Firework(canvas.width * 0.25, canvas.height * 0.1, true); // Left-top
         fireworks.push(fw);
         activeSequentialFirework = fw;
         firstShotSpawned = true;
@@ -251,19 +253,27 @@ export function ThankYouDashboard({ attemptId, answeredCount, totalQuestions, te
       
       if (firstShotSpawned && !secondShotSpawned) {
         if (activeSequentialFirework && activeSequentialFirework.done) {
-          const fw = new Firework(canvas.width * 0.5, canvas.height * 0.12, true);
-          fireworks.push(fw);
-          activeSequentialFirework = fw;
-          secondShotSpawned = true;
+          sequentialDelayCounter++;
+          if (sequentialDelayCounter >= DELAY_BETWEEN_SHOTS) {
+            const fw = new Firework(canvas.width * 0.75, canvas.height * 0.1, true); // Right-top
+            fireworks.push(fw);
+            activeSequentialFirework = fw;
+            secondShotSpawned = true;
+            sequentialDelayCounter = 0;
+          }
         }
       }
       
       if (secondShotSpawned && !thirdShotSpawned) {
         if (activeSequentialFirework && activeSequentialFirework.done) {
-          const fw = new Firework(canvas.width * 0.5, canvas.height * 0.12, true);
-          fireworks.push(fw);
-          activeSequentialFirework = fw;
-          thirdShotSpawned = true;
+          sequentialDelayCounter++;
+          if (sequentialDelayCounter >= DELAY_BETWEEN_SHOTS) {
+            const fw = new Firework(canvas.width * 0.5, canvas.height * 0.08, true); // Center-top
+            fireworks.push(fw);
+            activeSequentialFirework = fw;
+            thirdShotSpawned = true;
+            sequentialDelayCounter = 0;
+          }
         }
       }
 
