@@ -220,46 +220,31 @@ export default function Footer() {
           >
 
             {/* Logo mark + wordmark */}
-            <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 16, marginBottom: 28 }} onClick={() => scrollTo('hero')}>
+            <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 16, marginBottom: 10, marginLeft: -16 }} onClick={() => scrollTo('hero')}>
 
-              <motion.div
+              <motion.img
                 whileHover={{ scale: 1.05 }}
+                src="/images/Transparent_Logo.png"
+                alt="Klanvision Logo"
                 style={{
-                  width: 68,
-                  height: 68,
-                  background: 'linear-gradient(135deg, #4F46E5, #7C3AED, #FF6B35)',
-                  WebkitMaskImage: 'url(/logo.png)',
-                  maskImage: 'url(/logo.png)',
-                  WebkitMaskRepeat: 'no-repeat',
-                  maskRepeat: 'no-repeat',
-                  WebkitMaskSize: 'contain',
-                  maskSize: 'contain',
+                  width: 90,
+                  height: 90,
+                  objectFit: 'contain',
                   filter: 'drop-shadow(0 0 12px rgba(124, 58, 237, 0.5))'
                 }}
               />
 
-
-              <motion.span
+              <motion.img
                 whileHover={{ scale: 1.02 }}
+                src="/images/slogan.png"
+                alt="Klanvision Slogan"
                 style={{
-                  fontFamily: "'Outfit', 'Poppins', sans-serif",
-                  fontWeight: 900,
-                  fontSize: 28,
-                  letterSpacing: 2,
-                  display: 'flex',
-                  gap: 4,
+                  height: 50,
+                  width: 'auto',
+                  objectFit: 'contain',
                   cursor: 'pointer'
                 }}
-              >
-                <span style={{
-                  background: 'linear-gradient(90deg, #4F46E5, #7C3AED, #FF6B35)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  filter: 'drop-shadow(0 2px 10px rgba(124, 58, 237, 0.2))'
-                }}>KLAN</span>
-                <span style={{ color: 'white' }}>VISION</span>
-              </motion.span>
+              />
             </div>
 
 

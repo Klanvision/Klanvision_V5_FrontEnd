@@ -176,7 +176,7 @@ export default function Navbar({ theme, toggleTheme }) {
             onClick={() => scrollTo('hero')}
             style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', height: '100%' }}
           >
-            <img src="/logo.png" alt="Klanvision Logo" style={{ height: 60, width: 'auto', transform: 'scale(1.3)', marginLeft: 16 }} />
+            <img src="/images/Transparent_Logo.png" alt="Klanvision Logo" style={{ height: 75, width: 'auto', marginLeft: 16 }} />
           </motion.div>
 
           {/* Desktop nav links – hidden on ≤1024px via .desktop-nav CSS class */}

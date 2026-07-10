@@ -8,8 +8,8 @@
 import './index.css';
 import './App.css';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // ── Section Components ───────────────────────────────────────
 import Navbar from './components/Navbar';
@@ -30,6 +30,7 @@ import CareersPage from './components/CareersPage';
 import JobApplicationPage from './components/JobApplicationPage';
 import AdminPanel from './components/AdminPanel';
 import ResetPassword from './components/AdminPanel/ResetPassword';
+import AssessmentPortal from './components/AssessmentPortal';
 import Engine from './components/TestEngine/Engine';
 import VerificationPortal from './components/AdminPanel/VerificationPortal';
 import FAQPage from './components/FAQPage';
@@ -281,7 +282,7 @@ function Loader() {
 function App() {
   const location = useLocation();
   const currentPath = location.pathname;
-
+  
   // Only show loader on the home page, not when navigating via navbar
   const isHomePage = currentPath === '/' || currentPath === '/home';
   const [loading, setLoading] = useState(isHomePage);
@@ -305,7 +306,7 @@ function App() {
     if (!isHomePage) return;
     const t = setTimeout(() => setLoading(false), 2400);
     return () => clearTimeout(t);   // cleanup on unmount
-  }, [isHomePage]);
+  }, []);
 
 
 
@@ -315,8 +316,18 @@ function App() {
   if (currentPath === '/admin/reset-password') {
     return <ResetPassword />;
   }
-  if (currentPath.startsWith('/test/') || currentPath === '/test') {
-    return <Engine />;
+  if (currentPath === '/test') {
+    return (
+      <>
+        <Navbar theme={theme} toggleTheme={toggleTheme} />
+        <AssessmentPortal />
+        <Footer />
+      </>
+    );
+  }
+  if (currentPath.startsWith('/test/')) {
+    const parsedTestId = currentPath.split('/')[2];
+    return <Engine testId={parsedTestId} />;
   }
   if (currentPath === '/verify' || currentPath === '/verify/' || currentPath === '/verify-certificate' || currentPath.startsWith('/verify/')) {
     const certNum = currentPath.startsWith('/verify/') ? currentPath.substring(8) : '';
