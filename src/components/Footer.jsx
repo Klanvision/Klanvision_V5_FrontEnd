@@ -40,14 +40,14 @@ const legalContent = {
     content: (
       <div style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text-muted)' }}>
 
-        <p style={{ marginBottom: 16 }}>Welcome to Klanvision. By accessing our website and using our services, you agree to the following terms:</p>
+        <p style={{ marginBottom: 16 }}>Welcome to KLANVISION IT SOLUTIONS PRIVATE LIMITED (brand name: Klanvision). By accessing our website and using our services, you agree to the following terms:</p>
         <ul style={{ display: 'flex', flexDirection: 'column', gap: 10, paddingLeft: 16 }}>
-          <li>• All services are delivered based on agreed scope, timelines, and pricing.</li>
-          <li>• Clients must provide accurate requirements, content, and necessary access.</li>
-          <li>• Any misuse or unauthorized use of our website or services is strictly prohibited.</li>
+          <li>• All services are delivered based on agreed scope, timelines, and pricing models by KLANVISION IT SOLUTIONS PRIVATE LIMITED.</li>
+          <li>• Clients must provide accurate requirements, content, and necessary system access.</li>
+          <li>• Any misuse or unauthorized use of our website, IP, or services is strictly prohibited.</li>
           <li>• Project timelines depend on client feedback, approvals, and external dependencies.</li>
-          <li>• We reserve the right to modify services or terms at any time.</li>
-          <li>• Ownership of deliverables is transferred only after full payment is completed.</li>
+          <li>• We reserve the right to modify services, pricing, or these terms at any time.</li>
+          <li>• Ownership of deliverables is transferred to the client only after full payment is completed.</li>
         </ul>
       </div>
     )
@@ -56,7 +56,7 @@ const legalContent = {
     title: 'Service Policy',
     content: (
       <div style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text-muted)' }}>
-        <p style={{ marginBottom: 12 }}>At Klanvision, we deliver high-quality IT and software solutions tailored to meet diverse business requirements.</p>
+        <p style={{ marginBottom: 12 }}>At KLANVISION IT SOLUTIONS PRIVATE LIMITED, we deliver high-quality IT and software solutions tailored to meet diverse business requirements.</p>
         <h4 style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: 8 }}>Our service offerings include:</h4>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 16px', marginBottom: 16 }}>
@@ -72,11 +72,11 @@ const legalContent = {
         <h4 style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: 8 }}>Service Delivery Approach</h4>
 
         <ol style={{ paddingLeft: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <li><strong>1. Requirement Analysis</strong> – Perform detailed requirement gathering and business analysis.</li>
-          <li><strong>2. Solution Design & Planning</strong> – Develop architecture and implementation strategy.</li>
-          <li><strong>3. Development & Implementation</strong> – Execute development using secure coding practices.</li>
-          <li><strong>4. Quality Assurance & Deployment</strong> – Comprehensive testing and validation.</li>
-          <li><strong>5. Support & Maintenance</strong> – Ongoing monitoring and optimization.</li>
+          <li><strong>1. Requirement Analysis</strong> – Gather and analyze business and system requirements.</li>
+          <li><strong>2. Solution Design</strong> – Develop software architecture and implementation blueprints.</li>
+          <li><strong>3. Development</strong> – Secure, scalable programming following industry standards.</li>
+          <li><strong>4. Quality Assurance</strong> – Comprehensive validation, security checks, and testing.</li>
+          <li><strong>5. Support & SLA</strong> – Continuous support, monitoring, and optimization.</li>
         </ol>
       </div>
     )
@@ -85,20 +85,20 @@ const legalContent = {
     title: 'Privacy Policy',
     content: (
       <div style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text-muted)' }}>
-        <p style={{ marginBottom: 12 }}>We are committed to protecting the privacy and integrity of your information.</p>
+        <p style={{ marginBottom: 12 }}>KLANVISION IT SOLUTIONS PRIVATE LIMITED is committed to protecting the privacy, confidentiality, and integrity of your information.</p>
         <h4 style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: 6 }}>Information We Collect</h4>
 
         <ul style={{ paddingLeft: 16, marginBottom: 12 }}>
           <li>• Personal details (name, email, contact number)</li>
           <li>• Organization details and project requirements</li>
-          <li>• Technical data such address and interaction data</li>
+          <li>• Technical data such as IP address and interaction logs</li>
         </ul>
         <h4 style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: 6 }}>Data Sharing</h4>
 
-        <p style={{ marginBottom: 12 }}>Klanvision does not sell or rent your data. We share information only with trusted partners for service delivery or by law.</p>
+        <p style={{ marginBottom: 12 }}>KLANVISION IT SOLUTIONS PRIVATE LIMITED does not sell or rent your data. We share information only with trusted partners for service delivery or when required by law.</p>
         <h4 style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: 6 }}>Data Security</h4>
 
-        <p>We implement industry-standard technical and organizational safeguards to protect your data from unauthorized access.</p>
+        <p>We implement industry-standard technical and organizational safeguards to protect your data from unauthorized access or disclosure.</p>
       </div>
     )
   },
@@ -108,17 +108,17 @@ const legalContent = {
       <div style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text-muted)' }}>
         <h4 style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: 8 }}>4.1 Cancellation Policy</h4>
         <ul style={{ paddingLeft: 16, marginBottom: 16 }}>
-          <li>• <strong>Before Project Start:</strong> Full refund review of advance payments.</li>
-          <li>• <strong>After Project Start:</strong> Charges based on work completed.</li>
+          <li>• <strong>Before Project Start:</strong> Full refund review of advance payments under policy terms.</li>
+          <li>• <strong>After Project Start:</strong> Cancellation fees apply based on work completed.</li>
           <li>• <strong>Managed Services:</strong> Requires 30 days’ prior written notice.</li>
-          <li>• Third-party costs (licenses, tools) are non-refundable.</li>
+          <li>• Third-party costs (licenses, tools, server hosting) are non-refundable.</li>
         </ul>
         <h4 style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: 8 }}>4.2 Refund Policy</h4>
         <ul style={{ paddingLeft: 16 }}>
-          <li>• <strong>Before Commencement:</strong> Eligible for full refund.</li>
-          <li>• <strong>After Initiation:</strong> Refund after deducting labor and resources.</li>
-          <li>• <strong>Post-Delivery:</strong> No refunds once project is approved.</li>
-          <li>• Approved refunds processed within 7–10 business days.</li>
+          <li>• <strong>Before Commencement:</strong> Eligible for a full refund.</li>
+          <li>• <strong>After Initiation:</strong> Partial refund calculated after deducting labor and resources.</li>
+          <li>• <strong>Post-Delivery:</strong> No refunds once project deliverables are approved.</li>
+          <li>• Approved refunds processed by KLANVISION IT SOLUTIONS PRIVATE LIMITED within 7–10 business days.</li>
         </ul>
       </div>
     )
@@ -220,7 +220,7 @@ export default function Footer() {
           >
 
             {/* Logo mark + wordmark */}
-            <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 16, marginBottom: 10, marginLeft: -16 }} onClick={() => scrollTo('hero')}>
+            <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 16, marginBottom: 10, marginLeft: -16 }} onClick={() => window.location.href = 'https://www.klanvision.com'}>
 
               <motion.img
                 whileHover={{ scale: 1.05 }}
@@ -250,9 +250,11 @@ export default function Footer() {
 
 
             {/* Tagline */}
-            <p style={{ color: '#9CA3AF', fontSize: 14, lineHeight: 1.75, marginBottom: 20 }} className="footer-tagline">
-
+            <p style={{ color: '#9CA3AF', fontSize: 14, lineHeight: 1.75, marginBottom: 12 }} className="footer-tagline">
               Transforming the Future of Technology | Empowering Businesses with Enhanced Digital Solutions.
+            </p>
+            <p style={{ color: '#6B7280', fontSize: 12, lineHeight: 1.6, marginBottom: 20 }} className="footer-corporate-info">
+              KLANVISION IT SOLUTIONS PRIVATE LIMITED is a registered corporate entity in India. Registered Office: Anantapur, Andhra Pradesh.
             </p>
 
             {/* Social icon buttons – hover reveals platform brand color */}
@@ -454,7 +456,7 @@ export default function Footer() {
 
         {/* Bottom Bar – copyright + back-to-top button */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 0', flexWrap: 'wrap', gap: 12 }}>
-          <p style={{ color: '#6B7280', fontSize: 13.5 }}>© 2025 Klanvision Company. All rights reserved.</p>
+          <p style={{ color: '#6B7280', fontSize: 13.5 }}>© 2025 KLANVISION IT SOLUTIONS PRIVATE LIMITED. All rights reserved.</p>
           {/* Back to top – scrolls to page top smoothly */}
           <motion.button
             whileHover={{ scale: 1.06, y: -2 }}

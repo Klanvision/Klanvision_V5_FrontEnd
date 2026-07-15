@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Phone, Mail, MapPin, Clock, MessageSquare, ShieldCheck, 
+  Phone, Mail, MapPin, Clock, MessageSquare, ShieldCheck,
   Send, Sparkles, CheckCircle2, DollarSign, HelpCircle, Plus, Minus
 } from 'lucide-react';
 import { useSEO } from '../hooks/useSEO';
@@ -162,6 +162,7 @@ export default function ContactPage() {
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                   {[
+                    { icon: ShieldCheck, title: 'Legal Corporate Name', value: 'KLANVISION IT SOLUTIONS PRIVATE LIMITED' },
                     { icon: MapPin, title: 'Corporate Address', value: 'Anantapur, Andhra Pradesh, India' },
                     { icon: Phone, title: 'Contact Phone', value: '+91 70323 62358' },
                     { icon: Mail, title: 'Inquiry Email', value: 'support@klanvision.com' },

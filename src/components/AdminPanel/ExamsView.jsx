@@ -437,7 +437,7 @@ export default function ExamsView({ triggerToast }) {
     e.preventDefault();
     try {
       const result = await api.generateExamCertificate(selectedAttemptForCert.id, certForm);
-      setReports(prev => prev.map(r => r.id === selectedAttemptForCert.id ? { ...r, certificate_number: result.certificateNumber } : r));
+      setReports(prev => prev.map(r => r.id === selectedAttemptForCert.id ? { ...r, certificate_number: result.certificateNumber, certificate_status: 'Completed' } : r));
       setIsCertModalOpen(false);
       triggerToast(`Certificate Generated: ${result.certificateNumber}!`, "Certificates");
     } catch (err) {
@@ -1018,31 +1018,55 @@ export default function ExamsView({ triggerToast }) {
                             {report.status !== 'submitted' ? (
                               <span style={{ fontSize: 12, color: '#64748B', fontWeight: 800 }}>TEST IN PROGRESS</span>
                             ) : report.certificate_number ? (
-                              <div style={{ display: 'flex', gap: 8 }}>
-                                <a
-                                  href={`/verify/${report.certificate_number}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  style={{
-                                    display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none',
-                                    background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)',
-                                    color: '#10B981', padding: '6px 12px', borderRadius: 8, fontSize: 11, fontWeight: 800
-                                  }}
-                                >
-                                  <ShieldCheck size={12} /> Verify
-                                </a>
-                                <button
-                                  onClick={() => handleDownloadCertDoc(report.certificate_number)}
-                                  style={{
-                                    display: 'flex', alignItems: 'center', gap: 4,
-                                    background: 'rgba(255,255,255,0.05)', border: 'none',
-                                    color: '#94A3B8', padding: '6px 12px', borderRadius: 8, fontSize: 11, fontWeight: 800,
-                                    cursor: 'pointer'
-                                  }}
-                                >
-                                  <Download size={12} /> PDF
-                                </button>
-                              </div>
+                              report.certificate_status === 'Credentialing' ? (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                  <span style={{ 
+                                    padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 800,
+                                    background: 'rgba(139, 92, 246, 0.15)', color: '#A78BFA',
+                                    textTransform: 'uppercase'
+                                  }}>
+                                    Credentialing
+                                  </span>
+                                  <button
+                                    onClick={() => handleOpenCertificateGen(report)}
+                                    style={{
+                                      display: 'flex', alignItems: 'center', gap: 4,
+                                      background: 'rgba(255,255,255,0.05)', border: 'none',
+                                      color: '#94A3B8', padding: '6px 12px', borderRadius: 8, fontSize: 11, fontWeight: 800,
+                                      cursor: 'pointer'
+                                    }}
+                                    title="Complete & Issue Certificate"
+                                  >
+                                    <Award size={12} /> Issue
+                                  </button>
+                                </div>
+                              ) : (
+                                <div style={{ display: 'flex', gap: 8 }}>
+                                  <a
+                                    href={`/verify/${report.certificate_number}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                      display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none',
+                                      background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)',
+                                      color: '#10B981', padding: '6px 12px', borderRadius: 8, fontSize: 11, fontWeight: 800
+                                    }}
+                                  >
+                                    <ShieldCheck size={12} /> Verify
+                                  </a>
+                                  <button
+                                    onClick={() => handleDownloadCertDoc(report.certificate_number)}
+                                    style={{
+                                      display: 'flex', alignItems: 'center', gap: 4,
+                                      background: 'rgba(255,255,255,0.05)', border: 'none',
+                                      color: '#94A3B8', padding: '6px 12px', borderRadius: 8, fontSize: 11, fontWeight: 800,
+                                      cursor: 'pointer'
+                                    }}
+                                  >
+                                    <Download size={12} /> PDF
+                                  </button>
+                                </div>
+                              )
                             ) : (
                               <button
                                 onClick={() => handleOpenCertificateGen(report)}
