@@ -48,7 +48,7 @@ export default function ServicePolicyPage() {
               Service <span className="gradient-text">Policy</span>
             </h1>
             <p style={{ color: '#9CA3AF', fontSize: 18, maxWidth: 700, margin: '0 auto', lineHeight: 1.6 }}>
-              At Klanvision, we deliver high-quality IT and software solutions tailored to meet diverse business requirements.
+              At KLANVISION IT SOLUTIONS PRIVATE LIMITED (brand name: Klanvision), we deliver high-quality IT and software solutions tailored to meet diverse business requirements.
             </p>
           </motion.div>
         </div>
@@ -143,7 +143,7 @@ export default function ServicePolicyPage() {
       {/* Help Footer */}
       <section className="container" style={{ textAlign: 'center', marginTop: 80 }}>
         <p style={{ color: '#9CA3AF', fontSize: 14 }}>
-          Klanvision • Delivering Excellence Through Innovation
+          KLANVISION IT SOLUTIONS PRIVATE LIMITED • Delivering Excellence Through Innovation
         </p>
       </section>
     </div>

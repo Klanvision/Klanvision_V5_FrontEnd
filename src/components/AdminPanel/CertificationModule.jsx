@@ -90,7 +90,7 @@ export default function CertificationModule() {
   }, []);
 
   const getUniqueValues = (key) => {
-    if (key === 'status') return ['Verified', 'Pending', 'Completed'];
+    if (key === 'status') return ['Verified', 'Pending', 'Completed', 'Credentialing'];
     if (key === 'certificateType') {
       const dbTypes = certifications.map(cert => cert.certificateType || cert.certificate_type || '').filter(Boolean);
       // If dbTypes are comma-separated strings, split them. Otherwise just use them.
@@ -1223,8 +1223,8 @@ export default function CertificationModule() {
                     <td style={{ padding: '16px 24px' }}>
                       <span style={{ 
                         padding: '4px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700,
-                        background: cert.status === 'Completed' ? 'rgba(59, 130, 246, 0.1)' : cert.status === 'Verified' ? 'rgba(16, 185, 129, 0.1)' : cert.status === 'Rejected' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)',
-                        color: cert.status === 'Completed' ? '#3B82F6' : cert.status === 'Verified' ? '#10B981' : cert.status === 'Rejected' ? '#EF4444' : '#F59E0B'
+                        background: cert.status === 'Completed' ? 'rgba(59, 130, 246, 0.1)' : cert.status === 'Verified' ? 'rgba(16, 185, 129, 0.1)' : cert.status === 'Rejected' ? 'rgba(239, 68, 68, 0.1)' : cert.status === 'Credentialing' ? 'rgba(139, 92, 246, 0.15)' : 'rgba(245, 158, 11, 0.1)',
+                        color: cert.status === 'Completed' ? '#3B82F6' : cert.status === 'Verified' ? '#10B981' : cert.status === 'Rejected' ? '#EF4444' : cert.status === 'Credentialing' ? '#A78BFA' : '#F59E0B'
                       }}>
                         {cert.status}
                       </span>

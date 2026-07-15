@@ -64,7 +64,7 @@ export function ThankYouDashboard({ attemptId, answeredCount, totalQuestions, te
   };
 
   const handleExit = () => {
-    window.location.href = "/";
+    window.location.href = "https://www.klanvision.com";
   };
 
   useEffect(() => {
@@ -313,7 +313,8 @@ export function ThankYouDashboard({ attemptId, answeredCount, totalQuestions, te
           <img
             src="/images/Transparent_Logo.png"
             alt="Klanvision Logo"
-            className="w-[80px] h-[80px] object-contain drop-shadow-[0_0_12px_rgba(124,58,237,0.5)]"
+            onClick={() => window.location.href = "https://www.klanvision.com"}
+            className="w-[80px] h-[80px] object-contain drop-shadow-[0_0_12px_rgba(124,58,237,0.5)] cursor-pointer"
           />
           <img
             src="/images/slogan.png"

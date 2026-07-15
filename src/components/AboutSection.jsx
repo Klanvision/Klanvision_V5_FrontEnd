@@ -199,11 +199,11 @@ export default function AboutSection() {
 
             {/* Company description paragraphs */}
             <p style={{ color: 'var(--text-muted)', fontSize: 16, lineHeight: 1.8 }}>
-              Klanvision is a professional company specializing in innovative design, web development, and digital marketing. Headquartered in <strong style={{ color: '#4F46E5' }}>Anantapur, Andhra Pradesh</strong>, we provide comprehensive solutions for scalable growth across industries.
+              KLANVISION IT SOLUTIONS PRIVATE LIMITED (brand name: Klanvision) is a professional company specializing in innovative design, web development, and digital marketing. Headquartered in <strong style={{ color: '#4F46E5' }}>Anantapur, Andhra Pradesh</strong>, we provide comprehensive solutions for scalable growth across industries.
             </p>
 
             <p style={{ color: 'var(--text-muted)', fontSize: 16, lineHeight: 1.8 }}>
-              Since 2025, we have been delivering seamless digital services, ensuring every business achieves its digital goals. At Klanvision, we prioritize quality, efficiency, and customer satisfaction.
+              Since 2025, we have been delivering seamless digital services, ensuring every business achieves its digital goals. At KLANVISION IT SOLUTIONS PRIVATE LIMITED, we prioritize quality, efficiency, and customer satisfaction.
             </p>
 
 

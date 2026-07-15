@@ -383,10 +383,44 @@ export default function Engine({ testId: propTestId }) {
         });
       }
 
+      // Check if candidate has written any exam in the last 3 months
+      const { data: existingProfile } = await supabase
+        .from("profiles")
+        .select("id")
+        .ilike("email", formData.email.trim())
+        .maybeSingle();
+
+      if (existingProfile) {
+        const { data: pastAttempts } = await supabase
+          .from("attempts")
+          .select("created_at, submitted_at")
+          .eq("student_id", existingProfile.id)
+          .eq("status", "submitted")
+          .order("created_at", { ascending: false });
+
+        if (pastAttempts && pastAttempts.length > 0) {
+          const lastAttemptDate = new Date(pastAttempts[0].submitted_at || pastAttempts[0].created_at);
+          const threeMonthsAgo = new Date();
+          threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+          if (lastAttemptDate > threeMonthsAgo) {
+            const eligibleDate = new Date(lastAttemptDate);
+            eligibleDate.setMonth(eligibleDate.getMonth() + 3);
+            const formattedEligibleDate = eligibleDate.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric"
+            });
+            throw new Error(`You have already taken an assessment within the last 3 months. You will be eligible to write another exam on or after ${formattedEligibleDate}.`);
+          }
+        }
+        guestIdToUse = existingProfile.id;
+      }
+
       const { error: profileError } = await supabase.from("profiles").upsert({
         id: guestIdToUse,
         name: formData.name,
-        email: formData.email,
+        email: formData.email.trim().toLowerCase(),
         phone: formData.phone,
         client_id: test?.client_id || "klanvision-tech"
       }, { onConflict: 'id' });
@@ -600,6 +634,33 @@ export default function Engine({ testId: propTestId }) {
         const existingGuestId = sessionStorage.getItem(`guest_profile_id_${testId}`);
         if (!existingGuestId) throw new Error("Student profile not found. Please register details.");
         finalStudentId = existingGuestId;
+      }
+
+      // Check if candidate has written any exam in the last 3 months
+      if (finalStudentId) {
+        const { data: pastAttempts } = await supabase
+          .from("attempts")
+          .select("created_at, submitted_at")
+          .eq("student_id", finalStudentId)
+          .eq("status", "submitted")
+          .order("created_at", { ascending: false });
+
+        if (pastAttempts && pastAttempts.length > 0) {
+          const lastAttemptDate = new Date(pastAttempts[0].submitted_at || pastAttempts[0].created_at);
+          const threeMonthsAgo = new Date();
+          threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+          if (lastAttemptDate > threeMonthsAgo) {
+            const eligibleDate = new Date(lastAttemptDate);
+            eligibleDate.setMonth(eligibleDate.getMonth() + 3);
+            const formattedEligibleDate = eligibleDate.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric"
+            });
+            throw new Error(`You have already taken an assessment within the last 3 months. You will be eligible to write another exam on or after ${formattedEligibleDate}.`);
+          }
+        }
       }
 
       // Check if attempt exists, if not create one
@@ -943,7 +1004,8 @@ export default function Engine({ testId: propTestId }) {
             <img
               src="/images/Transparent_Logo.png"
               alt="Klanvision Logo"
-              className="w-[80px] h-[80px] object-contain drop-shadow-[0_0_12px_rgba(124,58,237,0.5)]"
+              onClick={() => window.location.href = "https://www.klanvision.com"}
+              className="w-[80px] h-[80px] object-contain drop-shadow-[0_0_12px_rgba(124,58,237,0.5)] cursor-pointer"
             />
             <img
               src="/images/slogan.png"

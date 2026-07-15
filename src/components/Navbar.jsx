@@ -126,7 +126,7 @@ export default function Navbar({ theme, toggleTheme }) {
       return;
     }
     if (id === 'home') {
-      window.location.href = '/';
+      window.location.href = 'https://www.klanvision.com';
       return;
     }
     window.location.href = `/${id}`;
@@ -173,7 +173,7 @@ export default function Navbar({ theme, toggleTheme }) {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1.5, ease: 'easeOut' }}
             whileHover={{ scale: 1.04 }}
-            onClick={() => scrollTo('hero')}
+            onClick={() => window.location.href = 'https://www.klanvision.com'}
             style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', height: '100%' }}
           >
             <img src="/images/Transparent_Logo.png" alt="Klanvision Logo" style={{ height: 75, width: 'auto', marginLeft: 16 }} />

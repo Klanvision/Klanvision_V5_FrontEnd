@@ -1153,7 +1153,7 @@ export default function VerificationPortal({ certificateNumber }) {
         >
           {/* Premium Company Logo */}
           <div
-            onClick={() => window.location.href = '/'}
+            onClick={() => window.location.href = 'https://www.klanvision.com'}
             className="verify-header-logo"
             style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginLeft: '-120px', marginTop: '-10px' }}
           >
@@ -1882,7 +1882,7 @@ export default function VerificationPortal({ certificateNumber }) {
                     <motion.button
                       whileHover={{ scale: 1.03, background: 'linear-gradient(90deg, #FFDF00, #D4AF37)', boxShadow: '0 8px 20px rgba(255,215,0,0.4)' }}
                       whileTap={{ scale: 0.97 }}
-                      onClick={() => window.location.href = '/'}
+                      onClick={() => window.location.href = 'https://www.klanvision.com'}
                       style={{
                         display: 'flex', alignItems: 'center', gap: 8,
                         padding: '10px 20px',
@@ -1963,7 +1963,7 @@ export default function VerificationPortal({ certificateNumber }) {
               <h4 style={{ color: 'white', fontSize: 15, fontWeight: 600, marginBottom: 20, marginTop: 0 }}>Quick Links</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[
-                  { label: 'Home', href: '/' },
+                  { label: 'Home', href: 'https://www.klanvision.com' },
                   { label: 'Services', href: '/#services' },
                   { label: 'Portfolio', href: '/#portfolio' },
                   { label: 'About', href: '/#about' },
