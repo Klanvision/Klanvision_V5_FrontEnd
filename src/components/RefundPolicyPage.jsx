@@ -29,7 +29,7 @@ export default function RefundPolicyPage() {
               Cancellation & <span className="gradient-text">Refund Policy</span>
             </h1>
             <p style={{ color: '#9CA3AF', fontSize: 18, maxWidth: 700, margin: '0 auto', lineHeight: 1.6 }}>
-              At Klanvision, we aim to maintain transparency, fairness, and clarity in all our engagements.
+              At KLANVISION IT SOLUTIONS PRIVATE LIMITED (brand name: Klanvision), we aim to maintain transparency, fairness, and clarity in all our engagements.
             </p>
           </motion.div>
         </div>
@@ -132,7 +132,7 @@ export default function RefundPolicyPage() {
                 {[
                   'Third-party costs (licenses, tools, domains) are non-refundable.',
                   'All outstanding payments must be settled before project closure.',
-                  'Cancellation is valid only after written confirmation from Klanvision.',
+                  'Cancellation is valid only after written confirmation from KLANVISION IT SOLUTIONS PRIVATE LIMITED.',
                   'Refund requests are subject to internal review and approval.',
                   'Approved refunds are processed within 7–10 business days.',
                   'All requests must be submitted via official email communication.'

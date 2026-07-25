@@ -23,7 +23,7 @@ export default function AboutPage() {
     {
       year: '2025 Jan',
       title: 'Company Foundation',
-      desc: 'Established our primary headquarters in Anantapur, Andhra Pradesh with a focused core team of 5 senior systems developers.'
+      desc: 'KLANVISION IT SOLUTIONS PRIVATE LIMITED was incorporated, establishing our primary headquarters in Anantapur, Andhra Pradesh.'
     },
     {
       year: '2025 Jul',
@@ -103,7 +103,7 @@ export default function AboutPage() {
               margin: '0 auto', 
               lineHeight: 1.6 
             }}>
-              Klanvision blends robust software engineering, scalable cloud topologies, and clean user experience principles to help global brands expand efficiently.
+              KLANVISION IT SOLUTIONS PRIVATE LIMITED (brand name: Klanvision) blends robust software engineering, scalable cloud topologies, and clean user experience principles to help global brands expand efficiently.
             </p>
           </motion.div>
         </div>

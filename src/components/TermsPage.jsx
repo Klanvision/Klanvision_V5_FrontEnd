@@ -62,7 +62,7 @@ export default function TermsPage() {
               Terms & <span className="gradient-text">Conditions</span>
             </h1>
             <p style={{ color: '#9CA3AF', fontSize: 18, maxWidth: 700, margin: '0 auto', lineHeight: 1.6 }}>
-              Welcome to Klanvision. By accessing our website and using our services, you agree to the following terms and conditions.
+              Welcome to KLANVISION IT SOLUTIONS PRIVATE LIMITED (brand name: Klanvision). By accessing our website and using our services, you agree to the following terms and conditions.
             </p>
           </motion.div>
         </div>
@@ -100,7 +100,7 @@ export default function TermsPage() {
           style={{ marginTop: 80, textAlign: 'center', borderTop: '1px solid var(--border-main)', paddingTop: 40 }}
         >
           <p style={{ color: '#9CA3AF', fontSize: 14, maxWidth: 600, margin: '0 auto' }}>
-            These terms represent the entire agreement between the user and Klanvision regarding the use of this website and our services. For any inquiries, please contact our legal team.
+            These terms represent the entire agreement between the user and KLANVISION IT SOLUTIONS PRIVATE LIMITED regarding the use of this website and our services. For any inquiries, please contact our legal team.
           </p>
         </motion.div>
       </section>

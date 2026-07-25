@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
               Privacy <span className="gradient-text">Policy</span>
             </h1>
             <p style={{ color: '#9CA3AF', fontSize: 18, maxWidth: 700, margin: '0 auto', lineHeight: 1.6 }}>
-              At Klanvision, we are committed to protecting the privacy, confidentiality, and integrity of your personal and business information.
+              At KLANVISION IT SOLUTIONS PRIVATE LIMITED (brand name: Klanvision), we are committed to protecting the privacy, confidentiality, and integrity of your personal and business information.
             </p>
           </motion.div>
         </div>
@@ -114,7 +114,7 @@ export default function PrivacyPolicyPage() {
                   <h2 style={{ fontSize: 24, fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>Data Sharing & Disclosure</h2>
                 </div>
                 <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: 24 }}>
-                  We maintain strict confidentiality. Klanvision does not sell or rent your data. Disclosure only occurs in:
+                  We maintain strict confidentiality. KLANVISION IT SOLUTIONS PRIVATE LIMITED does not sell or rent your data. Disclosure only occurs in:
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   <div style={{ padding: '20px', background: 'var(--bg-surface-soft)', borderRadius: 16, borderLeft: '4px solid var(--primary-purple)', border: '1px solid var(--border-main)', borderLeftWidth: 4 }}>
@@ -192,7 +192,7 @@ export default function PrivacyPolicyPage() {
           <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, #4F46E5, #7C3AED)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ color: 'white', fontWeight: 900, fontSize: 16 }}>K</span>
           </div>
-          <span style={{ fontWeight: 800, fontSize: 18, color: 'var(--text-main)' }}>KLANVISION</span>
+          <span style={{ fontWeight: 800, fontSize: 18, color: 'var(--text-main)' }}>KLANVISION IT SOLUTIONS PRIVATE LIMITED</span>
         </div>
         <p style={{ color: '#9CA3AF', fontSize: 14 }}>
           Security. Transparency. Trust.

@@ -90,7 +90,7 @@ export default function CertificationModule() {
   }, []);
 
   const getUniqueValues = (key) => {
-    if (key === 'status') return ['Verified', 'Pending', 'Completed'];
+    if (key === 'status') return ['Verified', 'Pending', 'Completed', 'Credentialing'];
     if (key === 'certificateType') {
       const dbTypes = certifications.map(cert => cert.certificateType || cert.certificate_type || '').filter(Boolean);
       // If dbTypes are comma-separated strings, split them. Otherwise just use them.
@@ -1014,17 +1014,16 @@ export default function CertificationModule() {
       </div>
 
       {/* Stats Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+      <div className="admin-grid-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
         {/* Total Certificates - Purple */}
         <motion.div 
           onClick={() => { const newFilters = {...columnFilters}; delete newFilters.status; setColumnFilters(newFilters); }}
-          whileHover={{ scale: 1.03, y: -5, boxShadow: '0 15px 30px rgba(139, 92, 246, 0.2)' }}
+          whileHover={{ scale: 1.02, y: -5 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="clay-card clay-card-interactive"
           style={{ 
-            background: 'rgba(30, 41, 59, 0.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-            padding: modalMode === 'view' ? 24 : 20, borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)', borderTop: '2px solid #8B5CF6',
+            padding: 24, borderTop: '4px solid #8B5CF6',
             display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
             cursor: 'pointer'
           }}
         >
@@ -1041,13 +1040,12 @@ export default function CertificationModule() {
         {/* Verified Certificates - Green */}
         <motion.div 
           onClick={() => setColumnFilters({ ...columnFilters, status: ['Verified'] })}
-          whileHover={{ scale: 1.03, y: -5, boxShadow: '0 15px 30px rgba(16, 185, 129, 0.2)' }}
+          whileHover={{ scale: 1.02, y: -5 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="clay-card clay-card-interactive"
           style={{ 
-            background: 'rgba(30, 41, 59, 0.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-            padding: 24, borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)', borderTop: '2px solid #10B981',
+            padding: 24, borderTop: '4px solid #10B981',
             display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
             cursor: 'pointer'
           }}
         >
@@ -1064,13 +1062,12 @@ export default function CertificationModule() {
         {/* Pending Verification - Orange */}
         <motion.div 
           onClick={() => setColumnFilters({ ...columnFilters, status: ['Pending'] })}
-          whileHover={{ scale: 1.03, y: -5, boxShadow: '0 15px 30px rgba(245, 158, 11, 0.2)' }}
+          whileHover={{ scale: 1.02, y: -5 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="clay-card clay-card-interactive"
           style={{ 
-            background: 'rgba(30, 41, 59, 0.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-            padding: 24, borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)', borderTop: '2px solid #F59E0B',
+            padding: 24, borderTop: '4px solid #F59E0B',
             display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
             cursor: 'pointer'
           }}
         >
@@ -1087,13 +1084,12 @@ export default function CertificationModule() {
         {/* Certificates Issued - Blue */}
         <motion.div 
           onClick={() => setShowCalendarMenu(!showCalendarMenu)}
-          whileHover={{ scale: 1.03, y: -5, boxShadow: '0 15px 30px rgba(59, 130, 246, 0.2)' }}
+          whileHover={{ scale: 1.02, y: -5 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="clay-card clay-card-interactive"
           style={{ 
-            background: 'rgba(30, 41, 59, 0.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
-            padding: 24, borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)', borderTop: '2px solid #3B82F6',
+            padding: 24, borderTop: '4px solid #3B82F6',
             display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
             cursor: 'pointer', position: 'relative'
           }}
         >
@@ -1172,7 +1168,8 @@ export default function CertificationModule() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        style={{ background: '#0F172A', border: '1px solid #1E293B', borderRadius: 16, overflow: 'hidden', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)', display: 'flex', flexDirection: 'column', minHeight: '620px' }}
+        className="clay-card admin-table-container"
+        style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: '620px' }}
       >
         <div style={{ overflowX: 'auto', flex: 1 }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: 13, minWidth: 1200 }}>
@@ -1223,8 +1220,8 @@ export default function CertificationModule() {
                     <td style={{ padding: '16px 24px' }}>
                       <span style={{ 
                         padding: '4px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700,
-                        background: cert.status === 'Completed' ? 'rgba(59, 130, 246, 0.1)' : cert.status === 'Verified' ? 'rgba(16, 185, 129, 0.1)' : cert.status === 'Rejected' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)',
-                        color: cert.status === 'Completed' ? '#3B82F6' : cert.status === 'Verified' ? '#10B981' : cert.status === 'Rejected' ? '#EF4444' : '#F59E0B'
+                        background: cert.status === 'Completed' ? 'rgba(59, 130, 246, 0.1)' : cert.status === 'Verified' ? 'rgba(16, 185, 129, 0.1)' : cert.status === 'Rejected' ? 'rgba(239, 68, 68, 0.1)' : cert.status === 'Credentialing' ? 'rgba(139, 92, 246, 0.15)' : 'rgba(245, 158, 11, 0.1)',
+                        color: cert.status === 'Completed' ? '#3B82F6' : cert.status === 'Verified' ? '#10B981' : cert.status === 'Rejected' ? '#EF4444' : cert.status === 'Credentialing' ? '#A78BFA' : '#F59E0B'
                       }}>
                         {cert.status}
                       </span>
