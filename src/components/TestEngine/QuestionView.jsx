@@ -21,7 +21,7 @@ export function QuestionView({ question, index, answer, onAnswer, totalQuestions
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-4 select-none text-left font-sans flex-1 flex flex-col justify-start w-full">
+    <div className="w-full space-y-5 select-none text-left font-sans flex-1 flex flex-col justify-start">
       {/* Question Metadata Header — hidden when parent renders it */}
       {!hideHeader && (
         <div className="flex items-center justify-between border-b border-[#1E295D]/25 pb-4.5">
@@ -51,30 +51,30 @@ export function QuestionView({ question, index, answer, onAnswer, totalQuestions
       </div>
 
       {/* Options Selection Cards */}
-      <div className="grid grid-cols-1 gap-3.5 mt-2">
+      <div className="grid grid-cols-1 gap-4 mt-3">
         {options.map((opt) => {
           const isSelected = answer === opt.key;
           return (
             <button
               key={opt.key}
               onClick={() => onAnswer(question.id, opt.key)}
-              className={`w-full text-left p-4.5 rounded-2xl text-[13.5px] font-semibold transition-all duration-300 flex items-center justify-between cursor-pointer group clay-card-interactive ${
+              className={`w-full text-left p-5 rounded-2xl text-[14.5px] font-semibold transition-all duration-300 flex items-center justify-between cursor-pointer group border ${
                 isSelected 
-                  ? "clay-card-emerald text-white" 
-                  : "clay-card hover:border-indigo-500/40"
+                  ? "bg-gradient-to-r from-emerald-500/15 to-emerald-600/5 border-emerald-500/60 text-white shadow-[0_0_20px_rgba(16,185,129,0.12),_inset_0_1px_1px_rgba(255,255,255,0.05)]" 
+                  : "bg-white/[0.02] border-white/5 hover:bg-white/[0.06] hover:border-indigo-500/40 text-slate-200"
               }`}
             >
               <div className="flex items-center gap-4 flex-1">
                 {/* Option Index Bubble */}
-                <div className={`h-9 w-9 rounded-xl font-black flex items-center justify-center border shrink-0 transition-all duration-300 font-['Outfit'] text-[14px] clay-pill ${
+                <div className={`h-10 w-10 rounded-xl font-black flex items-center justify-center border shrink-0 transition-all duration-300 font-['Outfit'] text-[15px] ${
                   isSelected 
-                    ? "bg-emerald-600 border-white/40 text-white shadow-lg" 
-                    : "bg-slate-900/80 border-slate-700/60 text-indigo-300 group-hover:border-indigo-500"
+                    ? "bg-emerald-500 border-emerald-400 text-white shadow-lg shadow-emerald-500/20" 
+                    : "bg-[#060B1C] border-slate-700/60 text-indigo-300 group-hover:border-indigo-500/60 group-hover:text-indigo-200"
                 }`}>
                   {opt.key}
                 </div>
-                <span className={`text-[13.5px] leading-relaxed font-bold font-['Outfit'] transition-colors duration-300 ${
-                  isSelected ? "text-white drop-shadow-md" : "text-slate-200 group-hover:text-white"
+                <span className={`text-[14.5px] leading-relaxed font-bold font-['Outfit'] transition-colors duration-300 ${
+                  isSelected ? "text-white" : "text-slate-200 group-hover:text-white"
                 }`}>
                   {opt.text}
                 </span>
@@ -83,11 +83,11 @@ export function QuestionView({ question, index, answer, onAnswer, totalQuestions
               {/* Selection Checkbox Ring */}
               <div className="shrink-0 ml-4">
                 {isSelected ? (
-                  <div className="w-6 h-6 rounded-full bg-white text-emerald-600 flex items-center justify-center shadow-lg animate-bounce">
+                  <div className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30">
                     <Check className="w-4 h-4 stroke-[4]" />
                   </div>
                 ) : (
-                  <div className="w-6 h-6 rounded-full border-2 border-slate-600/60 group-hover:border-indigo-500/80 transition-colors" />
+                  <div className="w-6 h-6 rounded-full border-2 border-slate-600/60 group-hover:border-indigo-500/50 transition-colors" />
                 )}
               </div>
             </button>

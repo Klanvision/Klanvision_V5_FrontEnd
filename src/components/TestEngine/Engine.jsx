@@ -328,7 +328,7 @@ export default function Engine({ testId: propTestId }) {
       console.log("Calling submission RPC...");
       const { error } = await supabase.rpc("submit_test_attempt", {
         _attempt_id: attemptId,
-        _time_taken: (test?.timer * 60) - timeLeftRef.current
+        _time_taken: 1800 - timeLeftRef.current
       });
 
       if (error) {
@@ -365,6 +365,9 @@ export default function Engine({ testId: propTestId }) {
       setIsFullscreen(true);
     }
   }, []);
+
+  // State for duplicate user detection
+  const [duplicateInfo, setDuplicateInfo] = useState(null); // { name, email, phone, submittedAt }
 
   const handleDetailsSubmit = async (e) => {
     e.preventDefault();
@@ -413,22 +416,77 @@ export default function Engine({ testId: propTestId }) {
 
     setLoading(true);
     try {
-      let guestIdToUse = sessionStorage.getItem(`guest_profile_id_${testId}`);
-      if (!guestIdToUse) {
-        guestIdToUse = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-          const r = Math.random() * 16 | 0;
-          return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
-      }
+      // ── DUPLICATE DETECTION ─────────────────────────────────────────────────
+      // Check if someone with matching name, email, OR phone has already submitted
+      // an attempt for THIS specific test.
+      const { data: allProfiles } = await supabase
+        .from("profiles")
+        .select("id, name, email, phone");
 
-      // Check if candidate has written any exam in the last 3 months
+      if (allProfiles && allProfiles.length > 0) {
+        const normalizedEmail = emailStr.toLowerCase();
+        const normalizedName = nameStr.toLowerCase();
+        const normalizedPhone = cleanPhone;
+
+        // Find profiles that match on any of the three fields
+        const matchingProfiles = allProfiles.filter(p => {
+          const pEmail = (p.email || "").toLowerCase();
+          const pName = (p.name || "").toLowerCase();
+          const pPhone = (p.phone || "").replace(/[^0-9]/g, '');
+          return (
+            pEmail === normalizedEmail ||
+            pName === normalizedName ||
+            pPhone === normalizedPhone
+          );
+        });
+
+        if (matchingProfiles.length > 0) {
+          // Check if any of these profiles have a submitted attempt for this test
+          const profileIds = matchingProfiles.map(p => p.id);
+          const { data: submittedAttempts } = await supabase
+            .from("attempts")
+            .select("id, student_id, submitted_at, created_at")
+            .in("student_id", profileIds)
+            .eq("test_id", testId)
+            .eq("status", "submitted")
+            .order("submitted_at", { ascending: false });
+
+          if (submittedAttempts && submittedAttempts.length > 0) {
+            // Find the matching profile for the first submitted attempt
+            const matchedProfile = matchingProfiles.find(p =>
+              submittedAttempts.some(a => a.student_id === p.id)
+            );
+            const latestAttempt = submittedAttempts[0];
+            const submittedDate = new Date(latestAttempt.submitted_at || latestAttempt.created_at);
+            // Show the duplicate block instead of proceeding
+            setDuplicateInfo({
+              name: matchedProfile?.name || nameStr,
+              email: matchedProfile?.email || emailStr,
+              phone: matchedProfile?.phone || phoneStr,
+              submittedAt: submittedDate.toLocaleString("en-IN", {
+                year: "numeric", month: "long", day: "numeric",
+                hour: "2-digit", minute: "2-digit"
+              })
+            });
+            setLoading(false);
+            return;
+          }
+        }
+      }
+      // ── END DUPLICATE DETECTION ─────────────────────────────────────────────
+
+      // Check if a profile with this email already exists in the database
       const { data: existingProfile } = await supabase
         .from("profiles")
         .select("id")
         .ilike("email", formData.email.trim())
         .maybeSingle();
 
+      let guestIdToUse;
       if (existingProfile) {
+        guestIdToUse = existingProfile.id;
+
+        // Check if candidate has written any exam in the last 3 months
         const { data: pastAttempts } = await supabase
           .from("attempts")
           .select("created_at, submitted_at")
@@ -452,7 +510,12 @@ export default function Engine({ testId: propTestId }) {
             throw new Error(`You have already taken an assessment within the last 3 months. You will be eligible to write another exam on or after ${formattedEligibleDate}.`);
           }
         }
-        guestIdToUse = existingProfile.id;
+      } else {
+        // Generate a brand new unique candidate profile ID
+        guestIdToUse = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+          const r = Math.random() * 16 | 0;
+          return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
       }
 
       const { error: profileError } = await supabase.from("profiles").upsert({
@@ -773,7 +836,7 @@ export default function Engine({ testId: propTestId }) {
         if (cancelled) return;
         if (!testData) throw new Error("Test not found");
         setTest(testData);
-        setTimeLeft(testData.timer * 60);
+        setTimeLeft(30 * 60); // Configured to exactly 30 minutes as requested
 
         let finalStudentId = user?.id;
         if (isGuest) {
@@ -854,6 +917,14 @@ export default function Engine({ testId: propTestId }) {
             setSetupStep("testing");
           }
         } else {
+          const jump = sessionStorage.getItem("jumpToSystemCheck") === "true";
+          
+          // Clear any stale guest profile ID in sessionStorage if there is no in-progress attempt,
+          // except when we just registered and are transitioning to the system check.
+          if (!jump) {
+            sessionStorage.removeItem(`guest_profile_id_${testId}`);
+          }
+
           // If query params already filled details, pre-populate
           if (guestName && guestEmail && guestPhone) {
             setFormData({
@@ -863,7 +934,6 @@ export default function Engine({ testId: propTestId }) {
             });
           }
           if (!cancelled) {
-            const jump = sessionStorage.getItem("jumpToSystemCheck") === "true";
             if (jump) {
               sessionStorage.removeItem("jumpToSystemCheck");
               setSetupStep("system_check");
@@ -892,7 +962,7 @@ export default function Engine({ testId: propTestId }) {
 
 
   useEffect(() => {
-    if (!loading && !showInstructions && timeLeft > 0) {
+    if (!loading && setupStep === "testing" && timeLeft > 0) {
       timeLeftRef.current = timeLeft;
       timerRef.current = setInterval(() => {
         setTimeLeft((prev) => {
@@ -907,7 +977,7 @@ export default function Engine({ testId: propTestId }) {
       }, 1000);
       return () => clearInterval(timerRef.current);
     }
-  }, [loading, showInstructions, timeLeft, handleSubmit]);
+  }, [loading, setupStep, timeLeft, handleSubmit]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -928,7 +998,7 @@ export default function Engine({ testId: propTestId }) {
   // Tab-switch detection
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === "hidden" && !showInstructions && !loading) {
+      if (document.visibilityState === "hidden" && setupStep === "testing" && !loading) {
         setFullscreenExitCount(prev => {
           const next = prev + 1;
           if (next >= 3) handleSubmit(true);
@@ -939,7 +1009,7 @@ export default function Engine({ testId: propTestId }) {
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
-  }, [handleSubmit, triggerAlert, showInstructions, loading]);
+  }, [handleSubmit, triggerAlert, setupStep, loading]);
 
   const handleAnswer = (qId, val) => {
     setAnswers(prev => {
@@ -973,19 +1043,51 @@ export default function Engine({ testId: propTestId }) {
   };
 
   if (loading) return (
-    <div className="flex h-screen flex-col items-center justify-center bg-[#090D1C] gap-6 text-white font-sans">
-      <div className="flex flex-col items-center gap-4">
-        <div className="relative h-12 w-12">
-          <div className="absolute inset-0 rounded-full border-4 border-white/10" />
-          <div className="absolute inset-0 rounded-full border-4 border-t-indigo-500 animate-spin" />
+    <div className="flex h-screen flex-col items-center justify-center bg-[#020512] text-white font-sans relative overflow-hidden select-none">
+      {/* Background glow effects */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.12)_0%,#020512_100%)]" />
+        <div className="absolute top-[30%] left-[30%] w-[40vw] h-[40vw] bg-purple-600/10 rounded-full blur-[120px] animate-pulse" />
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center gap-10">
+        {/* Glowing concentric rings surrounding the logo */}
+        <div className="relative w-44 h-44 flex items-center justify-center">
+          {/* Inner pulsating glow */}
+          <div className="absolute inset-4 rounded-full bg-purple-500/15 blur-md animate-pulse" />
+          
+          {/* Outer dashed spinning ring */}
+          <div className="absolute inset-0 rounded-full border-2 border-dashed border-indigo-500/40 animate-[spin_15s_linear_infinite]" />
+          
+          {/* Middle counter-spinning ring */}
+          <div className="absolute inset-2.5 rounded-full border border-purple-500/30 border-t-purple-400/80 animate-[spin_6s_linear_infinite_reverse]" />
+          
+          {/* Inner spinning gradient ring */}
+          <div className="absolute inset-5 rounded-full border-2 border-transparent border-l-[#00F2FE] border-r-[#7C3AED] animate-[spin_2.5s_linear_infinite]" />
+
+          {/* Logo in the very center */}
+          <img
+            src="/images/Transparent_Logo.png"
+            alt="Klanvision Logo"
+            className="w-[90px] h-[90px] object-contain drop-shadow-[0_0_15px_rgba(124,58,237,0.65)] relative z-10 hover:scale-105 transition-transform duration-300"
+          />
         </div>
-        <div className="text-center">
-          <p className="text-sm font-semibold text-slate-300">Setting up secure environment</p>
-          <p className="text-xs text-slate-500 mt-1">Please wait, loading details...</p>
+
+        <div className="text-center space-y-2.5">
+          <p className="text-[15px] font-black uppercase tracking-[0.25em] bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent font-['Outfit']">
+            Securing Session
+          </p>
+          <div className="flex items-center justify-center gap-1.5 text-xs text-slate-400 font-semibold mt-0.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+            <span>Establishing proctoring parameters...</span>
+          </div>
         </div>
       </div>
-      <div className="absolute bottom-6 text-center">
-        <p className="text-[11px] text-slate-500 uppercase tracking-widest">KV Exam Portal &nbsp;·&nbsp; Secure Testing System</p>
+
+      <div className="absolute bottom-10 text-center z-10">
+        <p className="text-[11px] text-slate-500 uppercase tracking-[0.2em] font-extrabold">
+          KV Exam Portal &nbsp;·&nbsp; Secure Testing System
+        </p>
       </div>
     </div>
   );
@@ -1255,6 +1357,94 @@ export default function Engine({ testId: propTestId }) {
                     </span>
                   </div>
 
+                  {/* ── DUPLICATE USER BLOCK ── */}
+                  {duplicateInfo ? (
+                    <div className="flex flex-col items-center text-center gap-6">
+                      {/* Icon */}
+                      <div className="relative">
+                        <div className="absolute inset-0 rounded-full bg-amber-500/20 blur-[20px] animate-pulse" />
+                        <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/10 border-2 border-amber-500/40 flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.25)]">
+                          <BadgeAlert className="w-9 h-9 text-amber-400" />
+                        </div>
+                      </div>
+
+                      {/* Heading */}
+                      <div>
+                        <h3 className="text-[20px] font-black text-white tracking-tight">
+                          Already Registered!
+                        </h3>
+                        <p className="text-[12.5px] text-slate-400 mt-1 max-w-[420px] leading-relaxed">
+                          Our records show that the details you entered match an existing candidate who has <span className="text-amber-400 font-semibold">already completed this assessment</span>. Each candidate can take this test only once.
+                        </p>
+                      </div>
+
+                      {/* Existing Data Card */}
+                      <div className="w-full bg-[#060B1C] border border-amber-500/20 rounded-[16px] p-4 space-y-3 shadow-[0_0_20px_rgba(245,158,11,0.06)]">
+                        <p className="text-[9.5px] text-amber-400/70 uppercase tracking-widest font-extrabold text-left mb-2">Existing Submission Record</p>
+
+                        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                          <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 shrink-0">
+                            <User className="w-4 h-4" />
+                          </div>
+                          <div className="text-left">
+                            <p className="text-[9px] text-slate-500 uppercase tracking-wider font-bold">Full Name</p>
+                            <p className="text-[13px] font-semibold text-white">{duplicateInfo.name}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                          <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+                            <Mail className="w-4 h-4" />
+                          </div>
+                          <div className="text-left">
+                            <p className="text-[9px] text-slate-500 uppercase tracking-wider font-bold">Email Address</p>
+                            <p className="text-[13px] font-semibold text-white">{duplicateInfo.email}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                          <div className="w-8 h-8 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 shrink-0">
+                            <Phone className="w-4 h-4" />
+                          </div>
+                          <div className="text-left">
+                            <p className="text-[9px] text-slate-500 uppercase tracking-wider font-bold">Phone Number</p>
+                            <p className="text-[13px] font-semibold text-white">{duplicateInfo.phone}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-500/5 border border-amber-500/20">
+                          <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+                            <Clock className="w-4 h-4" />
+                          </div>
+                          <div className="text-left">
+                            <p className="text-[9px] text-amber-400/70 uppercase tracking-wider font-bold">Submitted On</p>
+                            <p className="text-[13px] font-semibold text-amber-300">{duplicateInfo.submittedAt}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Info Footer */}
+                      <div className="flex items-start gap-2.5 bg-[#06121C] border border-blue-500/20 rounded-xl p-4 text-left">
+                        <AlertCircle className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                        <p className="text-[11.5px] text-slate-400 leading-relaxed">
+                          If you believe this is a mistake or need to retake the assessment, please contact{" "}
+                          <a href="mailto:support@klanvision.com" className="text-blue-400 hover:underline font-semibold">
+                            support@klanvision.com
+                          </a>{" "}
+                          with your details.
+                        </p>
+                      </div>
+
+                      {/* Back button */}
+                      <button
+                        type="button"
+                        onClick={() => setDuplicateInfo(null)}
+                        className="w-full h-[46px] rounded-xl border border-[#1E295D] text-slate-400 text-[13px] font-semibold hover:bg-white/5 hover:text-white transition-all"
+                      >
+                        ← Try Different Details
+                      </button>
+                    </div>
+                  ) : (
                   <form id="details-form" onSubmit={handleDetailsSubmit} className="space-y-4">
                     {/* Full Name input */}
                     <div className="space-y-1.5">
@@ -1356,8 +1546,10 @@ export default function Engine({ testId: propTestId }) {
                       </div>
                     </div>
                   </form>
+                  )}
                 </div>
               )}
+
 
               {/* ─── SUB-STEP 2: SYSTEM CHECK ─── */}
               {setupStep === "system_check" && (
@@ -2170,7 +2362,7 @@ export default function Engine({ testId: propTestId }) {
                       </div>
                       <div>
                         <span className="text-[9.5px] font-black uppercase text-[#8B9BB4] tracking-widest leading-none font-['Outfit']">DURATION</span>
-                        <h4 className="text-[15px] font-extrabold text-[#8257E6] mt-2 leading-none font-sans">{test?.timer || 30} Minutes</h4>
+                        <h4 className="text-[15px] font-extrabold text-[#8257E6] mt-2 leading-none font-sans">30 Minutes</h4>
                       </div>
                     </div>
 
@@ -2452,7 +2644,7 @@ export default function Engine({ testId: propTestId }) {
 
       <div className="flex flex-1 overflow-hidden">
         <main className="flex flex-1 flex-col overflow-hidden bg-[#020512]">
-          <div className="flex-1 overflow-y-auto px-3 md:px-5 py-4 md:py-5 flex flex-col space-y-3">
+          <div className="flex-1 overflow-hidden px-3 md:px-5 py-4 md:py-5 flex flex-col space-y-3">
             {questions[currentQuestionIndex] && (() => {
               const q = questions[currentQuestionIndex];
               const getDiffColor = (diff) => {
@@ -2486,9 +2678,9 @@ export default function Engine({ testId: propTestId }) {
                   </div>
 
                   {/* ── Row 2: Main dark navy card — question + options + buttons ── */}
-                  <div className="flex-1 flex flex-col justify-between bg-[#0A0E1F] border border-[#1A2244] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.45)] overflow-hidden min-h-[450px]">
+                  <div className="flex-1 flex flex-col justify-between bg-[#0A0E1F] border border-[#1A2244] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.45)] overflow-hidden">
                     {/* Question & Options */}
-                    <div className="px-4 pt-5 pb-4 flex-1 flex flex-col">
+                    <div className="px-4 pt-5 pb-4 flex-1 overflow-y-auto">
                       <QuestionView
                         question={q}
                         index={currentQuestionIndex}

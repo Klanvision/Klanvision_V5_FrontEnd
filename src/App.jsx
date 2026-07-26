@@ -161,49 +161,103 @@ function Loader() {
 
 
       {/* Innovative Logo Core & Orbits */}
-      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, transform: 'scale(0.85)' }}>
-        {/* Concentric Rotating Orbits */}
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            animate={{ rotate: i % 2 === 0 ? 360 : -360 }}
-            transition={{ duration: 5 + i * 2, repeat: Infinity, ease: "linear" }}
-            style={{
-              position: 'absolute',
-              width: 130 + i * 30,
-              height: 130 + i * 30,
-              borderRadius: '50%',
-              border: '1px solid rgba(255,255,255,0.03)',
-              borderTop: `1.5px solid ${i === 0 ? '#6366F1' : i === 1 ? '#EC4899' : '#F97316'}`,
-              opacity: 0.5
-            }}
-          />
-        ))}
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 15, height: 320, width: 320 }}>
+        {/* Pulsating background aura */}
+        <div style={{
+          position: 'absolute',
+          width: 140,
+          height: 140,
+          borderRadius: '50%',
+          background: 'rgba(99, 102, 241, 0.12)',
+          filter: 'blur(35px)',
+          animation: 'pulse 2.2s infinite ease-in-out'
+        }} />
 
-        {/* Central Logo & Slogan with Neural Scan Effect */}
+        {/* Orbit 1: Outer glowing radar track with rotating satellites (Encloses logo & slogan without touching them) */}
         <motion.div
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: 'absolute',
+            width: 290,
+            height: 290,
+            borderRadius: '50%',
+            border: '1.2px dotted rgba(99, 102, 241, 0.35)',
+            boxShadow: '0 0 20px rgba(99, 102, 241, 0.05)'
+          }}
+        >
+          {/* Glowing Orange Satellite Node */}
+          <div style={{
+            position: 'absolute',
+            top: '12%',
+            right: '12%',
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            background: '#F97316',
+            boxShadow: '0 0 12px 3px rgba(249, 115, 22, 0.85)'
+          }} />
+
+          {/* Glowing Cyan Satellite Node */}
+          <div style={{
+            position: 'absolute',
+            bottom: '12%',
+            left: '12%',
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            background: '#00F2FE',
+            boxShadow: '0 0 12px 3px rgba(0, 242, 254, 0.85)'
+          }} />
+        </motion.div>
+
+        {/* Orbit 2: Middle glowing solid ring with double arcs (Encloses logo & slogan completely without touching them) */}
+        <motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: 'absolute',
+            width: 255,
+            height: 255,
+            borderRadius: '50%',
+            border: '1.5px solid transparent',
+            borderTop: '2px solid #7C3AED',
+            borderBottom: '2px solid #00F2FE',
+            filter: 'drop-shadow(0 0 7px rgba(124, 58, 237, 0.45))'
+          }}
+        />
+
+        {/* Orbit 3: Inner fast gradient ring with side arcs (Encloses logo & slogan completely without touching them) */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: 'absolute',
+            width: 220,
+            height: 220,
+            borderRadius: '50%',
+            border: '2px solid transparent',
+            borderLeft: '2px solid #EC4899',
+            borderRight: '2px solid #F97316',
+            filter: 'drop-shadow(0 0 5px rgba(236, 72, 153, 0.35))'
+          }}
+        />
+
+        {/* Central Logo & Slogan */}
+        <motion.div
+          animate={{ y: [0, -4, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}
         >
           <img 
             src="/images/Transparent_Logo.png" 
             alt="Klanvision Logo" 
-            style={{ height: 95, width: 'auto', filter: 'drop-shadow(0 0 25px rgba(124, 58, 237, 0.6))', objectFit: 'contain' }} 
+            style={{ height: 70, width: 'auto', filter: 'drop-shadow(0 0 20px rgba(124, 58, 237, 0.6))', objectFit: 'contain' }} 
           />
           <img 
             src="/images/slogan.png" 
             alt="Klanvision Slogan" 
-            style={{ height: 45, width: 'auto', filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.4))', objectFit: 'contain' }} 
-          />
-          <motion.div
-            animate={{ top: ['-5%', '105%', '-5%'] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
-            style={{
-              position: 'absolute', left: '-15%', right: '-15%',
-              height: '1px', background: 'rgba(255,255,255,0.4)',
-              boxShadow: '0 0 10px white', zIndex: 2
-            }}
+            style={{ height: 30, width: 'auto', filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.4))', objectFit: 'contain' }} 
           />
         </motion.div>
       </div>
