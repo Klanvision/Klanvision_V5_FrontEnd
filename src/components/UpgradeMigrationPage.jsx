@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
 import { ChevronLeft, RefreshCw, Zap, Search, ArrowRight, CheckCircle2, Cpu, Gauge } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useSEO } from '../hooks/useSEO';
 
 export default function UpgradeMigrationPage() {
+  const navigate = useNavigate();
   useSEO({
     title: 'Website Upgrade & Migration | Zero-Downtime Modernization – Klanvision',
     description: 'Klanvision modernizes legacy systems and executes zero-downtime migrations with SEO-safe 301 redirects, data integrity checks, and blue-green deployments.',
@@ -63,8 +65,16 @@ export default function UpgradeMigrationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <a href="/" style={{ color: '#A5B4FC', display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', fontSize: 14, fontWeight: 700, marginBottom: 32, letterSpacing: '1px' }}>
-              <ChevronLeft size={18} /> BACK TO SOLUTIONS
+            <a 
+              href="/#services" 
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/#services');
+                setTimeout(() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }), 50);
+              }}
+              style={{ color: '#A5B4FC', display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', fontSize: 14, fontWeight: 700, marginBottom: 32, letterSpacing: '1px', cursor: 'pointer' }}
+            >
+              <ChevronLeft size={18} /> BACK TO SERVICES
             </a>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -88,7 +98,16 @@ export default function UpgradeMigrationPage() {
                 </p>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
-                  <a href="/#contact-form" className="btn-primary" style={{ textDecoration: 'none', padding: '18px 36px', background: '#6366F1', color: 'white', borderRadius: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 10px 20px rgba(99,102,241,0.3)' }}>
+                  <a 
+                    href="/contact" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate('/contact');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="btn-primary" 
+                    style={{ textDecoration: 'none', padding: '18px 36px', background: '#6366F1', color: 'white', borderRadius: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 10px 20px rgba(99,102,241,0.3)', cursor: 'pointer' }}
+                  >
                     Upgrade My System <ArrowRight size={18} />
                   </a>
                 </div>
@@ -330,7 +349,12 @@ export default function UpgradeMigrationPage() {
               </p>
 
               <motion.a 
-                href="/#contact-form" 
+                href="/contact" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/contact');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 whileHover={{ scale: 1.03, boxShadow: '0 15px 30px rgba(99,102,241,0.3)' }}
                 whileTap={{ scale: 0.98 }}
                 style={{ 
@@ -345,7 +369,8 @@ export default function UpgradeMigrationPage() {
                   alignItems: 'center',
                   gap: 12,
                   boxShadow: '0 10px 20px rgba(99,102,241,0.2)',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer'
                 }}
               >
                 Start Migration Discovery <ArrowRight size={20} />

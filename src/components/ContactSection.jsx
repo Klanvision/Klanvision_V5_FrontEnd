@@ -50,6 +50,20 @@ export default function ContactSection() {
   // on failure shows an alert with the error message.
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const emailStr = (form.email || '').trim();
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(emailStr)) {
+      setSubmitError("Please enter a valid email address (e.g. name@gmail.com).");
+      return;
+    }
+
+    const invalidGmailDomains = ['@gmai.com', '@gmaill.com', '@gmil.com', '@gmall.com', '@gmal.com', '@gmail.co', '@gmail.cm'];
+    if (invalidGmailDomains.some(domain => emailStr.toLowerCase().endsWith(domain))) {
+      setSubmitError("Your email address contains a typo (e.g. '@gmai.com'). Please correct it to '@gmail.com'.");
+      return;
+    }
+
     setLoading(true);
     setSubmitError('');
 

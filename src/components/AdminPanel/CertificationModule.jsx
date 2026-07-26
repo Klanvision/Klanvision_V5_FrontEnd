@@ -1695,7 +1695,15 @@ export default function CertificationModule() {
                             type={type || 'text'}
                             name={name}
                             value={formData[name]}
-                            onChange={handleInputChange}
+                            maxLength={name === 'certificateNumber' ? 30 : undefined}
+                            onChange={(e) => {
+                              if (name === 'certificateNumber') {
+                                const sanitized = e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 30);
+                                setFormData({ ...formData, [name]: sanitized });
+                              } else {
+                                handleInputChange(e);
+                              }
+                            }}
                             placeholder={placeholder}
                             style={{
                               width: '100%', boxSizing: 'border-box',

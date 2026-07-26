@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { 
   ArrowRight, Globe, Smartphone, Shield, Cloud, 
   Database, BarChart2, Layers, Cpu, Award, ExternalLink, Flame
@@ -64,10 +65,11 @@ const ProjectGfxEnterprise = () => (
 );
 
 export default function PortfolioPage() {
+  const navigate = useNavigate();
   useSEO({
-    title: 'Enterprise Portfolio & Client Success | Klanvision',
-    description: 'Browse through Klanvision’s client success stories, enterprise web developments, AI integrations, custom mobile systems, and scalable cloud migrations.',
-    keywords: 'Case Studies, IT Portfolio, Web Apps, Custom Mobile Systems, AI Integrations, Cloud Migration Projects',
+    title: 'Client Case Studies & Project Portfolio | Klanvision',
+    description: 'Explore Klanvision’s portfolio of enterprise software, high-converting mobile apps, scalable cloud architectures, cybersecurity implementations, and custom web applications.',
+    keywords: 'Klanvision portfolio, case studies, software projects, web app showcase, mobile apps, IT work',
     canonical: '/portfolio',
   });
 
@@ -488,7 +490,10 @@ export default function PortfolioPage() {
               Connect with our dedicated software engineers and solutions architects. Let’s map out a premium implementation plan together.
             </p>
             <button
-              onClick={() => window.location.href = '/contact'}
+              onClick={() => {
+                navigate('/contact');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               style={{
                 background: 'white',
                 color: '#EC4899',

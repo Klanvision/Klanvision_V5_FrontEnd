@@ -757,7 +757,7 @@ function DetailRow({ icon: Icon, label, value, color = '#C9A84C' }) {
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────
 export default function VerificationPortal({ certificateNumber }) {
-  const [certId, setCertId] = useState(certificateNumber || '');
+  const [certId, setCertId] = useState((certificateNumber || '').toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 30));
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
@@ -1004,7 +1004,8 @@ export default function VerificationPortal({ certificateNumber }) {
   });
 
   const verify = async (id) => {
-    if (!id.trim()) return;
+    const rawId = (id || '').trim().replace(/[^a-zA-Z0-9-]/g, '').slice(0, 50);
+    if (!rawId) return;
     setLoading(true); setError(''); setData(null);
 
     // Smooth scroll to the result section when verification starts
@@ -1013,10 +1014,32 @@ export default function VerificationPortal({ certificateNumber }) {
     }, 100);
 
     try {
-      const res = await api.verifyCertificate(id);
+      let res = null;
+      try {
+        res = await api.verifyCertificate(rawId);
+      } catch (e) {
+        // Fallback
+      }
+
+      if (!res || !res.verified) {
+        try {
+          res = await api.verifyCertificate(rawId.toUpperCase());
+        } catch (e) {
+          // Fallback
+        }
+      }
+
+      if (!res || !res.verified) {
+        try {
+          res = await api.verifyCertificate(rawId.toLowerCase());
+        } catch (e) {
+          // Fallback
+        }
+      }
+
       // Wait 5 seconds to show the premium loading animation
       await new Promise(resolve => setTimeout(resolve, 5000));
-      if (res.verified) {
+      if (res && res.verified) {
         setData(res.certificate);
 
         // Safely determine and set the active tab for the images based on the fetched data
@@ -1150,9 +1173,8 @@ export default function VerificationPortal({ certificateNumber }) {
         >
           {/* Premium Company Logo */}
           <div
-            onClick={() => window.location.href = 'https://www.klanvision.com'}
             className="verify-header-logo"
-            style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginLeft: '-120px', marginTop: '-10px' }}
+            style={{ display: 'flex', alignItems: 'center', cursor: 'default', marginLeft: '-120px', marginTop: '-10px' }}
           >
             <img
               src="/images/Certify.png"
@@ -1293,7 +1315,8 @@ export default function VerificationPortal({ certificateNumber }) {
                     ref={inputRef}
                     type="text"
                     value={certId}
-                    onChange={(e) => setCertId(e.target.value.toUpperCase())}
+                    maxLength={30}
+                    onChange={(e) => setCertId(e.target.value.replace(/[^a-zA-Z0-9-]/g, ''))}
                     placeholder="KV-XXX-XXXX-XXXX-XXXXXX"
                     style={{
                       flex: 1, background: 'transparent', border: 'none', outline: 'none',
@@ -1336,6 +1359,15 @@ export default function VerificationPortal({ certificateNumber }) {
                   }
                 </motion.button>
               </div>
+
+              {/* Length Indicator */}
+              {certId.length > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', maxWidth: 800, margin: '8px auto 0', padding: '0 4px' }}>
+                  <span style={{ fontSize: 11, color: certId.length >= 30 ? '#F59E0B' : 'rgba(255,255,255,0.4)', fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>
+                    {certId.length}/30
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>
@@ -1875,25 +1907,6 @@ export default function VerificationPortal({ certificateNumber }) {
                       <RefreshCw size={15} strokeWidth={2} />
                       Try Again
                     </motion.button>
-
-                    <motion.button
-                      whileHover={{ scale: 1.03, background: 'linear-gradient(90deg, #FFDF00, #D4AF37)', boxShadow: '0 8px 20px rgba(255,215,0,0.4)' }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => window.location.href = 'https://www.klanvision.com'}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: 8,
-                        padding: '10px 20px',
-                        background: 'linear-gradient(90deg, #D4AF37, #FFDF00)',
-                        border: 'none', borderRadius: 10,
-                        color: '#111', fontWeight: 700, fontSize: 13,
-                        fontFamily: "'Outfit', sans-serif", letterSpacing: '0.5px',
-                        cursor: 'pointer',
-                        boxShadow: '0 4px 12px rgba(255,215,0,0.2)'
-                      }}
-                    >
-                      <Home size={15} strokeWidth={2.5} />
-                      Go to Home
-                    </motion.button>
                   </div>
                 </motion.div>
               </motion.div>
@@ -1945,7 +1958,7 @@ export default function VerificationPortal({ certificateNumber }) {
             {/* Left */}
             <div style={{ flex: '1.5', minWidth: 300 }}>
               <div className="footer-logo-container" style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-                <img src="/images/footer_logo.png" alt="Footer Logo" style={{ height: 90, maxWidth: 300, objectFit: 'contain' }} />
+                <img src="/images/Transparent_Logo.png" alt="Klanvision Logo" style={{ height: 90, maxWidth: 300, objectFit: 'contain' }} />
                 <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, maxWidth: 260 }}>
                   Certify Verification ensures the authenticity and integrity of every certificate.<br />Verify with confidence.
                 </div>

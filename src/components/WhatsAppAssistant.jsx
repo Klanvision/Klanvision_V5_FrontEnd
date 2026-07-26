@@ -292,7 +292,7 @@ export default function WhatsAppAssistant({ isOpen, onToggle, isVisible }) {
               
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 48, height: 48, borderRadius: 14, background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                    <img src="/logo.png" alt="Klanvision" style={{ width: '80%', height: 'auto' }} />
+                    <img src="/images/Transparent_Logo.png" alt="Klanvision" style={{ width: '90%', height: 'auto', objectFit: 'contain' }} />
                 </div>
                 <div>
                   <div style={{ fontWeight: 800, fontSize: 17, letterSpacing: '-0.3px' }}>Welcome to Klanvision</div>

@@ -161,7 +161,7 @@ function Loader() {
 
 
       {/* Innovative Logo Core & Orbits */}
-      <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: 'scale(0.85)' }}>
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, transform: 'scale(0.85)' }}>
         {/* Concentric Rotating Orbits */}
         {[...Array(3)].map((_, i) => (
           <motion.div
@@ -180,22 +180,27 @@ function Loader() {
           />
         ))}
 
-        {/* Central Logo with Neural Scan Effect */}
+        {/* Central Logo & Slogan with Neural Scan Effect */}
         <motion.div
           animate={{ y: [0, -8, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          style={{ position: 'relative' }}
+          style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}
         >
           <img 
-            src="/logo.png" 
-            alt="Logo" 
-            style={{ height: 90, width: 'auto', filter: 'drop-shadow(0 0 20px rgba(99,102,241,0.3))' }} 
+            src="/images/Transparent_Logo.png" 
+            alt="Klanvision Logo" 
+            style={{ height: 95, width: 'auto', filter: 'drop-shadow(0 0 25px rgba(124, 58, 237, 0.6))', objectFit: 'contain' }} 
+          />
+          <img 
+            src="/images/slogan.png" 
+            alt="Klanvision Slogan" 
+            style={{ height: 45, width: 'auto', filter: 'drop-shadow(0 0 15px rgba(255,255,255,0.4))', objectFit: 'contain' }} 
           />
           <motion.div
             animate={{ top: ['-5%', '105%', '-5%'] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
             style={{
-              position: 'absolute', left: '-5%', right: '-5%',
+              position: 'absolute', left: '-15%', right: '-15%',
               height: '1px', background: 'rgba(255,255,255,0.4)',
               boxShadow: '0 0 10px white', zIndex: 2
             }}
@@ -203,30 +208,9 @@ function Loader() {
         </motion.div>
       </div>
 
-      {/* Visionary Branding Section */}
-      <div style={{ textAlign: 'center', zIndex: 1 }}>
-        <motion.div
-          initial={{ opacity: 0, letterSpacing: '10px' }}
-          animate={{ opacity: 1, letterSpacing: '6px' }}
-          transition={{ duration: 1 }}
-        >
-          <h1 style={{ 
-            fontFamily: "'Outfit', sans-serif", 
-            fontWeight: 900, 
-            fontSize: 'clamp(1.8rem, 6vw, 3.2rem)',
-            margin: 0,
-            background: 'linear-gradient(to right, #6366F1, #A855F7, #EC4899, #F97316)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundSize: '200% auto',
-            animation: 'shimmer-text 4s linear infinite',
-            textShadow: '0 10px 20px rgba(0,0,0,0.3)'
-          }}>
-            KLANVISION
-          </h1>
-        </motion.div>
-        
-        <div style={{ marginTop: 15, height: 16 }}>
+      {/* Visionary Status Section */}
+      <div style={{ textAlign: 'center', zIndex: 1, marginTop: -5 }}>
+        <div style={{ height: 16 }}>
           <AnimatePresence mode="wait">
             <motion.p
               key={status}
@@ -283,9 +267,10 @@ function App() {
   const location = useLocation();
   const currentPath = location.pathname;
   
-  // Only show loader on the home page, not when navigating via navbar
+  // Only show loader on first home load of session
   const isHomePage = currentPath === '/' || currentPath === '/home';
-  const [loading, setLoading] = useState(isHomePage);
+  const hasShownSplash = typeof window !== 'undefined' && sessionStorage.getItem('klanvision_splash_shown') === 'true';
+  const [loading, setLoading] = useState(isHomePage && !hasShownSplash);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('klanvision_theme') || 'dark';
   });
@@ -301,12 +286,29 @@ function App() {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
-  // Hide loader after 2400ms – only runs when on the home page
+  // Hide loader after 2400ms – only runs when on the home page for the first time in session
   useEffect(() => {
-    if (!isHomePage) return;
-    const t = setTimeout(() => setLoading(false), 2400);
+    if (!isHomePage || hasShownSplash) return;
+    const t = setTimeout(() => {
+      setLoading(false);
+      sessionStorage.setItem('klanvision_splash_shown', 'true');
+    }, 2400);
     return () => clearTimeout(t);   // cleanup on unmount
-  }, []);
+  }, [isHomePage, hasShownSplash]);
+
+  // Auto-scroll to section ID when hash is present in URL (e.g. /#services)
+  useEffect(() => {
+    if (location.hash) {
+      const targetId = location.hash.replace('#', '');
+      const timer = setTimeout(() => {
+        const elem = document.getElementById(targetId);
+        if (elem) {
+          elem.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, loading ? 2500 : 300);
+      return () => clearTimeout(timer);
+    }
+  }, [location, loading]);
 
 
 

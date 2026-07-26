@@ -7,6 +7,7 @@
 // ============================================================
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, Mail, MapPin, X } from 'lucide-react';
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
@@ -165,8 +166,20 @@ const FooterHeading = ({ children }) => (
 );
 
 export default function Footer() {
+  const navigate = useNavigate();
+
   // State for active legal modal
   const [activeLegal, setActiveLegal] = useState(null);
+
+  // Logo click handler – smooth scroll to top if on home page without triggering loader, or navigate SPA client-side
+  const handleLogoClick = () => {
+    if (window.location.pathname === '/' || window.location.pathname === '/home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   // Smooth scroll helper used for quick links navigation
   const scrollTo = (id) => {
@@ -220,7 +233,7 @@ export default function Footer() {
           >
 
             {/* Logo mark + wordmark */}
-            <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 16, marginBottom: 10, marginLeft: -16 }} onClick={() => window.location.href = 'https://www.klanvision.com'}>
+            <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 16, marginBottom: 10, marginLeft: -16 }} onClick={handleLogoClick}>
 
               <motion.img
                 whileHover={{ scale: 1.05 }}

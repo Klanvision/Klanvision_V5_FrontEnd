@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
 import { ChevronLeft, Shield, Cpu, Activity, Clock, Server, Zap, ArrowRight, CheckCircle2, HardDrive, Network } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useSEO } from '../hooks/useSEO';
 
 export default function ManagedServicesPage() {
+  const navigate = useNavigate();
   useSEO({
     title: 'Managed IT Services | 24/7 IT Operations – Klanvision',
     description: 'Klanvision provides 24/7 Managed IT Services including proactive monitoring, infrastructure maintenance, performance optimization and 99.9% uptime SLA for enterprises.',
@@ -68,8 +70,16 @@ export default function ManagedServicesPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <a href="/" style={{ color: '#818CF8', display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', fontSize: 14, fontWeight: 700, marginBottom: 32, letterSpacing: '1px' }}>
-              <ChevronLeft size={18} /> BACK TO SOLUTIONS
+            <a 
+              href="/#services" 
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/#services');
+                setTimeout(() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }), 50);
+              }}
+              style={{ color: '#818CF8', display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', fontSize: 14, fontWeight: 700, marginBottom: 32, letterSpacing: '1px', cursor: 'pointer' }}
+            >
+              <ChevronLeft size={18} /> BACK TO SERVICES
             </a>
             
             <div style={{ maxWidth: 800 }}>
@@ -92,7 +102,16 @@ export default function ManagedServicesPage() {
               </p>
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
-                <a href="/#contact-form" className="btn-primary" style={{ textDecoration: 'none', padding: '18px 36px', background: '#4F46E5', color: 'white', borderRadius: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 10px 20px rgba(79,70,229,0.3)' }}>
+                <a 
+                  href="/contact" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/contact');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="btn-primary" 
+                  style={{ textDecoration: 'none', padding: '18px 36px', background: '#4F46E5', color: 'white', borderRadius: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 10px 20px rgba(79,70,229,0.3)', cursor: 'pointer' }}
+                >
                   Get Managed Support <ArrowRight size={18} />
                 </a>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, color: '#CBD5E1' }}>
@@ -263,7 +282,16 @@ export default function ManagedServicesPage() {
             <p style={{ color: 'var(--text-muted)', fontSize: 18, marginBottom: 40, maxWidth: 600, margin: '0 auto 40px' }}>
               Let Klanvision take the wheel of your IT infrastructure. Get a custom managed service proposal tailored to your enterprise.
             </p>
-            <a href="/#contact-form" className="btn-primary" style={{ textDecoration: 'none', padding: '20px 48px', fontSize: 18, borderRadius: 16, display: 'inline-block', background: '#4F46E5' }}>
+            <a 
+              href="/contact" 
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/contact');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="btn-primary" 
+              style={{ textDecoration: 'none', padding: '20px 48px', fontSize: 18, borderRadius: 16, display: 'inline-block', background: '#4F46E5', cursor: 'pointer' }}
+            >
               Get Your Custom Quote
             </a>
           </motion.div>

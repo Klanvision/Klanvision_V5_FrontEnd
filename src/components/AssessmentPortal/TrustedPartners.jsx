@@ -1,39 +1,32 @@
 import React from 'react';
-import { Server, Database, Layers, Cloud, Activity, Code, Globe, Box, Target, Cpu, Shield, Zap, Compass, Hexagon, Terminal, Command, Briefcase, Monitor, Lock, Link, Rocket } from 'lucide-react';
 
 export default function TrustedPartners() {
-  // 30 Enterprise tech, consulting, and B2B companies with attractive text gradients and matching tech icons
+  // Enterprise tech, consulting, and cloud companies with real official vector logos from Simple Icons CDN
   const companies = [
-    { name: 'IBM', icon: Server, color: 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 font-[900] tracking-wider text-[34px]', iconColor: 'text-cyan-400' },
-    { name: 'ORACLE', icon: Database, color: 'text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400 font-[800] tracking-widest text-[28px]', iconColor: 'text-red-500' },
-    { name: 'SAP', icon: Layers, color: 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 font-[900] italic text-[34px]', iconColor: 'text-blue-500' },
-    { name: 'Salesforce', icon: Cloud, color: 'text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 font-[700] text-[30px] tracking-tight', iconColor: 'text-cyan-400' },
-    { name: 'CISCO', icon: Activity, color: 'text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400 font-[800] text-[28px] tracking-widest', iconColor: 'text-teal-400' },
-    { name: 'accenture', icon: Target, color: 'text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-[700] text-[32px] lowercase tracking-tight', suffix: <span className="text-[#A100FF] ml-1 font-[900]">&gt;</span>, iconColor: 'text-purple-400' },
-    { name: 'Capgemini', icon: Globe, color: 'text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-400 font-[800] text-[28px] tracking-tight', iconColor: 'text-indigo-400' },
-    { name: 'Infosys', icon: Code, color: 'text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-blue-400 font-[800] text-[30px]', iconColor: 'text-sky-400' },
-    { name: 'Atlassian', icon: Box, color: 'text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400 font-[700] text-[28px]', iconColor: 'text-blue-500' },
-    { name: 'Microsoft', icon: Command, color: 'text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-400 font-[600] text-[28px]', iconColor: 'text-gray-300' },
-    { name: 'Google Cloud', icon: Cloud, color: 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-red-400 to-yellow-400 font-[700] text-[28px]', iconColor: 'text-blue-400' },
-    { name: 'AWS', icon: Server, color: 'text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-400 font-[800] text-[28px] tracking-wider', iconColor: 'text-orange-400' },
-    { name: 'Snowflake', icon: Hexagon, color: 'text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 font-[700] text-[30px]', iconColor: 'text-cyan-300' },
-    { name: 'Databricks', icon: Database, color: 'text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500 font-[800] text-[28px]', iconColor: 'text-red-500' },
-    { name: 'Palantir', icon: Shield, color: 'text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-gray-400 font-[900] text-[32px] tracking-widest', iconColor: 'text-slate-300' },
-    { name: 'Splunk', icon: Activity, color: 'text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-orange-400 font-[800] text-[30px]', iconColor: 'text-pink-500' },
-    { name: 'Palo Alto Networks', icon: Lock, color: 'text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-gray-500 font-[700] text-[26px]', iconColor: 'text-gray-300' },
-    { name: 'CrowdStrike', icon: Zap, color: 'text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-rose-600 font-[900] text-[28px]', iconColor: 'text-red-500' },
-    { name: 'Fortinet', icon: Shield, color: 'text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-pink-500 font-[800] text-[28px]', iconColor: 'text-red-400' },
-    { name: 'ServiceNow', icon: Layers, color: 'text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500 font-[700] text-[30px]', iconColor: 'text-emerald-400' },
-    { name: 'Workday', icon: Briefcase, color: 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-sky-400 font-[800] text-[28px]', iconColor: 'text-blue-400' },
-    { name: 'Adobe', icon: Compass, color: 'text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 font-[900] text-[30px]', iconColor: 'text-red-500' },
-    { name: 'Zoom', icon: Monitor, color: 'text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-500 font-[700] text-[32px]', iconColor: 'text-blue-400' },
-    { name: 'Slack', icon: Terminal, color: 'text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-400 font-[800] text-[28px]', iconColor: 'text-purple-400' },
-    { name: 'Stripe', icon: Link, color: 'text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500 font-[700] text-[30px]', iconColor: 'text-indigo-400' },
-    { name: 'Square', icon: Box, color: 'text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-400 font-[800] text-[30px]', iconColor: 'text-gray-200' },
-    { name: 'Shopify', icon: Target, color: 'text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 font-[700] text-[28px]', iconColor: 'text-green-400' },
-    { name: 'Twilio', icon: Code, color: 'text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-rose-400 font-[800] text-[28px]', iconColor: 'text-red-400' },
-    { name: 'GitHub', icon: Globe, color: 'text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-gray-400 font-[700] text-[30px]', iconColor: 'text-slate-300' },
-    { name: 'GitLab', icon: Rocket, color: 'text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400 font-[800] text-[28px]', iconColor: 'text-orange-400' }
+    { name: 'Google Cloud', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlecloud.svg', color: '#4285F4' },
+    { name: 'AWS', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/amazonaws.svg', color: '#FF9900' },
+    { name: 'Microsoft', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/microsoft.svg', color: '#00A4EF' },
+    { name: 'Salesforce', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/salesforce.svg', color: '#00A1E0' },
+    { name: 'IBM', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/ibm.svg', color: '#1F70C1' },
+    { name: 'Oracle', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/oracle.svg', color: '#F80000' },
+    { name: 'SAP', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/sap.svg', color: '#0FAFFF' },
+    { name: 'Cisco', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/cisco.svg', color: '#1BA0D7' },
+    { name: 'Accenture', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/accenture.svg', color: '#A100FF' },
+    { name: 'Infosys', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/infosys.svg', color: '#007CC3' },
+    { name: 'Atlassian', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/atlassian.svg', color: '#0052CC' },
+    { name: 'NVIDIA', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/nvidia.svg', color: '#76B900' },
+    { name: 'Intel', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/intel.svg', color: '#0068B5' },
+    { name: 'Snowflake', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/snowflake.svg', color: '#29B5E8' },
+    { name: 'Databricks', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/databricks.svg', color: '#FF3621' },
+    { name: 'Palo Alto Networks', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/paloaltonetworks.svg', color: '#FA582D' },
+    { name: 'Stripe', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/stripe.svg', color: '#635BFF' },
+    { name: 'Zoom', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/zoom.svg', color: '#2D8CFF' },
+    { name: 'Slack', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/slack.svg', color: '#ECB22E' },
+    { name: 'Docker', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/docker.svg', color: '#2496ED' },
+    { name: 'Kubernetes', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/kubernetes.svg', color: '#326CE5' },
+    { name: 'Red Hat', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/redhat.svg', color: '#EE0000' },
+    { name: 'GitLab', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/gitlab.svg', color: '#FC6D26' },
+    { name: 'GitHub', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg', color: '#FFFFFF' }
   ];
 
   // Double the array for seamless infinite scrolling
@@ -50,7 +43,7 @@ export default function TrustedPartners() {
           .animate-scroll-left {
             display: flex;
             width: max-content;
-            animation: scroll-left 90s linear infinite;
+            animation: scroll-left 70s linear infinite;
           }
           .animate-scroll-left:hover {
             animation-play-state: paused;
@@ -81,15 +74,27 @@ export default function TrustedPartners() {
             <div className="flex-1 w-full relative overflow-hidden flex items-center 
                             before:absolute before:left-0 before:w-[60px] before:h-full before:bg-gradient-to-r before:from-[#0B1021] before:to-transparent before:z-20 
                             after:absolute after:right-0 after:w-[60px] after:h-full after:bg-gradient-to-l after:from-[#0B1021] after:to-transparent after:z-20">
-              <div className="animate-scroll-left flex items-center gap-12 px-4">
+              <div className="animate-scroll-left flex items-center gap-10 px-4">
                 {marqueeItems.map((company, index) => (
                   <div 
                     key={index} 
-                    className={`flex items-center gap-3 hover:scale-110 transition-all duration-300 cursor-pointer drop-shadow-md ${company.color}`}
+                    className="flex items-center gap-3.5 px-4 py-2.5 rounded-xl transition-all duration-300 cursor-pointer group hover:bg-white/[0.06] border border-transparent hover:border-white/10"
                   >
-                    {company.icon && <company.icon className={`w-8 h-8 ${company.iconColor}`} />}
-                    {company.name}
-                    {company.suffix && company.suffix}
+                    <div className="w-7 h-7 flex items-center justify-center relative flex-shrink-0">
+                      <img 
+                        src={company.logo} 
+                        alt={`${company.name} logo`}
+                        className="w-6 h-6 object-contain filter brightness-0 invert opacity-75 group-hover:opacity-100 transition-all duration-300"
+                        style={{
+                          filter: 'brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.3))'
+                        }}
+                      />
+                    </div>
+                    <span 
+                      className="text-[15.5px] font-[800] tracking-wide text-slate-200 group-hover:text-white transition-colors duration-300 whitespace-nowrap"
+                    >
+                      {company.name}
+                    </span>
                   </div>
                 ))}
               </div>
