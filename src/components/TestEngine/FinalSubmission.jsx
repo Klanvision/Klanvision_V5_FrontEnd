@@ -117,8 +117,8 @@ export function FinalSubmission({ answeredCount, totalQuestions, unansweredCount
             {/* Logo — zooms smoothly on hover */}
             <div className="relative w-36 h-36 flex items-center justify-center z-10 transition-transform duration-500 group-hover:scale-110">
               <img
-                src="/images/Company_Logo.png"
-                alt="Company Logo"
+                src="/images/Transparent_Logo.png"
+                alt="Klanvision Logo"
                 className="w-full h-full object-contain drop-shadow-[0_0_18px_rgba(129,140,248,0.5)]"
               />
             </div>

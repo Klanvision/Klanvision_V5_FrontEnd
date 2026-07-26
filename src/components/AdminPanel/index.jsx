@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import './AdminPanel.css';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { api } from '../../utils/api';
 import {
   LayoutDashboard, Users, FileText,
   Settings, LogOut, Search, Bell, Plus,
   Mail, ShieldCheck, Shield, UserPlus, LayoutPanelLeft,
   Activity, Zap, Rocket, Check, X, Lock, Eye,
-  EyeOff, Upload, GraduationCap
+  EyeOff, Upload, GraduationCap, ArrowLeft
 } from 'lucide-react';
 
 import {
@@ -632,6 +633,39 @@ export default function AdminPanel() {
           initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
           style={{ width: '100%', maxWidth: (isSettingUp2FA || isVerifying2FA) ? 420 : 450, background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(40px)', padding: (isSettingUp2FA || isVerifying2FA) ? '40px' : '48px', borderRadius: 40, border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 40px 100px rgba(0,0,0,0.7)' }}
         >
+          <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 20 }}>
+            <Link
+              to="/"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                color: '#94A3B8',
+                textDecoration: 'none',
+                fontSize: 13,
+                fontWeight: 700,
+                padding: '8px 16px',
+                borderRadius: 12,
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#FFFFFF';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#94A3B8';
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+              }}
+            >
+              <ArrowLeft size={16} />
+              <span>Back to Home</span>
+            </Link>
+          </div>
+
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             {isVerifying2FA || isSettingUp2FA ? (
               <motion.div whileHover={{ rotate: 15 }} className="shield-icon-container">
@@ -889,7 +923,7 @@ export default function AdminPanel() {
             {platformLogo ? (
               <img src={platformLogo} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             ) : (
-              <span style={{ fontWeight: 900, fontSize: 20 }}>K</span>
+              <img src="/images/Transparent_Logo.png" alt="Klanvision Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             )}
           </motion.div>
           {isSidebarOpen && (

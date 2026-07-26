@@ -1,9 +1,11 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronLeft, ShieldAlert, Lock, FileCheck, Zap, ArrowRight, CheckCircle2, Fingerprint, Activity, Shield, Terminal, Search } from 'lucide-react';
 import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSEO } from '../hooks/useSEO';
 
 export default function CybersecurityPage() {
+  const navigate = useNavigate();
   useSEO({
     title: 'Cybersecurity Solutions | Zero-Trust Protection – Klanvision',
     description: 'Klanvision delivers enterprise-grade cybersecurity: penetration testing, zero-trust architecture, 24/7 SOC monitoring, compliance (ISO 27001, SOC2, GDPR) and threat intelligence.',
@@ -79,8 +81,16 @@ export default function CybersecurityPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <a href="/" style={{ color: '#EF4444', display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', fontSize: 14, fontWeight: 700, marginBottom: 40, letterSpacing: '1px' }}>
-                <ChevronLeft size={18} /> BACK TO SOLUTIONS
+              <a 
+                href="/#services" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/#services');
+                  setTimeout(() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }), 50);
+                }}
+                style={{ color: '#EF4444', display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', fontSize: 14, fontWeight: 700, marginBottom: 40, letterSpacing: '1px', cursor: 'pointer' }}
+              >
+                <ChevronLeft size={18} /> BACK TO SERVICES
               </a>
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -104,7 +114,16 @@ export default function CybersecurityPage() {
                   </p>
 
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24 }}>
-                    <a href="/#contact-form" className="btn-primary" style={{ textDecoration: 'none', padding: '20px 48px', background: '#EF4444', color: 'white', borderRadius: '16px', fontWeight: 800, fontSize: 18, display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 20px 40px rgba(239,68,68,0.3)' }}>
+                    <a 
+                      href="/contact" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate('/contact');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="btn-primary" 
+                      style={{ textDecoration: 'none', padding: '20px 48px', background: '#EF4444', color: 'white', borderRadius: '16px', fontWeight: 800, fontSize: 18, display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 20px 40px rgba(239,68,68,0.3)', cursor: 'pointer' }}
+                    >
                       Start Security Audit <ArrowRight size={20} />
                     </a>
                   </div>
@@ -352,7 +371,12 @@ export default function CybersecurityPage() {
               </p>
 
               <motion.a 
-                href="/#contact-form" 
+                href="/contact" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/contact');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 whileHover={{ scale: 1.03, boxShadow: '0 15px 30px rgba(239,68,68,0.3)' }}
                 whileTap={{ scale: 0.98 }}
                 style={{ 
@@ -367,7 +391,8 @@ export default function CybersecurityPage() {
                   alignItems: 'center',
                   gap: 12,
                   boxShadow: '0 10px 20px rgba(239,68,68,0.2)',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer'
                 }}
               >
                 Start Security Audit <ArrowRight size={20} />

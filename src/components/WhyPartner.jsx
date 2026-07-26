@@ -131,7 +131,7 @@ export default function WhyPartner() {
                 gap: 20, 
                 alignItems: 'center', 
                 textAlign: 'center',
-                cursor: 'pointer',
+                cursor: 'default',
                 background: 'var(--bg-surface)',
                 border: '1px solid var(--border-main)',
                 borderRadius: '24px',

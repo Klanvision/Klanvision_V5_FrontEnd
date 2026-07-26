@@ -3,6 +3,7 @@
 // ============================================================
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 // ── Compact 3D SVG Icons ─────────────────────────────────────
 const SvgManaged = () => (
@@ -214,6 +215,7 @@ const services = [
 ];
 
 export default function ServicesSection() {
+  const navigate = useNavigate();
   const [selectedService, setSelectedService] = useState(null);
 
   return (
@@ -259,22 +261,12 @@ export default function ServicesSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.07 }}
               whileHover={{ y: -10, scale: 1.02 }}
-              onClick={() => {
-                if (s.title === 'Managed Services') window.location.href = '/managed-services';
-                if (s.title === 'IT Consultation & Advisory') window.location.href = '/it-consultation';
-                if (s.title === 'Securing Your Digital Infrastructure') window.location.href = '/cybersecurity';
-                if (s.title === 'Web Development') window.location.href = '/web-development';
-                if (s.title === 'Mobile App Design & Deployment') window.location.href = '/mobile-app';
-                if (s.title === 'Cloud Services') window.location.href = '/cloud-services';
-                if (s.title === 'Website Upgrade & Migration') window.location.href = '/upgrade-migration';
-                if (s.title === 'API Integration') window.location.href = '/api-integration';
-              }}
               className="card"
               style={{ 
                 padding: '32px 24px', 
                 position: 'relative', 
                 overflow: 'hidden', 
-                cursor: 'pointer', 
+                cursor: 'default', 
                 display: 'flex', 
                 flexDirection: 'column',
                 background: 'var(--bg-surface)',
@@ -323,20 +315,22 @@ export default function ServicesSection() {
               <p style={{ color: 'var(--text-muted)', fontSize: 13, lineHeight: 1.65, marginBottom: 0, fontFamily: "'Roboto','Poppins',sans-serif", flexGrow: 1 }}>{s.desc}</p>
 
 
-              {/* Read More – text + round animated arrow circle */}
+              {/* Read More – text + round animated arrow circle (ONLY CLICKABLE ELEMENT) */}
               <div 
-                style={{ marginTop: 24, display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} 
+                style={{ marginTop: 24, display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', width: 'fit-content' }} 
                 className="read-more-wrap"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (s.title === 'Managed Services') window.location.href = '/managed-services';
-                  if (s.title === 'IT Consultation & Advisory') window.location.href = '/it-consultation';
-                  if (s.title === 'Securing Your Digital Infrastructure') window.location.href = '/cybersecurity';
-                  if (s.title === 'Web Development') window.location.href = '/web-development';
-                  if (s.title === 'Mobile App Design & Deployment') window.location.href = '/mobile-app';
-                  if (s.title === 'Cloud Services') window.location.href = '/cloud-services';
-                  if (s.title === 'Website Upgrade & Migration') window.location.href = '/upgrade-migration';
-                  if (s.title === 'API Integration') window.location.href = '/api-integration';
+                onClick={() => {
+                  let path = '/';
+                  if (s.title === 'Managed Services') path = '/managed-services';
+                  if (s.title === 'IT Consultation & Advisory') path = '/it-consultation';
+                  if (s.title === 'Securing Your Digital Infrastructure') path = '/cybersecurity';
+                  if (s.title === 'Web Development') path = '/web-development';
+                  if (s.title === 'Mobile App Design & Deployment') path = '/mobile-app';
+                  if (s.title === 'Cloud Services') path = '/cloud-services';
+                  if (s.title === 'Website Upgrade & Migration') path = '/upgrade-migration';
+                  if (s.title === 'API Integration') path = '/api-integration';
+                  navigate(path);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
               >
                 <span style={{ color: s.color, fontWeight: 700, fontSize: 13, fontFamily: "'Poppins',sans-serif", letterSpacing: '0.3px' }}>Read More</span>

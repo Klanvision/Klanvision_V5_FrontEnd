@@ -13,7 +13,8 @@ export default function HeroSection() {
 
   const handleStart = async (e) => {
     e.preventDefault();
-    if (!code.trim()) {
+    const rawCode = code.trim().replace(/[^a-zA-Z0-9-]/g, '').slice(0, 50);
+    if (!rawCode) {
       setError("Please enter an assessment code");
       return;
     }
@@ -22,9 +23,55 @@ export default function HeroSection() {
     setError(null);
     
     try {
-      const exam = await api.getExam(code.trim());
-      if (exam && exam.id) {
-        navigate(`/test/${code.trim()}?guest=true`);
+      let resolvedExamId = null;
+
+      // 1. Try exact raw code
+      try {
+        const exam = await api.getExam(rawCode);
+        if (exam && (exam.id || exam.title)) resolvedExamId = exam.id || rawCode;
+      } catch (err) {
+        // Ignore fallback
+      }
+
+      // 2. Try uppercase
+      if (!resolvedExamId) {
+        try {
+          const exam = await api.getExam(rawCode.toUpperCase());
+          if (exam && (exam.id || exam.title)) resolvedExamId = exam.id || rawCode.toUpperCase();
+        } catch (err) {
+          // Ignore fallback
+        }
+      }
+
+      // 3. Try lowercase
+      if (!resolvedExamId) {
+        try {
+          const exam = await api.getExam(rawCode.toLowerCase());
+          if (exam && (exam.id || exam.title)) resolvedExamId = exam.id || rawCode.toLowerCase();
+        } catch (err) {
+          // Ignore fallback
+        }
+      }
+
+      // 4. Case-insensitive search across all available exams
+      if (!resolvedExamId) {
+        try {
+          const allExams = await api.getExams();
+          if (Array.isArray(allExams)) {
+            const match = allExams.find(ex => 
+              (ex.id && ex.id.toLowerCase() === rawCode.toLowerCase()) || 
+              (ex.title && ex.title.toLowerCase() === rawCode.toLowerCase()) ||
+              (ex.code && ex.code.toLowerCase() === rawCode.toLowerCase())
+            );
+            if (match) resolvedExamId = match.id;
+          }
+        } catch (err) {
+          // Ignore fallback
+        }
+      }
+
+      if (resolvedExamId) {
+        navigate(`/test/${resolvedExamId}?guest=true`);
       } else {
         setError("Invalid Assessment Code. Please check and try again.");
       }
@@ -241,8 +288,10 @@ export default function HeroSection() {
                         <input
                           type="text"
                           value={code}
+                          maxLength={30}
                           onChange={(e) => {
-                            setCode(e.target.value);
+                            const formatted = e.target.value.replace(/[^a-zA-Z0-9-]/g, '');
+                            setCode(formatted);
                             if (error) setError(null);
                           }}
                           onFocus={() => setIsFocused(true)}
@@ -251,6 +300,15 @@ export default function HeroSection() {
                           className={`relative z-10 w-full h-[54px] bg-[#131A30] border ${error ? 'border-red-500/50' : 'border-white/5'} rounded-[12px] px-5 text-white text-[15px] focus:outline-none focus:border-transparent transition-all placeholder:text-[#4A5568]`}
                         />
                       </div>
+
+                      {/* Length Indicator */}
+                      {code.length > 0 && (
+                        <div className="flex justify-end items-center -mt-3 px-1 text-[11px] font-[500]">
+                          <span className={code.length >= 30 ? "text-amber-400 font-semibold" : "text-[#A0ABC0]/70"}>
+                            {code.length}/30
+                          </span>
+                        </div>
+                      )}
                       
                       <AnimatePresence>
                         {error && (

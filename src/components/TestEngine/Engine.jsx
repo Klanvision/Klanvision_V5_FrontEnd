@@ -368,8 +368,46 @@ export default function Engine({ testId: propTestId }) {
 
   const handleDetailsSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
+
+    const nameStr = formData.name.trim();
+    const emailStr = formData.email.trim();
+    const phoneStr = formData.phone.trim();
+
+    if (!nameStr || !emailStr || !phoneStr) {
       toast({ title: "Validation Error", description: "All fields are required", variant: "destructive" });
+      return;
+    }
+
+    // Strict email format validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(emailStr)) {
+      toast({ 
+        title: "Invalid Email Address", 
+        description: "Please enter a valid email address (e.g., name@gmail.com).", 
+        variant: "destructive" 
+      });
+      return;
+    }
+
+    // Common email domain typos check
+    const invalidGmailDomains = ['@gmai.com', '@gmaill.com', '@gmil.com', '@gmall.com', '@gmal.com', '@gmail.co', '@gmail.cm'];
+    if (invalidGmailDomains.some(domain => emailStr.toLowerCase().endsWith(domain))) {
+      toast({
+        title: "Invalid Email Domain",
+        description: "Your email address contains a typo (e.g. '@gmai.com'). Please correct it to '@gmail.com'.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Phone number validation (minimum 10 digits)
+    const cleanPhone = phoneStr.replace(/[^0-9]/g, '');
+    if (cleanPhone.length < 10) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid 10-digit mobile number.",
+        variant: "destructive"
+      });
       return;
     }
 

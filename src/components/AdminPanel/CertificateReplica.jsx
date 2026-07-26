@@ -203,7 +203,7 @@ export default function CertificateReplica({ data }) {
       
       <div className="cert-corner-tl">
         <div style={{ position: 'absolute', top: '15%', left: '15%', color: '#fff', fontFamily: 'Montserrat' }}>
-          <img src="/logo.png" alt="Klanvision" style={{ width: '8vw', filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.3))' }} />
+          <img src="/images/Transparent_Logo.png" alt="Klanvision" style={{ width: '8vw', filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.3))' }} />
         </div>
       </div>
       

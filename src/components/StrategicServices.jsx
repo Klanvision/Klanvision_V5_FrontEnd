@@ -385,7 +385,7 @@ export default function StrategicServices() {
               style={{
                 padding: '28px 20px',
                 display: 'flex', flexDirection: 'column', alignItems: 'center',
-                textAlign: 'center', gap: 14, cursor: 'pointer',
+                textAlign: 'center', gap: 14, cursor: 'default',
                 borderTop: `3px solid ${s.border}`,
                 position: 'relative', overflow: 'hidden',
                 background: 'var(--bg-surface)',

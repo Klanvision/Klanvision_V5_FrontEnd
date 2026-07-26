@@ -215,7 +215,7 @@ export default function PortfolioSection() {
                   className="card"
                   style={{ 
                     overflow: 'hidden', 
-                    cursor: 'pointer',
+                    cursor: 'default',
                     background: 'var(--bg-surface)',
                     boxShadow: 'var(--card-shadow)',
                     border: '1px solid var(--border-main)',

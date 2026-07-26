@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
 import { ChevronLeft, Share2, Zap, Shield, Repeat, ArrowRight, CheckCircle2, Code2, Link, Database, Cpu } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useSEO } from '../hooks/useSEO';
 
 export default function APIIntegrationPage() {
+  const navigate = useNavigate();
   useSEO({
     title: 'API Integration Services | Connect Your Systems – Klanvision',
     description: 'Klanvision provides seamless API integration: custom REST & GraphQL APIs, third-party platform connections (Stripe, Salesforce, Shopify), real-time data sync, and OAuth2 security.',
@@ -72,8 +74,16 @@ export default function APIIntegrationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <a href="/" style={{ color: '#F9A8D4', display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', fontSize: 14, fontWeight: 700, marginBottom: 32, letterSpacing: '1px' }}>
-              <ChevronLeft size={18} /> BACK TO SOLUTIONS
+            <a 
+              href="/#services" 
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/#services');
+                setTimeout(() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }), 50);
+              }}
+              style={{ color: '#F9A8D4', display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', fontSize: 14, fontWeight: 700, marginBottom: 32, letterSpacing: '1px', cursor: 'pointer' }}
+            >
+              <ChevronLeft size={18} /> BACK TO SERVICES
             </a>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -97,7 +107,16 @@ export default function APIIntegrationPage() {
                 </p>
 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20 }}>
-                  <a href="/#contact-form" className="btn-primary" style={{ textDecoration: 'none', padding: '18px 36px', background: '#EC4899', color: 'white', borderRadius: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 10px 20px rgba(236,72,153,0.3)' }}>
+                  <a 
+                    href="/contact" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate('/contact');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="btn-primary" 
+                    style={{ textDecoration: 'none', padding: '18px 36px', background: '#EC4899', color: 'white', borderRadius: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 10px 20px rgba(236,72,153,0.3)', cursor: 'pointer' }}
+                  >
                     Connect Your Apps <ArrowRight size={18} />
                   </a>
                 </div>
@@ -320,7 +339,16 @@ export default function APIIntegrationPage() {
             <p style={{ color: 'var(--text-muted)', fontSize: 18, marginBottom: 40, maxWidth: 600, margin: '0 auto 40px' }}>
               Bridge the gaps between your applications and automate your business processes with our expert API integration services.
             </p>
-            <a href="/#contact-form" className="btn-primary" style={{ textDecoration: 'none', padding: '20px 48px', fontSize: 18, borderRadius: 16, display: 'inline-block', background: '#EC4899' }}>
+            <a 
+              href="/contact" 
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/contact');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="btn-primary" 
+              style={{ textDecoration: 'none', padding: '20px 48px', fontSize: 18, borderRadius: 16, display: 'inline-block', background: '#EC4899', cursor: 'pointer' }}
+            >
               Start Your Integration Project
             </a>
           </motion.div>

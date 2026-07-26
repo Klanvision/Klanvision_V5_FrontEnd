@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Globe, Smartphone, Shield, Cloud, Settings, 
   Cpu, Database, BarChart2, RefreshCw, Layers,
@@ -8,6 +9,7 @@ import {
 import { useSEO } from '../hooks/useSEO';
 
 export default function ServicesPage() {
+  const navigate = useNavigate();
   useSEO({
     title: 'Professional IT Services & Solutions | Klanvision',
     description: 'Explore Klanvision’s premium IT services including enterprise web apps, mobile app development, cloud migration, cybersecurity, data analytics, and custom API integration.',
@@ -481,7 +483,10 @@ export default function ServicesPage() {
               Connect with our solutions architects to map out custom specifications, budgets, and secure delivery timelines.
             </p>
             <button
-              onClick={() => window.location.href = '/contact'}
+              onClick={() => {
+                navigate('/contact');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               style={{
                 background: 'white',
                 color: '#4F46E5',
