@@ -50,6 +50,7 @@ import AuthenticVerificationPage from './components/AuthenticVerificationPage';
 import DataProtectionPage from './components/DataProtectionPage';
 import TrustedDatabasePage from './components/TrustedDatabasePage';
 import GlobalAcceptancePage from './components/GlobalAcceptancePage';
+import PlansPage from './components/PlansPage';
 
 import ServicesPage from './components/ServicesPage';
 import PortfolioPage from './components/PortfolioPage';
@@ -415,6 +416,7 @@ function App() {
             {currentPath === '/privacy-policy' && <PrivacyPolicyPage />}
             {currentPath === '/service-policy' && <ServicePolicyPage />}
             {currentPath === '/terms' && <TermsPage />}
+            {currentPath === '/plans' && <PlansPage />}
             {currentPath === '/it-consultation' && <ConsultationPage />}
             {currentPath === '/managed-services' && <ManagedServicesPage />}
             {currentPath === '/cybersecurity' && <CybersecurityPage />}

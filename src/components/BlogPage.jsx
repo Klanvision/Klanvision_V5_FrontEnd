@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, Clock, BookOpen, User, ArrowRight, 
-  Mail, Bookmark, CheckCircle2, ChevronRight, X, ExternalLink
+  Mail, Bookmark, CheckCircle2, ChevronRight, X, ExternalLink, ChevronLeft
 } from 'lucide-react';
 import { useSEO } from '../hooks/useSEO';
 
@@ -144,6 +144,19 @@ export default function BlogPage() {
         <div style={{ position: 'absolute', top: -100, right: -100, width: 450, height: 450, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.12), transparent)', pointerEvents: 'none' }} />
         
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+
+          {/* Navigation Back Link */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 20 }}
+          >
+            <a href="/" style={{ color: '#A855F7', display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none', fontSize: 13, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', transition: 'all 0.3s', padding: '8px 16px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 100 }} className="back-link">
+              <ChevronLeft size={16} /> Back to Home
+            </a>
+          </motion.div>
+
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 24, textAlign: 'center', maxWidth: 800, margin: '0 auto' }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--bg-surface)', border: '1px solid var(--border-main)', padding: '6px 16px', borderRadius: 50, marginBottom: 8, fontSize: 13, fontWeight: 700, color: 'var(--primary-purple)', alignSelf: 'center' }}>
               <BookOpen size={14} /> KLANVISION KNOWLEDGE HUB

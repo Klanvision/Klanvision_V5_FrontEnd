@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Globe, Smartphone, Shield, Cloud, Settings, 
   Cpu, Database, BarChart2, RefreshCw, Layers,
-  CheckCircle2, Plus, Minus, ArrowRight, Play, Award, Zap, Users
+  CheckCircle2, Plus, Minus, ArrowRight, Play, Award, Zap, Users, ChevronLeft
 } from 'lucide-react';
 import { useSEO } from '../hooks/useSEO';
 
@@ -142,6 +142,19 @@ export default function ServicesPage() {
         <div style={{ position: 'absolute', bottom: -100, left: -100, width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,107,53,0.08), transparent)', pointerEvents: 'none' }} />
 
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+
+          {/* Navigation Back Link */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 20 }}
+          >
+            <a href="/" style={{ color: '#A855F7', display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none', fontSize: 13, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', transition: 'all 0.3s', padding: '8px 16px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 100 }} className="back-link">
+              <ChevronLeft size={16} /> Back to Home
+            </a>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

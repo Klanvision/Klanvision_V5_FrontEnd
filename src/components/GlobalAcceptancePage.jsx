@@ -81,11 +81,13 @@ export default function GlobalAcceptancePage() {
 
         <div className="container" style={{ position: 'relative', zIndex: 10 }}>
           <motion.div style={{ opacity, scale }}>
-            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
-              <a href="/verify" style={{ color: '#3B82F6', display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', fontSize: 14, fontWeight: 700, marginBottom: 40, letterSpacing: '1px' }}>
-                <ChevronLeft size={18} /> BACK TO VERIFICATION
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 40 }}>
+              <a href="/" style={{ color: '#A855F7', display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none', fontSize: 13, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', transition: 'all 0.3s', padding: '8px 16px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 100 }} className="back-link">
+                <ChevronLeft size={16} /> Back to Home
               </a>
+            </motion.div>
               
+            <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div>
                   <motion.div

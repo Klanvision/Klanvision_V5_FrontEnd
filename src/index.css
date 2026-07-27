@@ -89,6 +89,13 @@ img {
   padding-right: 24px;
 }
 
+/* Back to Home button — used across all pages */
+.back-link:hover {
+  color: #FFFFFF !important;
+  border-color: #A855F7 !important;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+}
+
 h1,
 h2,
 h3,

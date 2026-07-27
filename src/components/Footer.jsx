@@ -30,6 +30,7 @@ const legalLinks = [
   'Service Policy',
   'Privacy Policy',
   'Cancellation & Refund Policy',
+  'Innovation Packages',
   'FAQ',
 ];
 
@@ -386,6 +387,17 @@ export default function Footer() {
                   ) : link === 'Privacy Policy' ? (
                     <motion.a
                       href="/privacy-policy"
+                      className="footer-link"
+                      whileHover={{ scale: 1.05, x: 5 }}
+                      whileTap={{ scale: 1.2, x: 10 }}
+                      style={{ textDecoration: 'none', fontSize: 13.5, display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0', margin: 0 }}
+                    >
+                      <span style={{ fontSize: 10, color: '#FF6B35', opacity: 0, transition: 'opacity 0.2s' }} className="link-dot">▶</span>
+                      {link}
+                    </motion.a>
+                  ) : link === 'Innovation Packages' ? (
+                    <motion.a
+                      href="/plans"
                       className="footer-link"
                       whileHover={{ scale: 1.05, x: 5 }}
                       whileTap={{ scale: 1.2, x: 10 }}
