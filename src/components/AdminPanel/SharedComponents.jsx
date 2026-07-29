@@ -78,18 +78,32 @@ export const currentShortDateIST = () => {
 };
 
 export const normalizePermission = (p) => {
-  if (p === 'MANAGE_USERS') return 'Users';
-  if (p === 'MANAGE_PROJECTS' || p === 'MANAGE_JOBS') return 'Projects';
-  if (p === 'MANAGE_BLOGS') return 'Blogs';
-  if (p === 'MANAGE_SEO') return 'Settings';
-  if (p === 'MANAGE_ACTIVITIES') return 'Activity Log';
-  return p;
+  if (!p) return '';
+  let clean = p;
+  let suffix = '';
+  if (p.endsWith(':Read')) {
+    clean = p.slice(0, -5);
+    suffix = ':Read';
+  } else if (p.endsWith(':Write')) {
+    clean = p.slice(0, -6);
+    suffix = ':Write';
+  }
+
+  if (clean === 'MANAGE_USERS') clean = 'Users';
+  if (clean === 'MANAGE_PROJECTS' || clean === 'MANAGE_JOBS') clean = 'Projects';
+  if (clean === 'MANAGE_BLOGS') clean = 'Blogs';
+  if (clean === 'MANAGE_SEO') clean = 'Settings';
+  if (clean === 'MANAGE_ACTIVITIES') clean = 'Activity Log';
+  if (clean === 'MANAGE_EXAMS') clean = 'Exams';
+  if (clean === 'MANAGE_CERTIFICATIONS' || clean === 'CERTIFICATION' || clean === 'Certification') clean = 'Certification';
+
+  return clean + suffix;
 };
 
 export const hasTabPermission = (user, tabId) => {
   if (!user) return false;
   const role = (user.role || '').toUpperCase();
-  if (role === 'SUPER_ADMIN' || role === 'SUPER ADMIN' || role === 'ADMIN' || role === 'ADMINISTRATOR' || role === 'SUPERADMIN') {
+  if (role === 'SUPER_ADMIN' || role === 'SUPER ADMIN' || role === 'SUPERADMIN' || role === 'ADMIN') {
     return true;
   }
   
@@ -97,7 +111,7 @@ export const hasTabPermission = (user, tabId) => {
     dashboard:  'Dashboard',
     users:      'Users',
     projects:   'Projects',
-    internship: 'Projects',
+    internship: 'Certification',
     exams:      'Exams',
     blogs:      'Blogs',
     settings:   'Settings',
@@ -111,8 +125,13 @@ export const hasTabPermission = (user, tabId) => {
     return true;
   }
   
-  // Explicitly granted tab access
-  if (perms.includes(required)) {
+  // Check if explicitly granted full tab, Read, or Write
+  if (
+    perms.includes(required) || 
+    perms.includes(`${required}:Read`) || 
+    perms.includes(`${required}:Write`) || 
+    (tabId === 'internship' && (perms.includes('Projects') || perms.includes('Projects:Read') || perms.includes('Projects:Write')))
+  ) {
     return true;
   }
   
@@ -124,7 +143,7 @@ export const hasWritePermission = (user, tabId) => {
   const role = (user.role || '').toUpperCase();
   
   // Super Admin and Admin have full write access everywhere
-  if (role === 'SUPER_ADMIN' || role === 'SUPER ADMIN' || role === 'ADMIN' || role === 'ADMINISTRATOR' || role === 'SUPERADMIN') {
+  if (role === 'SUPER_ADMIN' || role === 'SUPER ADMIN' || role === 'SUPERADMIN' || role === 'ADMIN') {
     return true;
   }
   
@@ -141,6 +160,7 @@ export const hasWritePermission = (user, tabId) => {
   const permMap = {
     users:      'Users',
     projects:   'Projects',
+    internship: 'Certification',
     exams:      'Exams',
     blogs:      'Blogs',
     settings:   'Settings',
@@ -148,14 +168,14 @@ export const hasWritePermission = (user, tabId) => {
   };
   const required = permMap[tabId];
   
-  // If explicitly granted permission by Superadmin, allow write
-  if (required && perms.includes(required)) {
+  // Check if explicitly granted Write permission or Legacy Full Module permission
+  if (required && (perms.includes(`${required}:Write`) || perms.includes(required))) {
     return true;
   }
   
-  // Base role write access
+  // Role-based default write access fallback
   if (role === 'DEVELOPER') {
-    return tabId === 'projects' || tabId === 'settings';
+    return tabId === 'projects' || tabId === 'settings' || tabId === 'exams';
   }
   
   if (role === 'EDITOR') {

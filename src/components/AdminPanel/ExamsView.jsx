@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, Search, GraduationCap, Clock, FileText, Edit2, Trash2, Rocket, X, 
-  Send, Copy, Check, FileSpreadsheet, Award, Calendar, AlertTriangle, ShieldCheck, Download, User
+  Send, Copy, Check, FileSpreadsheet, Award, Calendar, AlertTriangle, ShieldCheck, Download, User,
+  Eye, CheckCircle2, XCircle, AlertCircle, Printer, PieChart, ShieldAlert, ExternalLink, BarChart2, Filter, HelpCircle
 } from 'lucide-react';
 import { api } from '../../utils/api';
 import { BoardCard, NoResults, ConfirmDeleteModal } from './SharedComponents';
@@ -53,7 +54,7 @@ const jobs = [
 
 const slugify = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-export default function ExamsView({ triggerToast }) {
+export default function ExamsView({ triggerToast, canEdit = true }) {
   const [activeSubTab, setActiveSubTab] = useState('blueprints'); // 'blueprints', 'invitations', 'reports'
   
   // Exams State
@@ -115,6 +116,15 @@ export default function ExamsView({ triggerToast }) {
   const [reports, setReports] = useState([]);
   const [loadingReports, setLoadingReports] = useState(false);
   const [reportsSearchQuery, setReportsSearchQuery] = useState('');
+  
+  // Exam Summary State
+  const [isSummaryModalOpen, setIsSummaryModalOpen] = useState(false);
+  const [selectedReportForSummary, setSelectedReportForSummary] = useState(null);
+  const [summaryQuestions, setSummaryQuestions] = useState([]);
+  const [summaryAnswersMap, setSummaryAnswersMap] = useState({});
+  const [loadingSummaryDetails, setLoadingSummaryDetails] = useState(false);
+  const [summaryFilter, setSummaryFilter] = useState('all'); // 'all', 'correct', 'incorrect', 'unanswered'
+  const [activeSummaryTab, setActiveSummaryTab] = useState('overview'); // 'overview', 'questions', 'proctoring'
   
   // Certification State
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
@@ -524,6 +534,40 @@ export default function ExamsView({ triggerToast }) {
     window.open(url, '_blank');
   };
 
+  // Exam Summary Handlers
+  const handleOpenExamSummary = async (report) => {
+    setSelectedReportForSummary(report);
+    setIsSummaryModalOpen(true);
+    setLoadingSummaryDetails(true);
+    setSummaryFilter('all');
+    setActiveSummaryTab('overview');
+    try {
+      const [qs, ans] = await Promise.all([
+        api.getExamQuestions(report.test_id).catch(() => []),
+        api.getAttemptAnswers(report.id).catch(() => [])
+      ]);
+
+      const ansMap = {};
+      if (Array.isArray(ans)) {
+        ans.forEach(a => {
+          ansMap[a.question_id] = a;
+        });
+      }
+
+      setSummaryQuestions(qs || []);
+      setSummaryAnswersMap(ansMap);
+    } catch (err) {
+      console.error("Failed to load exam summary details:", err);
+      triggerToast("Could not load full question details for summary.", "Reports Console");
+    } finally {
+      setLoadingSummaryDetails(false);
+    }
+  };
+
+  const handlePrintSummary = () => {
+    window.print();
+  };
+
   // Filters
   const filteredExams = exams.filter(e => {
     const matchesSearch = e.test_name.toLowerCase().includes(searchQuery.toLowerCase()) || e.role.toLowerCase().includes(searchQuery.toLowerCase());
@@ -550,7 +594,7 @@ export default function ExamsView({ triggerToast }) {
           <p className="admin-section-subtitle">Design technical assessments, invite candidates, monitor AI proctoring, and issue competency certificates.</p>
         </div>
         
-        {activeSubTab === 'blueprints' && (
+        {activeSubTab === 'blueprints' && canEdit && (
           <button
             onClick={handleOpenAdd}
             style={{
@@ -564,7 +608,7 @@ export default function ExamsView({ triggerToast }) {
           </button>
         )}
 
-        {activeSubTab === 'invitations' && (
+        {activeSubTab === 'invitations' && canEdit && (
           <button
             onClick={handleOpenInvite}
             className="clay-btn clay-btn-emerald"
@@ -709,7 +753,7 @@ export default function ExamsView({ triggerToast }) {
                       <th className="admin-table-th">Scope</th>
                       <th className="admin-table-th">Scheduling Window</th>
                       <th className="admin-table-th">Duration &amp; Penalty</th>
-                      <th className="admin-table-th">Actions</th>
+                      <th className="admin-table-th" style={{ textAlign: 'right' }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -770,8 +814,8 @@ export default function ExamsView({ triggerToast }) {
                           </div>
                         </td>
 
-                        <td style={{ padding: '24px 32px' }}>
-                          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                        <td style={{ padding: '24px 32px', textAlign: 'right' }}>
+                          <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, flexWrap: 'wrap' }}>
                             <a
                               href={`/test/${exam.id}?guest=true&name=Admin%20Tester`}
                               target="_blank"
@@ -869,7 +913,7 @@ export default function ExamsView({ triggerToast }) {
                     <th className="admin-table-th">Exam / Role</th>
                     <th className="admin-table-th">Invite Link</th>
                     <th className="admin-table-th">Expiry &amp; Status</th>
-                    <th className="admin-table-th">Actions</th>
+                    <th className="admin-table-th" style={{ textAlign: 'right' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -916,16 +960,18 @@ export default function ExamsView({ triggerToast }) {
                         </div>
                       </td>
 
-                      <td style={{ padding: '24px 32px' }}>
-                        <button
-                          onClick={() => requestRevokeInvite(invite)}
-                          style={{
-                            background: 'rgba(239, 68, 68, 0.1)', border: 'none', color: '#F87171',
-                            padding: '8px 14px', borderRadius: 10, cursor: 'pointer', fontSize: 12, fontWeight: 800
-                          }}
-                        >
-                          Revoke Access
-                        </button>
+                      <td style={{ padding: '24px 32px', textAlign: 'right' }}>
+                        {canEdit && (
+                          <button
+                            onClick={() => requestRevokeInvite(invite)}
+                            style={{
+                              background: 'rgba(239, 68, 68, 0.1)', border: 'none', color: '#F87171',
+                              padding: '8px 14px', borderRadius: 10, cursor: 'pointer', fontSize: 12, fontWeight: 800
+                            }}
+                          >
+                            Revoke Access
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -1042,7 +1088,13 @@ export default function ExamsView({ triggerToast }) {
                                 </div>
                               )}
                               <div>
-                                <div style={{ fontSize: 15, fontWeight: 800, color: 'white' }}>{report.candidate_name || 'Mock Student'}</div>
+                                <div 
+                                  style={{ fontSize: 15, fontWeight: 800, color: 'white', cursor: 'pointer' }}
+                                  onClick={() => handleOpenExamSummary(report)}
+                                  title="Click to view detailed Exam Summary"
+                                >
+                                  {report.candidate_name || 'Mock Student'}
+                                </div>
                                 <div style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>{report.candidate_email || 'student@temp.exam'}</div>
                               </div>
                             </div>
@@ -1149,20 +1201,37 @@ export default function ExamsView({ triggerToast }) {
                           </td>
 
                           <td style={{ padding: '24px 32px', textAlign: 'right' }}>
-                            <button
-                              onClick={() => requestDeleteReport(report.id, report.candidate_name)}
-                              style={{
-                                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                                width: 34, height: 34, borderRadius: 10,
-                                background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)',
-                                color: '#EF4444', cursor: 'pointer', transition: 'all 0.2s ease'
-                              }}
-                              title="Delete Assessment Report"
-                              onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'; }}
-                              onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'; }}
-                            >
-                              <Trash2 size={14} />
-                            </button>
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                              <button
+                                onClick={() => handleOpenExamSummary(report)}
+                                style={{
+                                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                                  padding: '8px 14px', borderRadius: 10,
+                                  background: 'rgba(99, 102, 241, 0.15)', border: '1px solid rgba(99, 102, 241, 0.3)',
+                                  color: '#818CF8', fontSize: 12, fontWeight: 800,
+                                  cursor: 'pointer', transition: 'all 0.2s ease'
+                                }}
+                                title="View Comprehensive Exam Summary"
+                                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(99, 102, 241, 0.28)'; e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.5)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(99, 102, 241, 0.15)'; e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.3)'; }}
+                              >
+                                <Eye size={14} /> Exam Summary
+                              </button>
+                              <button
+                                onClick={() => requestDeleteReport(report.id, report.candidate_name)}
+                                style={{
+                                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                  width: 34, height: 34, borderRadius: 10,
+                                  background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)',
+                                  color: '#EF4444', cursor: 'pointer', transition: 'all 0.2s ease'
+                                }}
+                                title="Delete Assessment Report"
+                                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'; }}
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       );
@@ -1787,6 +1856,699 @@ export default function ExamsView({ triggerToast }) {
                   </button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Exam Summary Modal */}
+      <AnimatePresence>
+        {isSummaryModalOpen && selectedReportForSummary && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 110, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }} 
+              onClick={() => setIsSummaryModalOpen(false)} 
+              style={{ position: 'absolute', inset: 0, background: 'rgba(15, 23, 42, 0.85)', backdropFilter: 'blur(8px)' }} 
+            />
+            
+            <motion.div
+              initial={{ scale: 0.94, opacity: 0, y: 25 }} 
+              animate={{ scale: 1, opacity: 1, y: 0 }} 
+              exit={{ scale: 0.94, opacity: 0, y: 25 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              style={{ 
+                width: '100%', 
+                maxWidth: 960, 
+                maxHeight: '92vh', 
+                background: 'linear-gradient(145deg, #1E293B 0%, #0F172A 100%)', 
+                borderRadius: 32, 
+                border: '1px solid rgba(255, 255, 255, 0.12)', 
+                position: 'relative', 
+                overflow: 'hidden', 
+                boxShadow: '0 35px 70px rgba(0,0,0,0.6), 0 0 40px rgba(99, 102, 241, 0.15)', 
+                display: 'flex', 
+                flexDirection: 'column' 
+              }}
+              className="exam-summary-printable"
+            >
+              {/* Header */}
+              <div style={{ 
+                padding: '28px 36px', 
+                borderBottom: '1px solid rgba(255, 255, 255, 0.08)', 
+                background: 'rgba(255, 255, 255, 0.02)', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justify: 'space-between',
+                gap: 20
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                  <div style={{ 
+                    width: 48, height: 48, borderRadius: 16, 
+                    background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2))',
+                    border: '1px solid rgba(99, 102, 241, 0.4)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: '#818CF8' 
+                  }}>
+                    <BarChart2 size={24} />
+                  </div>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <h3 style={{ fontSize: 22, fontWeight: 900, color: 'white', margin: 0 }}>Exam Executive Summary</h3>
+                      <span style={{
+                        padding: '3px 10px', borderRadius: 8, fontSize: 11, fontWeight: 800, textTransform: 'uppercase',
+                        background: selectedReportForSummary.status === 'submitted' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                        color: selectedReportForSummary.status === 'submitted' ? '#10B981' : '#F59E0B',
+                        border: selectedReportForSummary.status === 'submitted' ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(245, 158, 11, 0.3)'
+                      }}>
+                        {selectedReportForSummary.status === 'submitted' ? 'Submitted' : 'In Progress'}
+                      </span>
+                    </div>
+                    <p style={{ fontSize: 13, color: '#94A3B8', marginTop: 4 }}>
+                      {selectedReportForSummary.test_name} • Candidate ID: <code style={{ color: '#A78BFA' }}>{selectedReportForSummary.student_id || selectedReportForSummary.id}</code>
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <button
+                    type="button"
+                    onClick={handlePrintSummary}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 6,
+                      background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)',
+                      color: '#E2E8F0', padding: '10px 16px', borderRadius: 14, fontSize: 13, fontWeight: 800,
+                      cursor: 'pointer', transition: 'all 0.2s ease'
+                    }}
+                    title="Print / Save Summary PDF"
+                  >
+                    <Printer size={15} /> Print Summary
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsSummaryModalOpen(false)}
+                    style={{
+                      width: 40, height: 40, borderRadius: 14,
+                      background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: '#94A3B8', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      cursor: 'pointer', transition: 'all 0.2s ease'
+                    }}
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Scrollable Body */}
+              <div style={{ padding: '32px 36px', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: 28 }}>
+                
+                {/* Candidate & High-level Metrics Row */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 20 }}>
+                  {/* Candidate Identity Card */}
+                  <div style={{ 
+                    background: 'rgba(255, 255, 255, 0.03)', 
+                    border: '1px solid rgba(255, 255, 255, 0.08)', 
+                    borderRadius: 24, 
+                    padding: 24,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    position: 'relative'
+                  }}>
+                    {selectedReportForSummary.photo ? (
+                      <div style={{ position: 'relative', marginBottom: 16 }}>
+                        <img 
+                          src={selectedReportForSummary.photo} 
+                          alt="Webcam Snapshot" 
+                          style={{ 
+                            width: 88, 
+                            height: 88, 
+                            borderRadius: 20, 
+                            objectFit: 'cover', 
+                            border: '3px solid rgba(99, 102, 241, 0.5)',
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+                            cursor: 'pointer'
+                          }}
+                          onClick={() => {
+                            const w = window.open();
+                            w.document.write(`<img src="${selectedReportForSummary.photo}" style="max-width:100%; height:auto; border-radius:12px;" />`);
+                          }}
+                          title="Click to view webcam snapshot"
+                        />
+                        <div style={{ 
+                          position: 'absolute', bottom: -6, right: -6,
+                          background: '#10B981', color: 'white', borderRadius: 8,
+                          padding: '2px 6px', fontSize: 10, fontWeight: 900, display: 'flex', alignItems: 'center', gap: 2
+                        }}>
+                          <ShieldCheck size={10} /> Verified
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ 
+                        width: 88, height: 88, borderRadius: 20, 
+                        background: 'rgba(255, 255, 255, 0.05)', 
+                        border: '2px dashed rgba(255, 255, 255, 0.15)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: '#64748B', marginBottom: 16
+                      }}>
+                        <User size={36} />
+                      </div>
+                    )}
+                    
+                    <h4 style={{ fontSize: 18, fontWeight: 900, color: 'white', margin: 0 }}>
+                      {selectedReportForSummary.candidate_name || 'Candidate'}
+                    </h4>
+                    <p style={{ fontSize: 12, color: '#94A3B8', marginTop: 4, marginBottom: 12 }}>
+                      {selectedReportForSummary.candidate_email || 'N/A'}
+                    </p>
+
+                    <div style={{ 
+                      width: '100%', 
+                      padding: '10px 14px', 
+                      borderRadius: 12, 
+                      background: 'rgba(0, 0, 0, 0.2)', 
+                      fontSize: 11, 
+                      color: '#94A3B8',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 4
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span>Target Role:</span>
+                        <strong style={{ color: '#E2E8F0' }}>{selectedReportForSummary.role}</strong>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <span>Attempt Date:</span>
+                        <strong style={{ color: '#E2E8F0' }}>
+                          {selectedReportForSummary.submitted_at 
+                            ? new Date(selectedReportForSummary.submitted_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                            : 'In Progress'}
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Performance Analytics Box */}
+                  <div style={{ 
+                    background: 'rgba(255, 255, 255, 0.03)', 
+                    border: '1px solid rgba(255, 255, 255, 0.08)', 
+                    borderRadius: 24, 
+                    padding: 24,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: 16
+                  }}>
+                    {/* Score Gauge Row */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div>
+                        <span style={{ fontSize: 12, fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          Final Assessment Score
+                        </span>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 4 }}>
+                          <span style={{ 
+                            fontSize: 38, 
+                            fontWeight: 900, 
+                            color: (selectedReportForSummary.score || 0) >= ((selectedReportForSummary.total_marks || 1) * 0.5) ? '#10B981' : '#F59E0B' 
+                          }}>
+                            {selectedReportForSummary.score !== null ? selectedReportForSummary.score : 'N/A'}
+                          </span>
+                          <span style={{ fontSize: 16, color: '#64748B', fontWeight: 700 }}>
+                            / {selectedReportForSummary.total_marks || summaryQuestions.reduce((acc, q) => acc + (q.marks || 1), 0) || 0} Marks
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Grade Pill */}
+                      {(() => {
+                        const totalM = selectedReportForSummary.total_marks || summaryQuestions.reduce((acc, q) => acc + (q.marks || 1), 0) || 1;
+                        const scoreM = selectedReportForSummary.score || 0;
+                        const pct = (scoreM / totalM) * 100;
+                        let gradeLabel = "PASS";
+                        let gradeBg = "rgba(16, 185, 129, 0.15)";
+                        let gradeColor = "#10B981";
+
+                        if (selectedReportForSummary.proctoring_status === 'Disqualified') {
+                          gradeLabel = "DISQUALIFIED";
+                          gradeBg = "rgba(239, 68, 68, 0.15)";
+                          gradeColor = "#EF4444";
+                        } else if (pct >= 80) {
+                          gradeLabel = "DISTINCTION";
+                          gradeBg = "rgba(139, 92, 246, 0.15)";
+                          gradeColor = "#A78BFA";
+                        } else if (pct < 50) {
+                          gradeLabel = "FAIL / RETAKE";
+                          gradeBg = "rgba(239, 68, 68, 0.15)";
+                          gradeColor = "#EF4444";
+                        }
+
+                        return (
+                          <div style={{ 
+                            padding: '12px 20px', 
+                            borderRadius: 16, 
+                            background: gradeBg, 
+                            border: `1px solid ${gradeColor}40`,
+                            textAlign: 'center'
+                          }}>
+                            <div style={{ fontSize: 10, fontWeight: 900, color: '#94A3B8', textTransform: 'uppercase' }}>Grade</div>
+                            <div style={{ fontSize: 16, fontWeight: 900, color: gradeColor, marginTop: 2 }}>{gradeLabel}</div>
+                            <div style={{ fontSize: 11, fontWeight: 700, color: '#CBD5E1', marginTop: 2 }}>{pct.toFixed(1)}% Score</div>
+                          </div>
+                        );
+                      })()}
+                    </div>
+
+                    {/* Stats Grid */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                      <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px 14px', borderRadius: 14 }}>
+                        <div style={{ fontSize: 11, color: '#94A3B8', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <Clock size={12} /> Time Spent
+                        </div>
+                        <div style={{ fontSize: 15, fontWeight: 800, color: 'white', marginTop: 4 }}>
+                          {selectedReportForSummary.time_taken !== null ? `${Math.floor(selectedReportForSummary.time_taken / 60)}m ${selectedReportForSummary.time_taken % 60}s` : 'N/A'}
+                        </div>
+                      </div>
+
+                      <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px 14px', borderRadius: 14 }}>
+                        <div style={{ fontSize: 11, color: '#94A3B8', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <ShieldAlert size={12} /> Proctor Status
+                        </div>
+                        <div style={{ 
+                          fontSize: 14, fontWeight: 800, marginTop: 4,
+                          color: selectedReportForSummary.proctoring_status === 'Clean' ? '#10B981' : selectedReportForSummary.proctoring_status === 'Suspicious' ? '#F59E0B' : '#EF4444'
+                        }}>
+                          {selectedReportForSummary.proctoring_status || 'Clean'} ({selectedReportForSummary.violations_count || 0} Exits)
+                        </div>
+                      </div>
+
+                      <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px 14px', borderRadius: 14 }}>
+                        <div style={{ fontSize: 11, color: '#94A3B8', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <Award size={12} /> Credentialing
+                        </div>
+                        <div style={{ fontSize: 14, fontWeight: 800, color: '#A78BFA', marginTop: 4 }}>
+                          {selectedReportForSummary.certificate_number ? 'Issued' : 'Eligible'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tab Navigation for Detailed Breakdown */}
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 12, 
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                  paddingBottom: 12
+                }}>
+                  <button
+                    onClick={() => setActiveSummaryTab('overview')}
+                    style={{
+                      padding: '8px 16px', borderRadius: 12, fontSize: 13, fontWeight: 800,
+                      background: activeSummaryTab === 'overview' ? 'rgba(99, 102, 241, 0.2)' : 'transparent',
+                      color: activeSummaryTab === 'overview' ? '#818CF8' : '#94A3B8',
+                      border: activeSummaryTab === 'overview' ? '1px solid rgba(99, 102, 241, 0.4)' : '1px solid transparent',
+                      cursor: 'pointer', transition: 'all 0.2s ease'
+                    }}
+                  >
+                    Question Breakdown ({summaryQuestions.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveSummaryTab('proctoring')}
+                    style={{
+                      padding: '8px 16px', borderRadius: 12, fontSize: 13, fontWeight: 800,
+                      background: activeSummaryTab === 'proctoring' ? 'rgba(99, 102, 241, 0.2)' : 'transparent',
+                      color: activeSummaryTab === 'proctoring' ? '#818CF8' : '#94A3B8',
+                      border: activeSummaryTab === 'proctoring' ? '1px solid rgba(99, 102, 241, 0.4)' : '1px solid transparent',
+                      cursor: 'pointer', transition: 'all 0.2s ease'
+                    }}
+                  >
+                    Proctoring &amp; Audit Trail
+                  </button>
+                </div>
+
+                {/* Question Breakdown Tab */}
+                {activeSummaryTab === 'overview' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                    {/* Filters bar */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ fontSize: 14, fontWeight: 800, color: 'white', display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <Filter size={16} style={{ color: '#818CF8' }} /> Filter Questions:
+                      </div>
+
+                      {(() => {
+                        let correctCount = 0;
+                        let incorrectCount = 0;
+                        let unansweredCount = 0;
+
+                        summaryQuestions.forEach(q => {
+                          const ans = summaryAnswersMap[q.id];
+                          if (!ans || !ans.selected_option) {
+                            unansweredCount++;
+                          } else if (ans.selected_option === q.correct_answer) {
+                            correctCount++;
+                          } else {
+                            incorrectCount++;
+                          }
+                        });
+
+                        return (
+                          <div style={{ display: 'flex', gap: 8 }}>
+                            <button
+                              onClick={() => setSummaryFilter('all')}
+                              style={{
+                                padding: '6px 12px', borderRadius: 10, fontSize: 12, fontWeight: 800,
+                                background: summaryFilter === 'all' ? '#6366F1' : 'rgba(255,255,255,0.05)',
+                                color: summaryFilter === 'all' ? 'white' : '#94A3B8', border: 'none', cursor: 'pointer'
+                              }}
+                            >
+                              All ({summaryQuestions.length})
+                            </button>
+                            <button
+                              onClick={() => setSummaryFilter('correct')}
+                              style={{
+                                padding: '6px 12px', borderRadius: 10, fontSize: 12, fontWeight: 800,
+                                background: summaryFilter === 'correct' ? '#10B981' : 'rgba(255,255,255,0.05)',
+                                color: summaryFilter === 'correct' ? 'white' : '#94A3B8', border: 'none', cursor: 'pointer'
+                              }}
+                            >
+                              Correct ({correctCount})
+                            </button>
+                            <button
+                              onClick={() => setSummaryFilter('incorrect')}
+                              style={{
+                                padding: '6px 12px', borderRadius: 10, fontSize: 12, fontWeight: 800,
+                                background: summaryFilter === 'incorrect' ? '#EF4444' : 'rgba(255,255,255,0.05)',
+                                color: summaryFilter === 'incorrect' ? 'white' : '#94A3B8', border: 'none', cursor: 'pointer'
+                              }}
+                            >
+                              Incorrect ({incorrectCount})
+                            </button>
+                            <button
+                              onClick={() => setSummaryFilter('unanswered')}
+                              style={{
+                                padding: '6px 12px', borderRadius: 10, fontSize: 12, fontWeight: 800,
+                                background: summaryFilter === 'unanswered' ? '#F59E0B' : 'rgba(255,255,255,0.05)',
+                                color: summaryFilter === 'unanswered' ? 'white' : '#94A3B8', border: 'none', cursor: 'pointer'
+                              }}
+                            >
+                              Skipped ({unansweredCount})
+                            </button>
+                          </div>
+                        );
+                      })()}
+                    </div>
+
+                    {/* Questions List */}
+                    {loadingSummaryDetails ? (
+                      <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748B' }}>
+                        Loading candidate responses and questions...
+                      </div>
+                    ) : summaryQuestions.length === 0 ? (
+                      <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748B' }}>
+                        No questions found for this exam blueprint.
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                        {summaryQuestions
+                          .filter(q => {
+                            const ans = summaryAnswersMap[q.id];
+                            const isCorrect = ans && ans.selected_option === q.correct_answer;
+                            const isIncorrect = ans && ans.selected_option && ans.selected_option !== q.correct_answer;
+                            const isUnanswered = !ans || !ans.selected_option;
+
+                            if (summaryFilter === 'correct') return isCorrect;
+                            if (summaryFilter === 'incorrect') return isIncorrect;
+                            if (summaryFilter === 'unanswered') return isUnanswered;
+                            return true;
+                          })
+                          .map((q, idx) => {
+                            const ans = summaryAnswersMap[q.id];
+                            const selectedOpt = ans?.selected_option;
+                            const isCorrect = selectedOpt === q.correct_answer;
+                            const isUnanswered = !selectedOpt;
+
+                            return (
+                              <div
+                                key={q.id || idx}
+                                style={{
+                                  background: 'rgba(255, 255, 255, 0.02)',
+                                  border: isCorrect 
+                                    ? '1px solid rgba(16, 185, 129, 0.25)' 
+                                    : isUnanswered 
+                                    ? '1px solid rgba(245, 158, 11, 0.25)' 
+                                    : '1px solid rgba(239, 68, 68, 0.25)',
+                                  borderRadius: 20,
+                                  padding: 20,
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: 14
+                                }}
+                              >
+                                {/* Question Top Bar */}
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                    <span style={{
+                                      background: 'rgba(99, 102, 241, 0.15)', color: '#818CF8',
+                                      padding: '4px 10px', borderRadius: 8, fontSize: 11, fontWeight: 900
+                                    }}>
+                                      Q{idx + 1}
+                                    </span>
+                                    <span style={{ fontSize: 11, color: '#64748B', fontWeight: 700 }}>
+                                      {q.section_name || 'Core Technical Concepts'}
+                                    </span>
+                                    <span style={{
+                                      fontSize: 10, padding: '2px 8px', borderRadius: 6,
+                                      background: q.difficulty === 'Hard' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)',
+                                      color: q.difficulty === 'Hard' ? '#EF4444' : '#10B981', fontWeight: 800
+                                    }}>
+                                      {q.difficulty || 'Medium'}
+                                    </span>
+                                  </div>
+
+                                  <div>
+                                    {isCorrect ? (
+                                      <span style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: 4,
+                                        padding: '4px 12px', borderRadius: 8, fontSize: 11, fontWeight: 800,
+                                        background: 'rgba(16, 185, 129, 0.15)', color: '#10B981'
+                                      }}>
+                                        <CheckCircle2 size={12} /> Correct (+{q.marks || 2} Marks)
+                                      </span>
+                                    ) : isUnanswered ? (
+                                      <span style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: 4,
+                                        padding: '4px 12px', borderRadius: 8, fontSize: 11, fontWeight: 800,
+                                        background: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B'
+                                      }}>
+                                        <AlertCircle size={12} /> Skipped (0 Marks)
+                                      </span>
+                                    ) : (
+                                      <span style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: 4,
+                                        padding: '4px 12px', borderRadius: 8, fontSize: 11, fontWeight: 800,
+                                        background: 'rgba(239, 68, 68, 0.15)', color: '#EF4444'
+                                      }}>
+                                        <XCircle size={12} /> Incorrect (0 Marks)
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* Question Text */}
+                                <div style={{ fontSize: 14, fontWeight: 700, color: 'white', lineHeight: 1.5 }}>
+                                  {q.question_text}
+                                </div>
+
+                                {/* Options Matrix */}
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 4 }}>
+                                  {['A', 'B', 'C', 'D'].map((optKey) => {
+                                    const optText = q[`option_${optKey.toLowerCase()}`];
+                                    if (!optText) return null;
+
+                                    const isUserChoice = selectedOpt === optKey;
+                                    const isCorrectAnswer = q.correct_answer === optKey;
+
+                                    let bg = 'rgba(255, 255, 255, 0.03)';
+                                    let border = '1px solid rgba(255, 255, 255, 0.06)';
+                                    let color = '#CBD5E1';
+
+                                    if (isUserChoice && isCorrectAnswer) {
+                                      bg = 'rgba(16, 185, 129, 0.15)';
+                                      border = '1px solid rgba(16, 185, 129, 0.5)';
+                                      color = '#10B981';
+                                    } else if (isUserChoice && !isCorrectAnswer) {
+                                      bg = 'rgba(239, 68, 68, 0.15)';
+                                      border = '1px solid rgba(239, 68, 68, 0.5)';
+                                      color = '#EF4444';
+                                    } else if (isCorrectAnswer) {
+                                      bg = 'rgba(16, 185, 129, 0.08)';
+                                      border = '1px solid rgba(16, 185, 129, 0.3)';
+                                      color = '#10B981';
+                                    }
+
+                                    return (
+                                      <div
+                                        key={optKey}
+                                        style={{
+                                          padding: '10px 14px',
+                                          borderRadius: 12,
+                                          background: bg,
+                                          border: border,
+                                          color: color,
+                                          fontSize: 13,
+                                          fontWeight: (isUserChoice || isCorrectAnswer) ? 800 : 500,
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'space-between',
+                                          gap: 10
+                                        }}
+                                      >
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
+                                          <span style={{ 
+                                            width: 22, height: 22, borderRadius: 6, 
+                                            background: 'rgba(255,255,255,0.1)', 
+                                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                                            fontSize: 11, fontWeight: 900
+                                          }}>
+                                            {optKey}
+                                          </span>
+                                          <span>{optText}</span>
+                                        </div>
+
+                                        {isUserChoice && isCorrectAnswer && (
+                                          <span style={{ fontSize: 10, fontWeight: 900, background: '#10B981', color: 'white', padding: '2px 6px', borderRadius: 6 }}>
+                                            Selected &amp; Correct
+                                          </span>
+                                        )}
+                                        {isUserChoice && !isCorrectAnswer && (
+                                          <span style={{ fontSize: 10, fontWeight: 900, background: '#EF4444', color: 'white', padding: '2px 6px', borderRadius: 6 }}>
+                                            Candidate Choice
+                                          </span>
+                                        )}
+                                        {!isUserChoice && isCorrectAnswer && (
+                                          <span style={{ fontSize: 10, fontWeight: 900, background: 'rgba(16, 185, 129, 0.2)', color: '#10B981', padding: '2px 6px', borderRadius: 6 }}>
+                                            Correct Answer
+                                          </span>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Proctoring & Audit Trail Tab */}
+                {activeSummaryTab === 'proctoring' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                    <div style={{ 
+                      background: 'rgba(255, 255, 255, 0.02)', 
+                      border: '1px solid rgba(255, 255, 255, 0.08)', 
+                      borderRadius: 20, 
+                      padding: 24,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 16
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div>
+                          <h4 style={{ fontSize: 16, fontWeight: 900, color: 'white', margin: 0 }}>AI Proctor Integrity Audit</h4>
+                          <p style={{ fontSize: 12, color: '#94A3B8', marginTop: 4 }}>Real-time vision and browser focus tracking logs.</p>
+                        </div>
+                        <span style={{
+                          padding: '6px 14px', borderRadius: 10, fontSize: 12, fontWeight: 900,
+                          background: selectedReportForSummary.proctoring_status === 'Clean' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                          color: selectedReportForSummary.proctoring_status === 'Clean' ? '#10B981' : '#EF4444'
+                        }}>
+                          {selectedReportForSummary.proctoring_status || 'Clean'}
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
+                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: 16, borderRadius: 14 }}>
+                          <div style={{ fontSize: 12, color: '#94A3B8' }}>Browser Focus Losses</div>
+                          <div style={{ fontSize: 20, fontWeight: 900, color: selectedReportForSummary.violations_count > 0 ? '#F59E0B' : '#10B981', marginTop: 4 }}>
+                            {selectedReportForSummary.violations_count || 0} / 3 Warnings
+                          </div>
+                        </div>
+
+                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: 16, borderRadius: 14 }}>
+                          <div style={{ fontSize: 12, color: '#94A3B8' }}>Webcam Verification</div>
+                          <div style={{ fontSize: 14, fontWeight: 800, color: selectedReportForSummary.photo ? '#10B981' : '#F59E0B', marginTop: 4 }}>
+                            {selectedReportForSummary.photo ? 'Snapshot Captured' : 'No Photo Captured'}
+                          </div>
+                        </div>
+
+                        <div style={{ background: 'rgba(0,0,0,0.2)', padding: 16, borderRadius: 14 }}>
+                          <div style={{ fontSize: 12, color: '#94A3B8' }}>Integrity Trust Rating</div>
+                          <div style={{ fontSize: 20, fontWeight: 900, color: selectedReportForSummary.violations_count === 0 ? '#10B981' : '#F59E0B', marginTop: 4 }}>
+                            {selectedReportForSummary.violations_count === 0 ? '100% High Trust' : `${Math.max(0, 100 - (selectedReportForSummary.violations_count * 33))}% Flagged`}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: 10, fontSize: 12, color: '#94A3B8', lineHeight: 1.6 }}>
+                        <strong style={{ color: 'white' }}>Proctoring Rule Policy:</strong> Candidates are allowed up to 3 tab switches/focus losses. Exceeding 3 exit warnings results in immediate auto-submission and candidate disqualification.
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+
+              {/* Footer */}
+              <div style={{ 
+                padding: '20px 36px', 
+                borderTop: '1px solid rgba(255, 255, 255, 0.08)', 
+                background: 'rgba(255, 255, 255, 0.02)', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justify: 'space-between' 
+              }}>
+                <div style={{ fontSize: 12, color: '#64748B' }}>
+                  KLANVISION Assessment Evaluation Engine v5.0
+                </div>
+
+                <div style={{ display: 'flex', gap: 12 }}>
+                  <button
+                    type="button"
+                    onClick={() => setIsSummaryModalOpen(false)}
+                    style={{
+                      padding: '10px 20px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)',
+                      background: 'transparent', color: '#94A3B8', fontSize: 13, fontWeight: 800, cursor: 'pointer'
+                    }}
+                  >
+                    Close Summary
+                  </button>
+
+                  {selectedReportForSummary.score >= ((selectedReportForSummary.total_marks || 1) * 0.5) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsSummaryModalOpen(false);
+                        handleOpenCertificateGen(selectedReportForSummary);
+                      }}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 6,
+                        padding: '10px 20px', borderRadius: 12, border: 'none',
+                        background: 'linear-gradient(135deg, #8B5CF6, #A78BFA)',
+                        color: 'white', fontSize: 13, fontWeight: 800, cursor: 'pointer',
+                        boxShadow: '0 8px 20px rgba(139, 92, 246, 0.3)'
+                      }}
+                    >
+                      <Award size={14} /> Issue Certificate
+                    </button>
+                  )}
+                </div>
+              </div>
             </motion.div>
           </div>
         )}

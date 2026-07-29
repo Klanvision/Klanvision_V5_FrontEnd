@@ -219,11 +219,7 @@ export default function SettingsView({
                   <SettingRow title="Platform Logo" desc="Upload the main company logo for the sidebar.">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
                       <div style={{ width: 80, height: 80, borderRadius: 24, background: 'rgba(255,255,255,0.03)', border: '2px dashed rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748B', overflow: 'hidden' }}>
-                        {platformLogo ? (
-                          <img src={platformLogo} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                        ) : (
-                          <Rocket size={32} />
-                        )}
+                        <img src={platformLogo || '/images/Transparent_Logo.png'} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 6 }} />
                       </div>
                       <div style={{ display: 'flex', gap: 12 }}>
                         <button

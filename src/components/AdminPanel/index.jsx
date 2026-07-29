@@ -117,8 +117,34 @@ export default function AdminPanel() {
       setSetup2FASecret(null);
     }
   }, [isSettingUp2FA, verifyingUser]);
-  const [platformLogo, setPlatformLogo] = useState(null);
-  const [companyName, setCompanyName] = useState('KLANVISION');
+  const [platformLogo, setPlatformLogo] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('klanvision_platform_logo') || null;
+    }
+    return null;
+  });
+  const [companyName, setCompanyName] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('klanvision_company_name') || 'KLANVISION';
+    }
+    return 'KLANVISION';
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (platformLogo) {
+        localStorage.setItem('klanvision_platform_logo', platformLogo);
+      } else {
+        localStorage.removeItem('klanvision_platform_logo');
+      }
+    }
+  }, [platformLogo]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && companyName) {
+      localStorage.setItem('klanvision_company_name', companyName);
+    }
+  }, [companyName]);
 
   useEffect(() => {
     // Apply Accent Color
@@ -429,6 +455,16 @@ export default function AdminPanel() {
       };
       api.updateUser(editingUser.id, updatedUser).then(updated => {
         setUsers(prev => prev.map(u => u.id === editingUser.id ? updated : u));
+
+        // Synchronize self-access session dynamically if Super Admin or Admin modifies their own profile
+        if (currentUser && (currentUser.id === updated.id || currentUser.email === updated.email)) {
+          setCurrentUser(updated);
+          const activeSession = JSON.parse(localStorage.getItem('klanvision_admin_session') || '{}');
+          if (activeSession.user) {
+            localStorage.setItem('klanvision_admin_session', JSON.stringify({ ...activeSession, user: updated }));
+          }
+        }
+
         addActivity(currentUser?.name || 'Admin', 'Modified User', 'security', 'info', `Updated profile for ${userData.name}`);
         triggerToast(`Modified credentials for ${userData.name}.`, 'Directory Update');
       }).catch(err => {
@@ -467,6 +503,16 @@ export default function AdminPanel() {
     };
     api.updateUser(user.id, updatedUser).then(updated => {
       setUsers(prev => prev.map(u => u.id === user.id ? updated : u));
+
+      // Synchronize self-access session dynamically if Super Admin or Admin toggles their own authorization
+      if (currentUser && (currentUser.id === updated.id || currentUser.email === updated.email)) {
+        setCurrentUser(updated);
+        const activeSession = JSON.parse(localStorage.getItem('klanvision_admin_session') || '{}');
+        if (activeSession.user) {
+          localStorage.setItem('klanvision_admin_session', JSON.stringify({ ...activeSession, user: updated }));
+        }
+      }
+
       addActivity(currentUser?.name || 'Admin', 'User Access Changed', 'security', updated.isAuthorized ? 'success' : 'warning', `${updated.isAuthorized ? 'Granted' : 'Revoked'} access for ${user.name}`);
       triggerToast(`Access privileges ${updated.isAuthorized ? 'granted to' : 'revoked from'} ${user.name}.`, 'Security Access');
     }).catch(err => {
@@ -672,8 +718,9 @@ export default function AdminPanel() {
                 <ShieldCheck size={32} />
               </motion.div>
             ) : (
-              <motion.div whileHover={{ rotate: 15 }} style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, #6366F1, #EC4899, #F59E0B)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', margin: '0 auto 24px', boxShadow: '0 10px 30px rgba(99, 102, 241, 0.4)' }}>
-                <Lock size={32} />
+              <motion.div whileHover={{ scale: 1.04 }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 24 }}>
+                <img src={platformLogo || '/images/Transparent_Logo.png'} alt="Klanvision Logo" style={{ height: 70, width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 8px 25px rgba(99, 102, 241, 0.35))' }} />
+                <img src="/images/slogan.png" alt="Klanvision Slogan" style={{ height: 45, width: 'auto', objectFit: 'contain' }} />
               </motion.div>
             )}
             <h2 style={{ fontSize: (isSettingUp2FA || isVerifying2FA) ? 32 : 38, fontWeight: 900, color: 'white', letterSpacing: '-1px', textShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
@@ -918,31 +965,39 @@ export default function AdminPanel() {
           flexDirection: 'column', position: 'sticky', top: 0, height: '100vh', zIndex: 50
         }}
       >
-        <div style={{ padding: '32px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
-          <motion.div whileHover={{ rotate: 15, scale: 1.1 }} style={{ width: 42, height: 42, borderRadius: 14, background: platformLogo ? 'transparent' : 'linear-gradient(135deg, #6366F1, #EC4899, #F59E0B)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', boxShadow: platformLogo ? 'none' : '0 8px 20px rgba(99, 102, 241, 0.4)', overflow: 'hidden' }}>
-            {platformLogo ? (
-              <img src={platformLogo} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-            ) : (
-              <img src="/images/Transparent_Logo.png" alt="Klanvision Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-            )}
-          </motion.div>
-          {isSidebarOpen && (
-            <motion.span
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
+        <div style={{ padding: '28px 24px', display: 'flex', alignItems: 'center', justifyContent: isSidebarOpen ? 'flex-start' : 'center' }}>
+          {isSidebarOpen ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.03 }}
+              onClick={() => setActiveTab('dashboard')}
+              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12, height: 48 }}
+            >
+              <img
+                src={platformLogo || '/images/Transparent_Logo.png'}
+                alt="Klanvision Logo"
+                style={{ height: 44, width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}
+              />
+              <img
+                src="/images/slogan.png"
+                alt="Klanvision Slogan"
+                style={{ height: 32, width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))' }}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              whileHover={{ scale: 1.08 }}
+              onClick={() => setActiveTab('dashboard')}
               style={{
-                fontWeight: 900,
-                fontSize: 22,
-                letterSpacing: '2px',
-                background: 'linear-gradient(135deg, #FFFFFF, #6366F1, #EC4899, #F59E0B)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                textTransform: 'uppercase',
-                filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))'
+                width: 44, height: 44, borderRadius: 14, background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', padding: 4, color: 'white', boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+                overflow: 'hidden', cursor: 'pointer'
               }}
             >
-              {companyName}
-            </motion.span>
+              <img src={platformLogo || '/images/Transparent_Logo.png'} alt="Klanvision Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            </motion.div>
           )}
         </div>
 
@@ -1071,7 +1126,11 @@ export default function AdminPanel() {
             setBlogCategoryFilter={setBlogCategoryFilter}
           />
           <AnimatePresence mode="wait">
-            {activeTab === 'dashboard' && <DashboardView projects={projects} users={users} activities={activities} setActiveTab={setActiveTab} />}
+            {activeTab === 'dashboard' && (
+              hasTabPermission(currentUser, 'dashboard') ? (
+                <DashboardView projects={projects} users={users} activities={activities} setActiveTab={setActiveTab} />
+              ) : <UnauthorizedView />
+            )}
             {activeTab === 'users' && (
               hasTabPermission(currentUser, 'users') ? (
                 <UsersView
@@ -1170,16 +1229,35 @@ export default function AdminPanel() {
             )}
             {activeTab === 'exams' && (
               hasTabPermission(currentUser, 'exams') ? (
-                <ExamsView triggerToast={triggerToast} />
+                <ExamsView triggerToast={triggerToast} canEdit={hasWritePermission(currentUser, 'exams')} />
               ) : <UnauthorizedView />
             )}
             {activeTab === 'internship' && (
-              hasTabPermission(currentUser, 'projects') ? (
-                <CertificationModule currentUser={currentUser} addActivity={addActivity} />
+              hasTabPermission(currentUser, 'internship') ? (
+                <CertificationModule currentUser={currentUser} addActivity={addActivity} canEdit={hasWritePermission(currentUser, 'internship')} />
               ) : <UnauthorizedView />
             )}
           </AnimatePresence>
         </div>
+
+        {/* --- Admin Panel Footer --- */}
+        <footer style={{
+          padding: '24px 40px',
+          borderTop: '1px solid rgba(255,255,255,0.05)',
+          background: 'rgba(15, 23, 42, 0.6)',
+          backdropFilter: 'blur(10px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginTop: 'auto'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <img src={platformLogo || '/images/Transparent_Logo.png'} alt="Klanvision Logo" style={{ height: 36, width: 'auto', objectFit: 'contain' }} />
+            <img src="/images/slogan.png" alt="Klanvision Slogan" style={{ height: 26, width: 'auto', objectFit: 'contain' }} />
+            <span style={{ fontSize: 13, fontWeight: 800, color: '#94A3B8', letterSpacing: '0.5px' }}>Admin Console</span>
+          </div>
+          <p style={{ fontSize: 12, color: '#64748B', fontWeight: 600 }}>© {new Date().getFullYear()} {companyName}. All Rights Reserved.</p>
+        </footer>
       </main>
 
       {/* --- Notification Toast --- */}
