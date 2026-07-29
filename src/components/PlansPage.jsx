@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, Globe, Gem, Rocket, Smartphone, Zap, Building2, ShieldCheck, Headphones, TrendingUp, Check, ChevronDown } from 'lucide-react';
+import { ChevronLeft, Globe, Gem, Rocket, Smartphone, Zap, Building2, ShieldCheck, Headphones, TrendingUp, Check } from 'lucide-react';
 import { useSEO } from '../hooks/useSEO';
 
 export default function PlansPage() {
@@ -12,14 +12,6 @@ export default function PlansPage() {
   });
 
   const [activeTab, setActiveTab] = useState('website'); // 'website' or 'mobile'
-  const [expandedPlans, setExpandedPlans] = useState({});
-
-  const toggleExpand = (planName) => {
-    setExpandedPlans(prev => ({
-      ...prev,
-      [planName]: !prev[planName]
-    }));
-  };
 
   const websitePlans = [
     {
@@ -37,7 +29,6 @@ export default function PlansPage() {
         "Social Media Integration",
         "Google Maps Integration",
         "SSL Certificate",
-        "Free 3 Months Maintenance",
         "Basic Support"
       ],
       color: "#A855F7",
@@ -57,20 +48,11 @@ export default function PlansPage() {
         "Everything in Basic",
         "Up to 15 Pages",
         "Advanced UI/UX Design",
-        "Premium Hosting",
-        "Free weekly backups",
-        "CMS Admin Panel",
-        "Advanced On-Page SEO Optimization",
-        "Basic API Integration",
-        "Payment Gateway",
+        "On-Page SEO Optimization",
         "Blog / News Section",
-        "Portfolio",
         "WhatsApp Integration",
-        "Advanced Security",
-        "AI Chatbot",
-        "CDN Global Content Delivery",
         "Speed Optimization",
-        "Free 6 Months Maintenance",
+        "Advanced Security",
         "Priority Support"
       ],
       color: "#EC4899",
@@ -89,28 +71,13 @@ export default function PlansPage() {
       features: [
         "Everything in Premium",
         "Unlimited Pages",
-        "Fully Custom Features",
-        "Enterprise Cloud Hosting",
-        "Daily and on demand backups",
+        "Custom Features & Integrations",
+        "E-commerce Functionality",
         "Advanced SEO & Analytics",
         "API Integrations",
-        "Role-Based Access Control (RBAC)",
-        "CDN & Global Content Delivery",
-        "Server Performance Monitoring",
-        "Source Code Version Control",
-        "Database Optimization",
-        "E-commerce Functionality",
-        "Premium Security Audit",
-        "AI Chatbot",
-        "CRM & ERP Integration",
-        "Business Automation",
-        "Analytics Dashboard",
-        "Unlimited Business Emails",
-        "Payment Gateway",
-        "Multi-language Support",
-        "Free 12 Months Maintenance",
+        "Multilingual Support",
         "Dedicated Account Manager",
-        "24×7 Priority Support"
+        "24/7 Priority Support"
       ],
       color: "#F97316",
       glowColor: "rgba(249, 115, 22, 0.45)",
@@ -131,21 +98,13 @@ export default function PlansPage() {
       features: [
         "Single Platform (Android or iOS)",
         "Up to 5 App Screens",
-        "Standard UI/UX Design",
+        "Standard UI Components",
         "Basic User Authentication",
-        "Local Database Integration",
-        "Basic API Integration",
-        "Push Notifications",
-        "Google Maps Integration",
+        "Local Data Storage",
         "Social Media Login",
-        "Contact & Inquiry Form",
-        "App Icon & Splash Screen",
-        "Basic Security",
-        "Performance Optimization",
+        "Google Maps API",
         "App Store Submission Support",
-        "Source Code Handover",
-        "Free 3 Months Maintenance",
-        "Standard Technical Support"
+        "3 Months Maintenance"
       ],
       color: "#A855F7",
       glowColor: "rgba(168, 85, 247, 0.45)",
@@ -161,29 +120,15 @@ export default function PlansPage() {
       iconColor: "#EC4899",
       description: "High performance cross-platform app with advanced functionality.",
       features: [
-        "Everything in Basic",
-        "Android & iOS Support",
+        "Cross-Platform (Android & iOS)",
         "Up to 15 App Screens",
-        "Custom UI/UX Design",
-        "Cloud Database Integration",
+        "Custom Animated UI/UX",
         "Push Notifications",
-        "Real-Time Data Synchronization",
         "Payment Gateway Integration",
-        "Google Maps Integration",
-        "Social Login",
-        "WhatsApp Integration",
-        "REST API Integration",
-        "Admin Dashboard",
-        "Analytics Dashboard",
-        "App Performance Optimization",
-        "Biometric Authentication",
-        "Offline Data Support",
-        "Cloud Backup",
-        "Premium Security",
-        "App Store & Play Store Deployment",
-        "Source Code Handover",
-        "Free 6 Months Maintenance",
-        "Priority Technical Support"
+        "Database & Cloud Sync",
+        "Advanced Security (Biometric)",
+        "Analytics Dashboard Integration",
+        "6 Months Premium Support"
       ],
       color: "#EC4899",
       glowColor: "rgba(236, 72, 153, 0.55)",
@@ -199,37 +144,15 @@ export default function PlansPage() {
       iconColor: "#F97316",
       description: "Fully custom enterprise application built to scale infinitely.",
       features: [
-        "Everything in Premium",
-        "Unlimited App Screens",
-        "Fully Custom Mobile Application",
-        "Android & iOS Applications",
-        "Enterprise UI/UX Design",
-        "Enterprise Cloud Infrastructure",
-        "AI Chatbot Integration",
+        "Cross-Platform (iOS, Android & Web Admin)",
+        "Unlimited App Screens & Workflows",
         "Bespoke System Integrations",
-        "Enterprise API Integrations",
-        "Business Process Automation",
-        "CRM & ERP Integration",
-        "Multi-Level Admin Dashboard",
-        "Role-Based Access Control (RBAC)",
-        "Analytics Dashboard",
+        "Real-Time Chat & Collaboration",
         "AI / Machine Learning Features",
-        "Real-Time Push Notifications",
-        "Payment Gateway Integration",
-        "Advanced Authentication (OTP, OAuth, SSO)",
-        "Offline Data Synchronization",
-        "Multi-language Support",
-        "Cloud Database Integration",
-        "Premium High-Grade Enterprise Security",
-        "Application Performance Monitoring",
-        "Crash Analytics & Error Monitoring",
-        "Source Code Version Control",
-        "Database Optimization",
-        "App Store & Play Store Deployment",
-        "Unlimited Business User Accounts",
-        "Free 12 Months Maintenance",
-        "Dedicated Account Manager",
-        "24×7 Priority Support"
+        "Offline-First Capability",
+        "High-Grade Enterprise Security",
+        "Dedicated Support Team",
+        "12 Months Maintenance & SLA"
       ],
       color: "#F97316",
       glowColor: "rgba(249, 115, 22, 0.45)",
@@ -274,11 +197,11 @@ export default function PlansPage() {
   ];
 
   return (
-    <div style={{ background: 'var(--bg-main)', minHeight: '100vh', color: 'var(--text-main)', fontFamily: "'Outfit', 'Poppins', sans-serif", overflow: 'hidden', position: 'relative', transition: 'background 0.3s ease, color 0.3s ease' }}>
+    <div style={{ background: '#09070F', minHeight: '100vh', color: '#FFFFFF', fontFamily: "'Outfit', 'Poppins', sans-serif", overflow: 'hidden', position: 'relative' }}>
 
       {/* Decorative Blur Blobs */}
-      <div style={{ position: 'absolute', top: '10%', left: '-10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.1), transparent)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
-      <div style={{ position: 'absolute', top: '30%', right: '-15%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(236,72,153,0.1), transparent)', filter: 'blur(100px)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'absolute', top: '10%', left: '-10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.08), transparent)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'absolute', top: '30%', right: '-15%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(236,72,153,0.08), transparent)', filter: 'blur(100px)', pointerEvents: 'none', zIndex: 0 }} />
 
       {/* Main Container */}
       <div className="container" style={{ position: 'relative', zIndex: 2, padding: '120px 24px 80px' }}>
@@ -290,30 +213,30 @@ export default function PlansPage() {
           transition={{ duration: 0.5 }}
           style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 20 }}
         >
-          <a href="/" style={{ color: '#A855F7', display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none', fontSize: 13, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', transition: 'all 0.3s', padding: '8px 16px', background: 'var(--bg-surface-soft)', border: '1px solid var(--border-main)', borderRadius: 100 }} className="back-link">
+          <a href="/" style={{ color: '#A855F7', display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none', fontSize: 13, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', transition: 'all 0.3s', padding: '8px 16px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: 100 }} className="back-link">
             <ChevronLeft size={16} /> Back to Home
           </a>
         </motion.div>
 
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
-          <h1 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900, marginTop: 10, marginBottom: 16, letterSpacing: '-0.5px', lineHeight: 1.25, color: 'var(--text-main)' }}>
+          <h1 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900, marginTop: 10, marginBottom: 16, letterSpacing: '-0.5px', lineHeight: 1.25 }}>
             Success Starts with the <span style={{ background: 'linear-gradient(90deg, #A855F7, #EC4899, #F97316)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Right Solution</span>
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: 'clamp(14px, 1.8vw, 16px)', maxWidth: 650, margin: '0 auto', lineHeight: 1.6 }}>
+          <p style={{ color: '#9CA3AF', fontSize: 'clamp(14px, 1.8vw, 16px)', maxWidth: 650, margin: '0 auto', lineHeight: 1.6 }}>
             Choose the perfect solution for your business needs — scalable, secure, and future-ready to grow with your business.
           </p>
         </div>
 
         {/* Toggle Switcher */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 64 }}>
-          <div style={{ background: 'var(--bg-surface-soft)', border: '1px solid var(--border-main)', borderRadius: 100, padding: 6, display: 'flex', gap: 8, backdropFilter: 'blur(10px)', boxShadow: 'var(--card-shadow)' }}>
+          <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: 100, padding: 6, display: 'flex', gap: 8, backdropFilter: 'blur(10px)', boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)' }}>
             <button
               onClick={() => setActiveTab('website')}
               style={{
                 background: activeTab === 'website' ? 'linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)' : 'transparent',
                 border: 'none',
-                color: activeTab === 'website' ? '#FFFFFF' : 'var(--text-muted)',
+                color: activeTab === 'website' ? '#FFFFFF' : '#9CA3AF',
                 padding: '12px 24px',
                 borderRadius: 100,
                 cursor: 'pointer',
@@ -326,7 +249,7 @@ export default function PlansPage() {
                 transition: 'all 0.3s'
               }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z" /></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
               WEBSITE DEVELOPMENT
             </button>
             <button
@@ -334,7 +257,7 @@ export default function PlansPage() {
               style={{
                 background: activeTab === 'mobile' ? 'linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%)' : 'transparent',
                 border: 'none',
-                color: activeTab === 'mobile' ? '#FFFFFF' : 'var(--text-muted)',
+                color: activeTab === 'mobile' ? '#FFFFFF' : '#9CA3AF',
                 padding: '12px 24px',
                 borderRadius: 100,
                 cursor: 'pointer',
@@ -366,26 +289,23 @@ export default function PlansPage() {
                   exit={{ opacity: 0, y: -30 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   whileHover={{
-                    scale: 1.035,
-                    y: -10,
                     borderColor: plan.color,
-                    boxShadow: `0 28px 56px -10px ${plan.glowColor}, 0 0 0 1px ${plan.iconColor}30`,
-                    zIndex: 10,
+                    boxShadow: `0 20px 40px -10px ${plan.glowColor}`,
+                    background: plan.bgGradient
                   }}
                   style={{
-                    background: 'var(--bg-surface)',
-                    border: isPremium ? `2.5px solid ${plan.color}` : '1.5px solid var(--border-main)',
+                    background: 'rgba(18, 15, 23, 0.65)',
+                    border: isPremium ? `2.5px solid ${plan.color}` : '1.5px solid rgba(255, 255, 255, 0.06)',
                     borderRadius: 24,
                     padding: '48px 36px 40px',
                     position: 'relative',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    boxShadow: isPremium ? `0 15px 45px -10px ${plan.glowColor}` : 'var(--card-shadow)',
+                    boxShadow: isPremium ? `0 15px 45px -10px ${plan.glowColor}` : '0 10px 30px -15px rgba(0, 0, 0, 0.3)',
                     backdropFilter: 'blur(10px)',
                     zIndex: isPremium ? 3 : 1,
-                    cursor: 'default',
-                    willChange: 'transform',
+                    transition: 'border-color 0.4s, background 0.4s, box-shadow 0.4s'
                   }}
                 >
                   {/* Premium Badge */}
@@ -418,12 +338,12 @@ export default function PlansPage() {
                           width: 72,
                           height: 72,
                           borderRadius: 22,
-                          background: `${plan.iconColor}15`,
+                          background: `radial-gradient(circle at 40% 40%, ${plan.iconColor}18, rgba(0,0,0,0))`,
                           border: `1.5px solid ${plan.iconColor}30`,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          boxShadow: `0 8px 32px -8px ${plan.glowColor}`,
+                          boxShadow: `0 8px 32px -8px ${plan.glowColor}, inset 0 1px 0 rgba(255,255,255,0.06)`,
                           position: 'relative',
                           overflow: 'hidden'
                         }}
@@ -451,23 +371,21 @@ export default function PlansPage() {
                     </h3>
 
                     {/* Plan Description */}
-                    <p style={{ color: 'var(--text-muted)', fontSize: 14, textAlign: 'center', lineHeight: 1.6, marginBottom: 32, minHeight: 44 }}>
+                    <p style={{ color: '#9CA3AF', fontSize: 14, textAlign: 'center', lineHeight: 1.6, marginBottom: 32, minHeight: 44 }}>
                       {plan.description}
                     </p>
 
                     {/* Horizontal Divider */}
-                    <div style={{ height: 1, background: 'var(--border-main)', marginBottom: 32 }} />
+                    <div style={{ height: 1, background: 'rgba(255, 255, 255, 0.08)', marginBottom: 32 }} />
 
                     {/* Features List with interactive point zoom */}
                     <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
-                      {(expandedPlans[plan.name] ? plan.features : plan.features.slice(0, 10)).map((feature, fIdx) => (
+                      {plan.features.map((feature, fIdx) => (
                         <motion.li
                           key={fIdx}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.25, delay: fIdx < 10 ? 0 : (fIdx - 10) * 0.03 }}
-                          whileHover={{ scale: 1.04, x: 6, color: plan.color }}
-                          style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 13.5, color: 'var(--text-main)', cursor: 'pointer', originX: 0 }}
+                          whileHover={{ scale: 1.04, x: 6, color: '#FFFFFF' }}
+                          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                          style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 13.5, color: '#E5E7EB', cursor: 'pointer', originX: 0 }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 20, height: 20, borderRadius: '50%', background: `${plan.iconColor}20`, color: plan.iconColor, flexShrink: 0 }}>
                             <Check size={12} strokeWidth={3} />
@@ -476,43 +394,6 @@ export default function PlansPage() {
                         </motion.li>
                       ))}
                     </ul>
-
-                    {/* Read More / Show Less Button if features > 10 */}
-                    {plan.features.length > 10 && (
-                      <div style={{ marginTop: 24, textAlign: 'left' }}>
-                        <motion.button
-                          onClick={() => toggleExpand(plan.name)}
-                          whileHover={{ scale: 1.05, boxShadow: `0 8px 25px ${plan.glowColor}` }}
-                          whileTap={{ scale: 0.95 }}
-                          style={{
-                            background: `linear-gradient(135deg, ${plan.iconColor}15, ${plan.iconColor}30)`,
-                            border: `1.5px solid ${plan.iconColor}60`,
-                            color: plan.iconColor,
-                            padding: '10px 22px',
-                            borderRadius: 100,
-                            fontWeight: 700,
-                            fontSize: 12.5,
-                            letterSpacing: '1px',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: 8,
-                            backdropFilter: 'blur(8px)',
-                            transition: 'all 0.3s ease',
-                            boxShadow: `0 4px 15px ${plan.glowColor}`
-                          }}
-                        >
-                          <span>{expandedPlans[plan.name] ? 'SHOW LESS' : `READ MORE (+${plan.features.length - 10})`}</span>
-                          <motion.div
-                            animate={{ rotate: expandedPlans[plan.name] ? 180 : 0 }}
-                            transition={{ duration: 0.3 }}
-                            style={{ display: 'flex', alignItems: 'center' }}
-                          >
-                            <ChevronDown size={16} strokeWidth={2.5} />
-                          </motion.div>
-                        </motion.button>
-                      </div>
-                    )}
                   </div>
                 </motion.div>
               );
@@ -535,10 +416,11 @@ export default function PlansPage() {
                 y: -6,
                 boxShadow: `0 12px 30px -10px ${hl.glow}`,
                 borderColor: hl.iconColor,
+                background: 'rgba(255,255,255,0.02)'
               }}
               style={{
-                background: 'var(--bg-surface)',
-                border: '1.5px solid var(--border-main)',
+                background: 'rgba(18, 15, 23, 0.6)',
+                border: '1.5px solid rgba(255, 255, 255, 0.05)',
                 borderRadius: 20,
                 padding: '24px',
                 backdropFilter: 'blur(10px)',
@@ -569,8 +451,8 @@ export default function PlansPage() {
                 <hl.icon size={24} />
               </motion.div>
               <div>
-                <h4 style={{ fontSize: 15, fontWeight: 800, color: 'var(--text-main)', marginBottom: 6 }}>{hl.title}</h4>
-                <p style={{ color: 'var(--text-muted)', fontSize: 12.5, lineHeight: 1.5, margin: 0 }}>{hl.desc}</p>
+                <h4 style={{ fontSize: 15, fontWeight: 800, color: '#FFFFFF', marginBottom: 6 }}>{hl.title}</h4>
+                <p style={{ color: '#9CA3AF', fontSize: 12.5, lineHeight: 1.5, margin: 0 }}>{hl.desc}</p>
               </div>
             </motion.div>
           ))}

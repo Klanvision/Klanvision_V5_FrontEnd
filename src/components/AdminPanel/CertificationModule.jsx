@@ -30,7 +30,7 @@ const TruncatedCertificateList = ({ itemsString }) => {
   );
 };
 
-export default function CertificationModule() {
+export default function CertificationModule({ currentUser, addActivity, canEdit = true }) {
   useEffect(() => {
   }, []);
 
