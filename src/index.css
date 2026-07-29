@@ -15,27 +15,27 @@
   --primary-purple: #7C3AED;
   --accent: #FF6B35;
 
-  /* Light Mode (Default) */
-  --bg-main: #F5F6FA;
-  --bg-surface: #FFFFFF;
-  --bg-surface-soft: #F9FAFB;
-  --text-main: #1F2937;
-  --text-muted: #6B7280;
-  --border-main: #E5E7EB;
-  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
-  --hero-bg: linear-gradient(135deg, #EEF2FF 0%, #F3E8FF 50%, #FFF7ED 100%);
-  --glass-bg: rgba(255, 255, 255, 0.75);
+  /* Dark Mode (Default) */
+  --bg-main: #020617;
+  --bg-surface: #0F172A;
+  --bg-surface-soft: #1E293B;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border-main: #1E293B;
+  --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  --hero-bg: linear-gradient(135deg, #020617 0%, #0F172A 50%, #1E1B4B 100%);
+  --glass-bg: rgba(15, 23, 42, 0.85);
 
   /* Compatibility with App.css */
-  --accent-bg: rgba(255, 107, 53, 0.1);
-  --accent-border: rgba(255, 107, 53, 0.2);
+  --accent-bg: rgba(255, 107, 53, 0.2);
+  --accent-border: rgba(255, 107, 53, 0.4);
   --border: var(--border-main);
   --text-h: var(--text-main);
   --social-bg: var(--bg-surface-soft);
   --shadow: var(--card-shadow);
 }
 
-/* Dark Mode (Attractive & Professional) */
+/* Dark Mode Explicit */
 [data-theme='dark'] {
   --bg-main: #020617;
   --bg-surface: #0F172A;
@@ -50,6 +50,23 @@
   /* Compatibility with App.css */
   --accent-bg: rgba(255, 107, 53, 0.2);
   --accent-border: rgba(255, 107, 53, 0.4);
+}
+
+/* Light Mode */
+[data-theme='light'] {
+  --bg-main: #F5F6FA;
+  --bg-surface: #FFFFFF;
+  --bg-surface-soft: #F9FAFB;
+  --text-main: #1F2937;
+  --text-muted: #6B7280;
+  --border-main: #E5E7EB;
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+  --hero-bg: linear-gradient(135deg, #EEF2FF 0%, #F3E8FF 50%, #FFF7ED 100%);
+  --glass-bg: rgba(255, 255, 255, 0.75);
+
+  /* Compatibility with App.css */
+  --accent-bg: rgba(255, 107, 53, 0.1);
+  --accent-border: rgba(255, 107, 53, 0.2);
 }
 
 
