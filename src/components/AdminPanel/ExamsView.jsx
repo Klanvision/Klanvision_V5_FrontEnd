@@ -1539,7 +1539,7 @@ export default function ExamsView({ triggerToast, canEdit = true }) {
                             <span style={{ fontSize: 11, color: '#64748B', fontWeight: 600 }}>Section: {q.section_name}</span>
                           </div>
 
-                          <div style={{ fontSize: 14, fontWeight: 700, color: 'white', marginBottom: 16, paddingRight: 80, lineHeight: 1.5 }}>
+                          <div style={{ fontSize: 14, fontWeight: 700, color: 'white', marginBottom: 16, paddingRight: 80, lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
                             {q.question_text}
                           </div>
 
@@ -1553,7 +1553,8 @@ export default function ExamsView({ triggerToast, canEdit = true }) {
                                     fontSize: 12, padding: '10px 14px', borderRadius: 10,
                                     background: isCorrect ? 'rgba(16, 185, 129, 0.05)' : 'rgba(255,255,255,0.01)',
                                     border: isCorrect ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(255,255,255,0.03)',
-                                    color: isCorrect ? '#10B981' : '#94A3B8'
+                                    color: isCorrect ? '#10B981' : '#94A3B8',
+                                    whiteSpace: 'pre-wrap'
                                   }}
                                 >
                                   <span style={{ fontWeight: 800 }}>{opt.toUpperCase()}:</span> {q[`option_${opt}`]}
@@ -2359,7 +2360,7 @@ export default function ExamsView({ triggerToast, canEdit = true }) {
                                 </div>
 
                                 {/* Question Text */}
-                                <div style={{ fontSize: 14, fontWeight: 700, color: 'white', lineHeight: 1.5 }}>
+                                <div style={{ fontSize: 14, fontWeight: 700, color: 'white', lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
                                   {q.question_text}
                                 </div>
 

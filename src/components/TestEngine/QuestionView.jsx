@@ -44,7 +44,7 @@ export function QuestionView({ question, index, answer, onAnswer, totalQuestions
       )}
 
       <div className="space-y-1.5">
-        <h3 className="text-[16.5px] font-extrabold text-[#F8FAFC] leading-relaxed font-['Outfit'] drop-shadow-[0_2px_10px_rgba(99,102,241,0.15)]">
+        <h3 className="text-[16.5px] font-extrabold text-[#F8FAFC] leading-relaxed font-['Outfit'] drop-shadow-[0_2px_10px_rgba(99,102,241,0.15)] whitespace-pre-wrap">
           {question.question_text}
         </h3>
         <p className="text-[11px] text-[#8B9BB4] font-semibold font-['Outfit']">Choose the correct answer</p>
@@ -73,7 +73,7 @@ export function QuestionView({ question, index, answer, onAnswer, totalQuestions
                 }`}>
                   {opt.key}
                 </div>
-                <span className={`text-[14.5px] leading-relaxed font-bold font-['Outfit'] transition-colors duration-300 ${
+                <span className={`text-[14.5px] leading-relaxed font-bold font-['Outfit'] transition-colors duration-300 whitespace-pre-wrap ${
                   isSelected ? "text-white" : "text-slate-200 group-hover:text-white"
                 }`}>
                   {opt.text}
@@ -105,7 +105,7 @@ export function QuestionView({ question, index, answer, onAnswer, totalQuestions
             <h4 className="text-[12px] font-['Outfit'] font-black uppercase text-[#10B981] tracking-wider leading-none">
               Explanation
             </h4>
-            <p className="text-[11px] text-slate-300 mt-2 font-medium leading-relaxed font-sans">
+            <p className="text-[11px] text-slate-300 mt-2 font-medium leading-relaxed font-sans whitespace-pre-wrap">
               {question.explanation}
             </p>
           </div>
