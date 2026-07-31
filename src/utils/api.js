@@ -105,25 +105,31 @@ export const api = {
     }),
 
     // Admin Users
-    getUsers: () => fetchWithAuth(`${API_BASE_URL}/admin/users`),
-    createUser: (data) => fetchWithAuth(`${API_BASE_URL}/admin/users`, {
+    getUsers: () => fetchWithAuth(`${API_BASE_URL}/admins`),
+    createUser: (data) => fetchWithAuth(`${API_BASE_URL}/admins`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     }),
-    updateUser: (id, data) => fetchWithAuth(`${API_BASE_URL}/admin/users/${id}`, {
+    updateUser: (id, data) => fetchWithAuth(`${API_BASE_URL}/admins/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     }),
-    deleteUser: (id) => fetchWithAuth(`${API_BASE_URL}/admin/users/${id}`, { method: 'DELETE' }),
+    deleteUser: (id) => fetchWithAuth(`${API_BASE_URL}/admins/${id}`, { method: 'DELETE' }),
 
     // Auth (Login and 2FA don't need token)
-    login: (credentials) => fetch(`${API_BASE_URL}/admin/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials)
-    }).then(handleResponse),
+    login: async (credentials) => {
+        const usernameOrEmail = credentials.usernameOrEmail || credentials.email || credentials.username || '';
+        const password = credentials.password || '';
+
+        const res = await fetch(`${API_BASE_URL}/admin/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usernameOrEmail, password })
+        });
+        return handleResponse(res);
+    },
     verify2FA: (email, code) => fetch(`${API_BASE_URL}/admin/verify-2fa?usernameOrEmail=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`, {
         method: 'POST'
     }).then(handleResponse),
@@ -304,6 +310,26 @@ export const api = {
     deleteInvitation: (id) => fetchWithAuth(`${API_BASE_URL}/exam-invitations/${id}`, { method: 'DELETE' }),
     verifyInvitation: (token) => fetch(`${API_BASE_URL}/exam-invitations/verify/${token}`).then(handleResponse),
     generateExamCertificate: (attemptId, data) => fetchWithAuth(`${API_BASE_URL}/attempts/${attemptId}/certificate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    }),
+
+    // Employee Tasks & Sprints API
+    getTasks: () => fetchWithAuth(`${API_BASE_URL}/tasks`),
+    createTask: (data) => fetchWithAuth(`${API_BASE_URL}/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    }),
+    updateTask: (id, data) => fetchWithAuth(`${API_BASE_URL}/tasks/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    }),
+    deleteTask: (id) => fetchWithAuth(`${API_BASE_URL}/tasks/${id}`, { method: 'DELETE' }),
+    getSprints: () => fetchWithAuth(`${API_BASE_URL}/sprints`),
+    createSprint: (data) => fetchWithAuth(`${API_BASE_URL}/sprints`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
