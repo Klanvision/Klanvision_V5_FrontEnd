@@ -436,7 +436,7 @@ export default function Footer() {
               {[
                 { icon: Phone, val: '+91 70323 62358', href: 'tel:+917032362358' },
                 { icon: Mail, val: 'support@klanvision.com', href: 'mailto:support@klanvision.com' },
-                { icon: MapPin, val: 'Anantapur, Andhra Pradesh, India' },
+                { icon: MapPin, val: 'Anantapur, Andhra Pradesh, India', href: 'https://maps.app.goo.gl/FqTU7y6zC8e51Da47' },
               ].map(c => (
                 <div key={c.val} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                   {/* Icon badge */}
