@@ -194,41 +194,76 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Stylized CSS/SVG Map Mockup */}
+              {/* Interactive Real Google Map Embed */}
               <div style={{ 
-                height: 240, 
+                height: 280, 
                 borderRadius: 24, 
                 border: '1px solid var(--border-main)', 
                 background: 'var(--bg-surface)',
                 boxShadow: 'var(--card-shadow)',
                 position: 'relative',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                overflow: 'hidden'
               }}>
-                {/* SVG Vector Map Mockup */}
-                <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.15 }}>
-                  <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--text-main)" strokeWidth="0.5" />
-                  </pattern>
-                  <rect width="100%" height="100%" fill="url(#grid)" />
-                  <path d="M 50,50 C 150,50 150,150 250,150 S 350,50 450,150" fill="none" stroke="var(--primary-purple)" strokeWidth="1.5" strokeDasharray="5,5" />
-                </svg>
+                <iframe
+                  title="Klanvision HQ Map"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d61685.25992985799!2d77.56834015820314!3d14.681888400000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb14ac283c748c9%3A0xb366b567406a090e!2sAnantapur%2C%20Andhra%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0, width: '100%', height: '100%' }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
 
-                {/* Pulsing HQ Pin */}
-                <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div style={{ position: 'relative', width: 20, height: 20 }}>
-                    <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'var(--primary-purple)' }} />
+                {/* Floating Location Badge */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: 12,
+                  left: 12,
+                  background: 'var(--bg-surface-soft)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid var(--border-main)',
+                  padding: '8px 14px',
+                  borderRadius: 12,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  zIndex: 10,
+                  boxShadow: '0 8px 20px rgba(0,0,0,0.15)'
+                }}>
+                  <div style={{ position: 'relative', width: 10, height: 10, flexShrink: 0 }}>
+                    <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: '#10B981' }} />
                     <motion.div 
                       animate={{ scale: [1, 2.5], opacity: [0.6, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
-                      style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: 'var(--primary-purple)' }}
+                      style={{ position: 'absolute', inset: 0, borderRadius: '50%', background: '#10B981' }}
                     />
                   </div>
-                  <span style={{ fontSize: 12, fontWeight: 700, background: 'var(--bg-surface-soft)', border: '1px solid var(--border-main)', padding: '6px 12px', borderRadius: 8, marginTop: 8, color: 'var(--text-main)', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
-                    Klanvision HQ, AP
-                  </span>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--text-main)', lineHeight: 1.2 }}>
+                      Klanvision HQ
+                    </span>
+                    <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-muted)' }}>
+                      Anantapur, Andhra Pradesh, India
+                    </span>
+                  </div>
+                  <a
+                    href="https://maps.google.com/?q=Anantapur,Andhra+Pradesh,India"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: 'var(--primary-purple)',
+                      marginLeft: 6,
+                      padding: '4px 8px',
+                      background: 'rgba(124,58,237,0.1)',
+                      borderRadius: 6,
+                      textDecoration: 'none'
+                    }}
+                  >
+                    Open Map ↗
+                  </a>
                 </div>
               </div>
 
