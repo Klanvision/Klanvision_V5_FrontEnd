@@ -104,19 +104,19 @@ export const api = {
         method: 'DELETE'
     }),
 
-    // Admin Users
-    getUsers: () => fetchWithAuth(`${API_BASE_URL}/admin/users`),
+    // Admin Users Directory
+    getUsers: () => fetchWithAuth(`${API_BASE_URL}/admin/users`).catch(() => []),
     createUser: (data) => fetchWithAuth(`${API_BASE_URL}/admin/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }),
+    }).catch(() => null),
     updateUser: (id, data) => fetchWithAuth(`${API_BASE_URL}/admin/users/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-    }),
-    deleteUser: (id) => fetchWithAuth(`${API_BASE_URL}/admin/users/${id}`, { method: 'DELETE' }),
+    }).catch(() => null),
+    deleteUser: (id) => fetchWithAuth(`${API_BASE_URL}/admin/users/${id}`, { method: 'DELETE' }).catch(() => null),
 
     // Auth (Login and 2FA don't need token)
     login: (credentials) => fetch(`${API_BASE_URL}/admin/login`, {
