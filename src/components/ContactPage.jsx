@@ -176,9 +176,9 @@ export default function ContactPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
                   {[
                     { icon: ShieldCheck, title: 'Legal Corporate Name', value: 'KLANVISION IT SOLUTIONS PRIVATE LIMITED' },
-                    { icon: MapPin, title: 'Corporate Address', value: 'Anantapur, Andhra Pradesh, India', link: 'https://maps.app.goo.gl/FqTU7y6zC8e51Da47' },
-                    { icon: Phone, title: 'Contact Phone', value: '+91 70323 62358', link: 'tel:+917032362358' },
-                    { icon: Mail, title: 'Inquiry Email', value: 'support@klanvision.com', link: 'mailto:support@klanvision.com' },
+                    { icon: MapPin, title: 'Corporate Address', value: 'Anantapur, Andhra Pradesh, India' },
+                    { icon: Phone, title: 'Contact Phone', value: '+91 70323 62358' },
+                    { icon: Mail, title: 'Inquiry Email', value: 'support@klanvision.com' },
                     { icon: Clock, title: 'Business Hours', value: '9:00 AM - 6:00 PM IST (Mon - Sat)' }
                   ].map((item, idx) => (
                     <div key={idx} style={{ display: 'flex', gap: 14 }}>
@@ -187,13 +187,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block', marginBottom: 2 }}>{item.title}</span>
-                        {item.link ? (
-                          <a href={item.link} target={item.link.startsWith('http') ? '_blank' : '_self'} rel="noreferrer" style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-main)', textDecoration: 'none' }}>
-                            {item.value} {item.link.startsWith('http') && '↗'}
-                          </a>
-                        ) : (
-                          <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-main)' }}>{item.value}</span>
-                        )}
+                        <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-main)' }}>{item.value}</span>
                       </div>
                     </div>
                   ))}
@@ -254,7 +248,7 @@ export default function ContactPage() {
                     </span>
                   </div>
                   <a
-                    href="https://maps.app.goo.gl/FqTU7y6zC8e51Da47"
+                    href="https://maps.google.com/?q=Anantapur,Andhra+Pradesh,India"
                     target="_blank"
                     rel="noreferrer"
                     style={{
