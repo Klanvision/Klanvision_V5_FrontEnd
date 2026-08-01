@@ -29,13 +29,10 @@ import SettingsView from './SettingsView';
 import ActivityView from './ActivityView';
 import ExamsView from './ExamsView';
 import CertificationModule from './CertificationModule';
-import TasksModuleContainer from './TasksModule/TasksModuleContainer';
-import { Kanban } from 'lucide-react';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, gradient: 'linear-gradient(135deg, #6366F1, #818CF8)' },
-  { id: 'tasks', label: 'Employee Tasks', icon: Kanban, gradient: 'linear-gradient(135deg, #0EA5E9, #38BDF8)' },
-  { id: 'users', label: 'Employees', icon: Users, gradient: 'linear-gradient(135deg, #EC4899, #F472B6)' },
+  { id: 'users', label: 'Users', icon: Users, gradient: 'linear-gradient(135deg, #EC4899, #F472B6)' },
   { id: 'projects', label: 'Projects', icon: LayoutPanelLeft, gradient: 'linear-gradient(135deg, #7C3AED, #A78BFA)', sub: ['All Projects', 'Delivered Projects', 'Future Projects'] },
   { id: 'exams', label: 'Examination', icon: GraduationCap, gradient: 'linear-gradient(135deg, #8B5CF6, #A78BFA)' },
   { id: 'internship', label: 'Certification', icon: ShieldCheck, gradient: 'linear-gradient(135deg, #10B981, #34D399)' },
@@ -373,13 +370,7 @@ export default function AdminPanel() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        usernameOrEmail: loginForm.email,
-        email: loginForm.email,
-        username: loginForm.email,
-        password: loginForm.password
-      };
-      const result = await api.login(payload);
+      const result = await api.login({ usernameOrEmail: loginForm.email, password: loginForm.password });
 
       if (rememberMe) {
         localStorage.setItem('klanvision_remembered', JSON.stringify({ email: loginForm.email, password: loginForm.password }));
@@ -393,15 +384,7 @@ export default function AdminPanel() {
         return;
       }
 
-      // Normalize authorization: D1 admins table uses 'status' field (Online/Offline),
-      // legacy fields use isAuthorized boolean, is_authorized, or authorized
-      const statusStr = (user.status || '').toLowerCase();
-      const isAuthorized = (user.isAuthorized !== undefined) ? Boolean(user.isAuthorized) :
-                           (user.is_authorized !== undefined) ? Boolean(user.is_authorized) :
-                           (user.authorized !== undefined) ? Boolean(user.authorized) :
-                           (statusStr === 'disabled' || statusStr === 'locked' || statusStr === 'blocked') ? false : true;
-
-      if (isAuthorized) {
+      if (user.isAuthorized) {
         if (result.is2FAEnabled) {
           setVerifyingUser(user);
           if (user.is2FAConfigured) {
@@ -416,6 +399,7 @@ export default function AdminPanel() {
           setLoginError('');
           localStorage.setItem('klanvision_admin_session', JSON.stringify({ user, loginTime: Date.now() }));
           triggerToast(`Authorized session initialized for ${user.name || user.email}.`, 'Access Granted');
+          // Give local storage a tiny moment to save before triggering a network request that reads it
           setTimeout(() => {
             addActivity(user.name || user.email, 'System Login', 'security', 'success', `Successful login from ${user.email}`);
           }, 50);
@@ -425,27 +409,6 @@ export default function AdminPanel() {
         triggerToast('Account authorization mismatch.', 'Access Blocked');
       }
     } catch (err) {
-      console.error('Login error:', err);
-      // Fallback local match check if backend network fails
-      if (users && users.length > 0) {
-        const matchedLocalUser = users.find(u => 
-          (u.email && u.email.toLowerCase() === loginForm.email.toLowerCase()) || 
-          (u.name && u.name.toLowerCase() === loginForm.email.toLowerCase())
-        );
-
-        if (matchedLocalUser) {
-          const isAuth = matchedLocalUser.isAuthorized ?? true;
-          if (isAuth) {
-            setIsAuthenticated(true);
-            setCurrentUser(matchedLocalUser);
-            setLoginError('');
-            localStorage.setItem('klanvision_admin_session', JSON.stringify({ user: matchedLocalUser, loginTime: Date.now() }));
-            triggerToast(`Authorized session initialized for ${matchedLocalUser.name}.`, 'Access Granted');
-            return;
-          }
-        }
-      }
-
       setLoginError('Invalid security credentials provided.');
       triggerToast('Authentication credentials mismatch.', 'Access Denied');
     }
@@ -1172,7 +1135,6 @@ export default function AdminPanel() {
               hasTabPermission(currentUser, 'users') ? (
                 <UsersView
                   users={users}
-                  currentUser={currentUser}
                   onAddClick={() => { setEditingUser(null); setIsUserModalOpen(true); }}
                   onEditClick={(user) => { setEditingUser(user); setIsUserModalOpen(true); }}
                   onDeleteClick={(id) => {
@@ -1259,9 +1221,6 @@ export default function AdminPanel() {
                   canEdit={hasWritePermission(currentUser, 'settings')}
                 />
               ) : <UnauthorizedView />
-            )}
-            {activeTab === 'tasks' && (
-              <TasksModuleContainer currentUser={currentUser} projects={projects} users={users} />
             )}
             {activeTab === 'activity' && (
               hasTabPermission(currentUser, 'activity') ? (

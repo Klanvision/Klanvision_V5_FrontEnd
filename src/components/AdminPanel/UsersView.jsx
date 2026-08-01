@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Mail, Shield, ShieldCheck, Eye, EyeOff, Check, X, UserPlus, Edit2, Trash2, Lock, CheckCircle2, Camera } from 'lucide-react';
+import { Users, Mail, Shield, ShieldCheck, Eye, EyeOff, Check, X, UserPlus, Edit2, Trash2, Lock, CheckCircle2 } from 'lucide-react';
 import { NoResults, normalizePermission } from './SharedComponents';
-import EmployeeProfileModal from './EmployeeProfileModal';
 
 export function UserForm({ initialData, onSave, triggerToast }) {
   const availablePermissions = [
@@ -31,14 +30,6 @@ export function UserForm({ initialData, onSave, triggerToast }) {
     let presetPerms = [];
     if (newRole === 'Super Admin' || newRole === 'Admin') {
       presetPerms = availablePermissions.flatMap(m => [`${m}:Read`, `${m}:Write`]);
-    } else if (newRole === 'Team Lead') {
-      presetPerms = [
-        'Dashboard:Read', 'Dashboard:Write',
-        'Projects:Read', 'Projects:Write',
-        'Users:Read', 'Users:Write',
-        'Exams:Read', 'Exams:Write',
-        'Activity Log:Read'
-      ];
     } else if (newRole === 'Developer') {
       presetPerms = [
         'Dashboard:Read',
@@ -195,7 +186,6 @@ export function UserForm({ initialData, onSave, triggerToast }) {
         <select value={formData.role} onChange={e => handleRoleChange(e.target.value)} style={{ width: '100%', padding: '14px', borderRadius: 14, background: '#111827', border: '1px solid rgba(255,255,255,0.1)', color: 'white', outline: 'none', cursor: 'pointer' }}>
           <option value="Super Admin">Super Admin (Full Platform Control)</option>
           <option value="Admin">Administrator (Full Access)</option>
-          <option value="Team Lead">Team Lead (Team & Project Management)</option>
           <option value="Developer">Developer (Technical &amp; Build Access)</option>
           <option value="Editor">Editor (Content Management)</option>
           <option value="Viewer">Viewer (Read Only Access)</option>
@@ -296,51 +286,12 @@ export function UserForm({ initialData, onSave, triggerToast }) {
   );
 }
 
-export default function UsersView({ users, currentUser, onAddClick, onEditClick, onDeleteClick, onToggleAccess, searchQuery, roleFilter, canEdit, onSaveUser }) {
-  const [expandedUserPerms, setExpandedUserPerms] = useState({});
-  const [activeProfileUser, setActiveProfileUser] = useState(null);
-
-  const toggleExpandPerms = (userId) => {
-    setExpandedUserPerms(prev => ({
-      ...prev,
-      [userId]: !prev[userId]
-    }));
-  };
-
-  const isSelfOrAdmin = (targetUser) => {
-    if (!targetUser) return false;
-    const role = (currentUser?.role || '').toLowerCase();
-    if (role.includes('super admin') || role.includes('admin') || role === 'team lead' || role === 'tl') return true;
-
-    const currEmail = (currentUser?.email || '').toLowerCase();
-    const currUsername = (currentUser?.username || '').toLowerCase();
-    const currName = (currentUser?.name || '').toLowerCase();
-    const targEmail = (targetUser.email || '').toLowerCase();
-    const targUsername = (targetUser.username || '').toLowerCase();
-    const targName = (targetUser.name || '').toLowerCase();
-
-    return (currEmail && currEmail === targEmail)
-      || (currUsername && currUsername === targUsername)
-      || (currName && currName === targName)
-      || (currentUser?.id !== undefined && currentUser.id === targetUser.id);
-  };
-
-  const handleOpenProfileModal = (targetUser) => {
-    if (isSelfOrAdmin(targetUser)) {
-      setActiveProfileUser(targetUser);
-    } else {
-      alert(`Permission Alert: You can only edit your own profile picture and details. (Logged in as ${currentUser?.name || 'Employee'})`);
-    }
-  };
-
+export default function UsersView({ users, onAddClick, onEditClick, onDeleteClick, onToggleAccess, searchQuery, roleFilter, canEdit }) {
   const filteredUsers = users.filter((u) => {
-    const nameStr = (u.name || u.username || '').toLowerCase();
-    const emailStr = (u.email || '').toLowerCase();
-    const roleStr = (u.role || '').toLowerCase();
-    const usernameStr = (u.username || '').toLowerCase();
-    const q = searchQuery.toLowerCase();
-    const matchesSearch = !q || nameStr.includes(q) || emailStr.includes(q) || roleStr.includes(q) || usernameStr.includes(q);
-    const matchesRole = roleFilter === 'All' || roleStr === roleFilter.toLowerCase();
+    const matchesSearch = u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      u.role.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole = roleFilter === 'All' || u.role === roleFilter;
     return matchesSearch && matchesRole;
   });
 
@@ -348,7 +299,6 @@ export default function UsersView({ users, currentUser, onAddClick, onEditClick,
     const r = (role || '').toLowerCase();
     if (r.includes('super admin')) return '#8B5CF6';
     if (r.includes('admin')) return '#6366F1';
-    if (r.includes('team lead') || r === 'tl') return '#F59E0B';
     if (r.includes('developer')) return '#06B6D4';
     if (r.includes('editor')) return '#F59E0B';
     if (r.includes('viewer')) return '#64748B';
@@ -359,12 +309,12 @@ export default function UsersView({ users, currentUser, onAddClick, onEditClick,
     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 44 }}>
         <div>
-          <h2 className="admin-section-title">Employees Directory</h2>
-          <p className="admin-section-subtitle">Manage company employees, system role permissions, and access controls.</p>
+          <h2 className="admin-section-title">Team Directory</h2>
+          <p className="admin-section-subtitle">Manage administrative accounts, role permissions, and access controls.</p>
         </div>
         {canEdit && (
           <button onClick={onAddClick} className="btn-primary" style={{ padding: '16px 32px', display: 'flex', alignItems: 'center', gap: 12, borderRadius: 16 }}>
-            <UserPlus size={22} /> Add Employee
+            <UserPlus size={22} /> Add Member
           </button>
         )}
       </div>
@@ -372,169 +322,90 @@ export default function UsersView({ users, currentUser, onAddClick, onEditClick,
       {filteredUsers.length === 0 ? (
         <NoResults query={searchQuery} />
       ) : (
-        <div style={{
-          background: '#1E293B',
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: 20,
-          overflow: 'hidden',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
-        }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-            <thead>
-              <tr style={{ background: '#0F172A', borderBottom: '1px solid rgba(255,255,255,0.08)', color: '#94A3B8', fontSize: 12, fontWeight: 800 }}>
-                <th style={{ padding: '16px 20px' }}>EMPLOYEE DETAILS</th>
-                <th style={{ padding: '16px 20px' }}>SYSTEM ROLE</th>
-                <th style={{ padding: '16px 20px' }}>AUTHORIZED PERMISSIONS</th>
-                <th style={{ padding: '16px 20px' }}>STATUS & ACCESS</th>
-                <th style={{ padding: '16px 20px', textAlign: 'right' }}>ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.map((user) => {
-                const roleColor = getRoleColor(user.role);
-                const displayName = user.name || user.username || user.email?.split('@')[0] || 'Employee';
-                const isAuth = (user.isAuthorized !== undefined) ? Boolean(user.isAuthorized) : (user.status !== 'Disabled' && user.status !== 'Locked');
-                const userPerms = (user.permissions && user.permissions.length > 0)
-                  ? user.permissions
-                  : (user.role === 'Super Admin' || user.role === 'Admin')
-                    ? ['Dashboard:Write', 'Projects:Write', 'Users:Write', 'Blogs:Write', 'Settings:Write', 'Activity Log:Write', 'Exams:Write', 'Certification:Write']
-                    : ['Dashboard:Read', 'Projects:Read'];
+        <div className="admin-grid-cards-360" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: 32 }}>
+          {filteredUsers.map((user) => {
+            const roleColor = getRoleColor(user.role);
 
-                return (
-                  <tr key={user.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.15s' }}>
-                    {/* Employee Avatar & Name */}
-                    <td style={{ padding: '16px 20px', whiteSpace: 'nowrap' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                        <div style={{ position: 'relative', cursor: 'pointer' }} onClick={() => handleOpenProfileModal(user)}>
-                          <img
-                            src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=6366F1&color=fff`}
-                            style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', border: isSelfOrAdmin(user) ? '2px solid #6366F1' : '2px solid rgba(255,255,255,0.1)' }}
-                          />
-                          {isSelfOrAdmin(user) && (
-                            <div style={{ position: 'absolute', bottom: -2, right: -2, width: 16, height: 16, borderRadius: '50%', background: '#6366F1', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFF' }}>
-                              <Camera size={10} />
-                            </div>
-                          )}
-                        </div>
-                        <div style={{ cursor: 'pointer' }} onClick={() => handleOpenProfileModal(user)}>
-                          <div style={{ fontSize: 14, fontWeight: 800, color: '#FFF', display: 'flex', alignItems: 'center', gap: 6 }}>
-                            {displayName}
-                            {(currentUser?.email?.toLowerCase() === user.email?.toLowerCase() || currentUser?.name?.toLowerCase() === displayName.toLowerCase() || currentUser?.username?.toLowerCase() === user.username?.toLowerCase()) && (
-                              <span style={{ fontSize: 10, fontWeight: 900, color: '#10B981', background: 'rgba(16,185,129,0.15)', padding: '2px 6px', borderRadius: 4 }}>You</span>
-                            )}
-                          </div>
-                          <div style={{ fontSize: 12, color: '#94A3B8' }}>{user.email || user.username || 'employee@klanvision.com'}</div>
-                        </div>
+            return (
+              <motion.div key={user.id} layout whileHover={{ y: -6 }} className="clay-card clay-card-interactive" style={{ padding: '32px', position: 'relative', overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%', borderTop: `4px solid ${roleColor}` }}>
+                <div style={{ position: 'absolute', top: 0, right: 0, width: 120, height: 120, background: roleColor, filter: 'blur(80px)', opacity: 0.05 }} />
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 32 }}>
+                  <div style={{ padding: 4, borderRadius: 20, background: `linear-gradient(45deg, ${roleColor}, transparent)` }}>
+                    <img src={`https://ui-avatars.com/api/?name=${user.name}&background=1E293B&color=fff`} style={{ width: 72, height: 72, borderRadius: 16, display: 'block' }} />
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: 20, fontWeight: 900 }}>{user.name}</h4>
+                    <p style={{ fontSize: 13, color: roleColor, fontWeight: 900, letterSpacing: '0.5px' }}>{(user.role || 'Member').toUpperCase()}</p>
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: 32 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <div style={{ fontSize: 11, fontWeight: 900, color: '#475569', textTransform: 'uppercase', letterSpacing: '1px' }}>Authorized Modules</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      {user.isAuthorized ? (
+                        <div style={{ color: '#10B981', fontSize: 10, fontWeight: 900, display: 'flex', alignItems: 'center', gap: 4 }}><ShieldCheck size={12} /> SECURE</div>
+                      ) : (
+                        <div style={{ color: '#F87171', fontSize: 10, fontWeight: 900, display: 'flex', alignItems: 'center', gap: 4 }}><X size={12} /> LOCKED</div>
+                      )}
+                      <div
+                        onClick={() => canEdit && onToggleAccess && onToggleAccess(user)}
+                        style={{
+                          width: 36, height: 18, borderRadius: 20, background: user.isAuthorized ? '#6366F1' : 'rgba(255,255,255,0.1)',
+                          position: 'relative', cursor: canEdit ? 'pointer' : 'not-allowed', transition: '0.3s', display: 'inline-block', opacity: canEdit ? 1 : 0.6
+                        }}
+                      >
+                        <motion.div animate={{ x: user.isAuthorized ? 20 : 2 }} style={{ width: 14, height: 14, borderRadius: '50%', background: 'white', position: 'absolute', top: 2 }} />
                       </div>
-                    </td>
+                    </div>
+                  </div>
 
-                    {/* Role Badge */}
-                    <td style={{ padding: '16px 20px', whiteSpace: 'nowrap' }}>
-                      <span style={{ fontSize: 12, fontWeight: 800, color: roleColor, background: `${roleColor}18`, padding: '4px 12px', borderRadius: 8, border: `1px solid ${roleColor}33` }}>
-                        {user.role || 'Member'}
-                      </span>
-                    </td>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {user.permissions && user.permissions.length > 0 ? (
+                      user.permissions.map(p => {
+                        const norm = normalizePermission(p);
+                        const isWrite = norm.endsWith(':Write');
+                        const isRead = norm.endsWith(':Read');
+                        const modName = norm.replace(':Write', '').replace(':Read', '');
 
-                    {/* Permissions */}
-                    <td style={{ padding: '16px 20px' }}>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, maxWidth: 360 }}>
-                        {userPerms.length > 0 ? (
-                          (expandedUserPerms[user.id] ? userPerms : userPerms.slice(0, 3)).map(p => {
-                            const norm = normalizePermission(p);
-                            const isWrite = norm.endsWith(':Write');
-                            const modName = norm.replace(':Write', '').replace(':Read', '');
-                            return (
-                              <span key={p} style={{ fontSize: 11, fontWeight: 800, color: isWrite ? '#34D399' : '#818CF8', background: 'rgba(255,255,255,0.04)', padding: '3px 8px', borderRadius: 6, border: '1px solid rgba(255,255,255,0.06)' }}>
-                                {modName} {isWrite ? '(W)' : '(R)'}
-                              </span>
-                            );
-                          })
-                        ) : (
-                          <span style={{ fontSize: 11, color: '#64748B' }}>Standard Access</span>
-                        )}
-                        {userPerms.length > 3 && (
-                          <button
-                            type="button"
-                            onClick={() => toggleExpandPerms(user.id)}
+                        return (
+                          <span
+                            key={p}
                             style={{
-                              background: expandedUserPerms[user.id] ? 'rgba(239,68,68,0.15)' : 'rgba(99,102,241,0.15)',
-                              border: expandedUserPerms[user.id] ? '1px solid rgba(239,68,68,0.3)' : '1px solid rgba(99,102,241,0.3)',
-                              color: expandedUserPerms[user.id] ? '#F87171' : '#818CF8',
                               fontSize: 11,
                               fontWeight: 800,
-                              padding: '3px 10px',
-                              borderRadius: 6,
-                              cursor: 'pointer',
-                              transition: 'all 0.15s'
+                              color: isWrite ? '#34D399' : isRead ? '#A5B4FC' : 'white',
+                              background: isWrite ? 'rgba(16, 185, 129, 0.1)' : 'rgba(99, 102, 241, 0.1)',
+                              padding: '4px 10px',
+                              borderRadius: 10,
+                              border: isWrite ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(99, 102, 241, 0.3)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 4
                             }}
                           >
-                            {expandedUserPerms[user.id] ? 'Show Less' : `+${userPerms.length - 3} More`}
-                          </button>
-                        )}
-                      </div>
-                    </td>
-
-                    {/* Status & Security */}
-                    <td style={{ padding: '16px 20px', whiteSpace: 'nowrap' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        {isAuth ? (
-                          <span style={{ color: '#10B981', fontSize: 11, fontWeight: 800, background: 'rgba(16,185,129,0.12)', padding: '3px 8px', borderRadius: 6, display: 'flex', alignItems: 'center', gap: 4 }}>
-                            <ShieldCheck size={12} /> SECURE
+                            {isWrite ? <Shield size={10} /> : <Eye size={10} />}
+                            {modName} {isWrite ? '(W)' : '(R)'}
                           </span>
-                        ) : (
-                          <span style={{ color: '#EF4444', fontSize: 11, fontWeight: 800, background: 'rgba(239,68,68,0.12)', padding: '3px 8px', borderRadius: 6, display: 'flex', alignItems: 'center', gap: 4 }}>
-                            <X size={12} /> LOCKED
-                          </span>
-                        )}
+                        );
+                      })
+                    ) : (
+                      <span style={{ fontSize: 11, color: '#64748B', fontStyle: 'italic' }}>No modules assigned</span>
+                    )}
+                  </div>
+                </div>
 
-                        <div
-                          onClick={() => canEdit && onToggleAccess && onToggleAccess(user)}
-                          style={{
-                            width: 34, height: 18, borderRadius: 20, background: isAuth ? '#6366F1' : 'rgba(255,255,255,0.1)',
-                            position: 'relative', cursor: canEdit ? 'pointer' : 'not-allowed', transition: '0.3s', display: 'inline-block'
-                          }}
-                        >
-                          <motion.div animate={{ x: user.isAuthorized ? 18 : 2 }} style={{ width: 14, height: 14, borderRadius: '50%', background: 'white', position: 'absolute', top: 2 }} />
-                        </div>
-                      </div>
-                    </td>
-
-                    {/* Actions */}
-                    <td style={{ padding: '16px 20px', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                      {canEdit && (
-                        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                          {(currentUser?.role?.toLowerCase().includes('admin') || currentUser?.role?.toLowerCase() === 'team lead' || currentUser?.role?.toLowerCase() === 'tl') && (
-                            <button onClick={() => onEditClick(user)} style={{ background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', color: '#FBBF24', padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-                              <Shield size={13} /> Manage Access
-                            </button>
-                          )}
-                          <button onClick={() => handleOpenProfileModal(user)} style={{ background: isSelfOrAdmin(user) ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.04)', border: isSelfOrAdmin(user) ? '1px solid rgba(99,102,241,0.3)' : '1px solid rgba(255,255,255,0.08)', color: isSelfOrAdmin(user) ? '#818CF8' : '#94A3B8', padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-                            <Edit2 size={13} /> Edit Profile
-                          </button>
-                          <button onClick={() => onDeleteClick(user.id)} style={{ background: 'rgba(239,68,68,0.12)', border: 'none', color: '#EF4444', padding: '6px 10px', borderRadius: 8, cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                            <Trash2 size={13} />
-                          </button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                {canEdit && (
+                  <div style={{ display: 'flex', gap: 12, marginTop: 'auto' }}>
+                    <button onClick={() => onEditClick(user)} style={{ flex: 1, padding: '14px', borderRadius: 16, background: 'rgba(255,255,255,0.05)', border: 'none', color: 'white', fontSize: 13, fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}><Edit2 size={16} /> Modify</button>
+                    <button onClick={() => onDeleteClick(user.id)} style={{ width: 52, height: 52, borderRadius: 16, background: 'rgba(239, 68, 68, 0.1)', border: 'none', color: '#F87171', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Trash2 size={20} /></button>
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
         </div>
-      )}
-
-      {/* ── Employee Profile & Picture Upload Modal ── */}
-      {activeProfileUser && (
-        <EmployeeProfileModal
-          employee={activeProfileUser}
-          onClose={() => setActiveProfileUser(null)}
-          onSave={(updatedProfile) => {
-            onEditClick && onEditClick(updatedProfile);
-            onSaveUser && onSaveUser(updatedProfile);
-          }}
-        />
       )}
     </motion.div>
   );

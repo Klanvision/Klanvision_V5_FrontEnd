@@ -169,9 +169,9 @@ export default function ContactSection() {
 
               {/* Contact detail rows – phone, email, location */}
               {[
-                { icon: Phone,  label: 'Phone',    val: '+91 70323 62358', href: 'tel:+917032362358' },
-                { icon: Mail,   label: 'Email',    val: 'support@klanvision.com', href: 'mailto:support@klanvision.com' },
-                { icon: MapPin, label: 'Location', val: 'Anantapur, Andhra Pradesh, India', href: 'https://maps.app.goo.gl/FqTU7y6zC8e51Da47' },
+                { icon: Phone,  label: 'Phone',    val: '+91 70323 62358'                    },
+                { icon: Mail,   label: 'Email',    val: 'support@klanvision.com'             },
+                { icon: MapPin, label: 'Location', val: 'Anantapur, Andhra Pradesh, India'   },
               ].map(c => (
                 <div key={c.label} style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
                   {/* Icon badge */}
@@ -180,13 +180,7 @@ export default function ContactSection() {
                   </div>
                   <div>
                     <div style={{ color: 'var(--text-muted)', fontSize: 12, fontWeight: 500 }}>{c.label}</div>
-                    {c.href ? (
-                      <a href={c.href} target={c.href.startsWith('http') ? '_blank' : '_self'} rel="noreferrer" style={{ fontWeight: 600, fontSize: 14, marginTop: 2, color: 'var(--text-main)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
-                        {c.val} {c.href.startsWith('http') && '↗'}
-                      </a>
-                    ) : (
-                      <div style={{ fontWeight: 600, fontSize: 14, marginTop: 2, color: 'var(--text-main)' }}>{c.val}</div>
-                    )}
+                    <div style={{ fontWeight: 600, fontSize: 14, marginTop: 2, color: 'var(--text-main)' }}>{c.val}</div>
                   </div>
 
                 </div>
